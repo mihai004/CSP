@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">                                                  <!-- HTML5 doc-type -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"">       <!--  responsive s-mobile -->
+    <meta name="description" content="E-commerce website">
+    <meta name="author" content="Mihai Raul, Blaga">
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="/css/bootstrap-theme.css" rel="stylesheet">
+    <link href="/css/my-style.css" rel="stylesheet">
+    <link rel="icon" href="images/logo.png">
+
+    <title>MyBooks</title>
+</head>
+
+<body role="document">
+
+<div class="navbar-wrapper">
+    <div class="container">
+
+        <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="../../index.php"><b><i>MyBooks</i></b></a>
+        </div>
+        <div id="myNavbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="../../shopList.php">Shop</a></li>
+                <li><a href="../../logOut.php"></a></li>
+            </ul>
+
+
+            <form action="../../shopList.php" method="post" class="navbar-form navbar-left" role="search">
+                    <input name="search" type="text" class="form-control" placeholder="Search...">
+                <input name="look" type="submit" class="btn btn-success" value="Search"  />
+
+                <div class='printchatbox' id='printchatbox'></div>
+
+                <input type='text' name='fname' class='chatinput' id='chatinput'>
+
+
+            </form>
+
+            <ul class="nav navbar-nav navbar-right">
+                <?php
+                if(isset($_SESSION['userID'])){
+
+                   echo '<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-user">
+                            </span> ' . $view->user->getEMail() . ' </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="../../basket.php">My Basket</a></li>
+                            <li><a href="../../logOut.php">LogOut</a></li>
+                        </ul>
+                        ';
+
+                }
+                else {
+
+                   echo '<li><a href="../../register.php"><span class="glyphicon glyphicon-log-in"></span> LogIn/SignUp </a></li>';
+
+                }
+                ?>
+            </ul>
+         </div>
+         </div>
+        </nav>
+    </div>
+</div>
+

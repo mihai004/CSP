@@ -1,0 +1,110 @@
+<div id="response" style="font-size: 20px; width: 100%; position: fixed; margin-bottom: 15px;"  class="bg-success text-center text-success"></div>
+<input type="hidden" value="<?php echo $_SESSION['userID'] ?>" id="userID">
+
+<?php require('template/header.phtml') ?>
+
+    <div class="navbar-wrap">
+
+        <div class="container" id="shop">
+
+            <nav class="navbar navbar-pills">
+
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" style="background-color: forestgreen;" data-target="#myNav">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span style="background-color: whitesmoke;" class="icon-bar"></span>
+                        <span style="background-color: whitesmoke;" class="icon-bar"></span>
+                        <span style="background-color: whitesmoke;" class="icon-bar"></span>
+                    </button>
+
+                </div>
+
+                <div id="myNav" class="collapse navbar-collapse">
+                    <form action="../shopList.php" method="get">
+                        <ul class="nav navbar-nav">
+                            <label class="dropdown-toggle" data-toggle="dropdown" href="#" >Category</label>
+                            <select name="filter_1" >
+                                <option value=""></option>
+                                <option value="science">Science</option>
+                                <option value="novel">Novel</option>
+                                <option value="poetry">Poetry</option>
+                                <option value="philosophy">Philosophy</option>
+                            </select>
+                            <label class="dropdown-toggle" data-toggle="dropdown" href="#" >Price</label>
+                            <select name="filter_2">
+                                <option value=""></option>
+                                <option value="asc">Price Asc</option>
+                                <option value="desc">Price Desc</option>
+                            </select>
+                        </ul>
+                        <input id="sortBut" name="sort" class="btn btn-primary pull-right" type="submit" value="Sort">
+                    </form>
+                </div>
+            </nav>
+
+            <div class="col-lg-offset-0">
+                        <?php foreach ($view->booksDataSet as $bookData) {
+                            echo '
+                             <div class="bookSet">
+                                    <a href="product.php?id='. $bookData->getIdBook() .'">
+                                    <p>' . '<img src="images/'. $bookData->getPhotoName()  . ' " alt="no pic" />' . '</p>
+                                    <p><b>Name:</b> ' . $bookData->getBookName() . ' </p>
+                                    <p><b>Author:</b> ' . $bookData->getAuthor() . ' </p>
+                                    <p><b>Available:</b> ' . $bookData->getNumberInStock() . ' </p>
+                                    <p><b>Price: £</b>'.$bookData->getPrice() . ' </p>
+                                    </a>
+                                    <p>' . '<button data-id="' . $bookData->getIdBook() . '" class="btn btn-primary btn-success addToCart"><b>Add to</b><span class="glyphicon glyphicon-shopping-cart"></span></button>' . ' </p>
+                                </div>';
+                        } ?>
+                </div>
+                <div class="col-xs-12 text-center" style="margin-bottom: 100px;">
+                <?php
+
+                echo '<nav aria-label="Page navigation">';
+                echo '<ul class="pagination">';
+
+                if($page > 1){
+
+                    $previous = $page - 1;
+                    echo '<li><a href="../shopList.php?limit='. $limit .'&page='. $previous .'" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    </a></li>';
+
+                }
+
+                $pages = ceil($total / $limit);
+                for($i = 1; $i <= $pages; $i++) {
+
+                    echo '<li><a href="../shopList.php?limit='. $limit.'&page='. $i .'"> ';
+                    echo $i;
+                    echo '</a></li> ';
+
+                }
+
+                if($page < $pages){
+
+                    $next = $page + 1;
+                    echo '<li><a href="../shopList.php?limit='. $limit .'&page='. $next .'" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a></li>';
+
+                }
+
+                echo '</ul>';
+                echo '</nav>';
+
+                ?>
+                    <div>
+                    <label class="dropdown-toggle text-center" data-toggle="dropdown" href="#">Items/page</label>
+                    <select name="filter_3" onchange="window.location.href=this.value">
+                        <option value="<?php echo $_SERVER['REQUEST_URI'];?>"></option>
+                        <option value="<?php echo $_SERVER['REQUEST_URI'],'?&limit=2';?>">2</option>
+                        <option value="<?php echo $_SERVER['REQUEST_URI'],'?&limit=5';?>">5</option>
+                    </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<?php require('template/footer.phtml') ?>

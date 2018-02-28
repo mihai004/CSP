@@ -1,0 +1,467 @@
+
+body {
+    padding-bottom: 40px;
+    color: #5a5a5a;
+    position: relative;
+    margin: 0;
+    min-height: 100%;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+}
+
+html {
+    height: 170%;
+    box-sizing: border-box;
+}
+
+#marketing {
+    height: 470px;
+}
+
+.navbar-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 20;
+}
+
+.navbar-wrapper > .container {
+    padding-right: 0;
+    padding-left: 0;
+}
+.navbar-wrapper .navbar {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.navbar-wrapper .navbar .container {
+    width: auto;
+}
+
+.carousel {
+    height: 500px;
+    margin-bottom: 60px;
+}
+
+.carousel-caption {
+    z-index: 10;
+}
+
+
+.carousel .item {
+    height: 500px;
+    background-color: #777;
+}
+.carousel-inner > .item > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    height: 500px;
+}
+
+.footer {
+
+    position: absolute;
+    height: 150px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    text-align: center;
+    overflow: hidden;
+    background-color: #1b1b1b;
+    background-image: -moz-linear-gradient(top, #222222, #111111);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#222222), to(#111111));
+    background-image: -webkit-linear-gradient(top, #222222, #111111);
+    background-image: -o-linear-gradient(top, #222222, #111111);
+    background-image: linear-gradient(to bottom, #222222, #111111);
+    background-repeat: repeat-x;
+    border-color: #252525;
+}
+
+.footer a {
+    color: #2d6ca2;
+}
+
+.footer p {
+    color: lightgrey;
+    font-size: 18px;
+}
+
+#footer {
+    margin-top: 150px;
+    text-align: center;
+    background-color: #000;
+    color: #fff;
+}
+
+.colorgraph {
+    height: 5px;
+    border-top: 0;
+    background: #c4e17f;
+    border-radius: 5px;
+    background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+    background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+    background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+    background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+}
+
+.pull-right, a,
+.pull-right, a:hover,
+.pull-right, a:visited {
+    color: whitesmoke;
+    text-decoration: none;
+}
+
+#shop {
+    background-color: #F6F6F6;
+    margin-bottom: 40px;
+}
+
+.btn.btn-link {
+    color: #2a6496;
+}
+
+.btn-success,
+.btn-danger {
+    font-size: 18px;
+}
+
+a {
+    font-size: 18px;
+    color: whitesmoke;
+}
+
+.navbar.navbar-pills {
+    margin-top: 125px;
+    padding-top: 8px;
+}
+
+#myNav a {
+    font-size: 20px;
+    color: #2b669a;
+    padding-bottom: -20px;
+}
+#inner > a:hover {
+    font-size: 18px;
+    border-radius: 14px;
+    color: #2a6496;
+}
+
+.bookSet {
+
+    margin-top: -100px;
+    padding-top: 35px;
+    padding-bottom: 20px;
+    font-size: 15px;
+    height: 400px;
+    margin-bottom:30px;
+    text-align: center;
+
+}
+
+
+.glyphicon.glyphicon-shopping-cart {
+    width: 30px;
+    height: 30px;
+    padding-top: 6px;
+}
+
+p {
+
+    color: black;
+}
+
+#addChart {
+    font-size: 16px;
+    border-radius: 10px;
+}
+
+
+#addChart:hover {
+    color: whitesmoke;
+}
+
+#aloneBook img {
+    margin-top: 50px;
+    border-radius: 15%;
+    width: 200px;
+    height: 300px;
+}
+
+#singleBook img{
+    margin-top: 180px;
+    border-radius: 15%;
+    width: 200px;
+    height: 300px;
+}
+
+.bookSet img {
+    border-radius: 15%;
+    width: 110px;
+    height: 150px;
+}
+
+.bookSet:hover {
+    background-color: #9acfea;
+    border-radius: 45px;
+    -webkit-transition: all 3s ease;
+    transition:  all 3s ease;
+}
+
+/* menu second */
+
+.navbar-pills {
+
+    background-color: whitesmoke;
+    margin-top: 15px;
+    margin-bottom: 80px;
+    float: none;
+}
+
+.navbar-pills .container  {
+
+    padding-right: 15px;
+    padding-left: 15px;
+    background-color: whitesmoke;
+}
+
+#search:hover input[type=text]{
+    width:200px;
+}
+
+#innerReg {
+    width: 80%;
+}
+
+.footer a {
+    color: #2a6496;
+}
+
+.btn.btn-default {
+    margin-top: 10px;
+}
+
+.btn.btn-default:focus {
+    color: #398439;
+}
+
+#inputCol {
+    transition: width 0.3s;
+    -webkit-transition: width 0.3s;
+}
+
+#inputCol:focus {
+    background-color: lightblue;
+    color: black;
+}
+
+text {
+    padding-left: 20px;
+    margin-left: 20px;
+}
+
+.form-group {
+    padding-left: 40px;
+    padding-right: 50px;
+}
+
+#button1 {
+    margin-top: 30px;
+    margin-left: 125px;
+    margin-bottom: 20px;
+
+}
+
+#button2{
+    margin-left: 118px;
+}
+
+#sortBut {
+    width: 10%;
+    font-size: 15px;
+}
+
+#singleBook {
+
+    margin-bottom: 100px;
+
+}
+
+#comment {
+    padding-top: 100px;
+    padding-bottom: 150px;
+    text-align:center;
+}
+
+.review-box {
+    margin-top: 20px;
+    padding-bottom: 20px;
+
+}
+
+.review-box p {
+
+    font-size: 14px;
+    line-height: 16px;
+    color: #282828;
+    font-weight: 100;
+}
+
+
+textarea {
+    border-style: groove;
+    border-radius: 6%;
+    width: 600px;
+    height: 150px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    resize: none;
+}
+
+
+
+
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+
+@media (min-width: 768px) {
+
+    .navbar-wrapper {
+        margin-top: 25px;
+    }
+    .navbar-wrapper .container {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+    .navbar-wrapper .navbar {
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .navbar-wrapper .navbar {
+        border-radius: 4px;
+    }
+
+    .carousel-caption p {
+        margin-bottom: 20px;
+        font-size: 21px;
+        line-height: 1.4;
+    }
+
+    .bookSet {
+        margin-top: 35px;
+        float: left;
+        width: 25%;
+    }
+
+    .navbar-toggle {
+        display: none;
+    }
+
+}
+
+
+@media (max-width : 765px) {
+    #myCarousel {
+        display: none;
+    }
+
+    #myList{
+        text-align: center;
+    }
+
+
+    #marketing {
+        padding-top: 70px;
+    }
+
+    #marketing, h2 {
+        text-align: center;
+    }
+
+    #marketing, p {
+        text-align: center;
+    }
+
+    .bookSet {
+
+        margin-bottom:130px;
+    }
+
+    .img-circle {
+        margin-left: 25%;
+    }
+
+    .btn.btn-info {
+        margin-left: 25%;
+        margin-bottom: 120px;
+        width: 50%;
+        height: 40px;
+    }
+
+    .footer p {
+        text-align: center;
+    }
+
+
+    .btn.btn-info, a {
+        font-size: 20px;
+        text-decoration: chartreuse;
+    }
+
+    .imgcontainer {
+        display: none;
+    }
+
+    #button1 {
+        margin-left: 90px;
+    }
+
+    .navbar-pills {
+        margin-bottom: 100px;
+    }
+
+    .navbar-pills a {
+        text-align: center;
+        display: block;
+    }
+
+    select {
+        width: 100%;
+    }
+
+    #button2{
+        margin-left: 83px;
+        margin-bottom: 20px;
+    }
+
+    #sortBut {
+        width: 100%;
+    }
+
+    textarea {
+        height: 200px;
+        width: 100%;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
