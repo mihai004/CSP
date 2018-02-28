@@ -88,10 +88,70 @@ $(document).ready(function(){
         });
     });
 
+    $("button#register").click(function(){
+        $.ajax({
+            type: "POST",
+            url: "register.php",
+            data: $('form.register').serialize(),
+            success: function(message){
+                $("#register").html(message)
+                $("#register-modal").modal('hide');
+            },
+            error: function(){
+                alert("Error");
+            }
+        });
+    });
+
+
+
+    // function post()
+    // {
+    //     var email = document.getElementById("emailReg").value;
+    //     var password = document.getElementById("passwordConfirm").value;
+    //     if(email && password)
+    //     {
+    //         alert(email);
+    //         $.ajax
+    //         ({
+    //             type: 'post',
+    //             url: 'register.php',
+    //             data:
+    //                 {
+    //                     user_email:email,
+    //                     user_password: password
+    //                 },
+    //             success: function (response)
+    //             {
+    //                 document.getElementById("status").innerHTML="Form Submitted Successfully";;
+    //
+    //             }
+    //         });
+    //     }
+    //
+    //     return false;
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
     // gets text
     // var inputBox = document.getElementById('chatinput');
     // inputBox.onkeyup = function(){
     //     document.getElementById('printchatbox').innerHTML = inputBox.value;
     // }
+
+    //  without refreshing the page
+
+
+
 
 });

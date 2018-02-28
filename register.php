@@ -9,12 +9,27 @@ if(isset($_SESSION['userID'])) {
      header('Location: index.php');
 }
 
-
-if (isset($_POST['register'])) {
-
+if (isset($_POST['emailReg'])) {
     $userDataSet = new UserDataSet();
-    $userDataSet->insertUser();
+    echo $_POST['emailReg'];
+   // $userDataSet->insertUser();
 
+} else {
+    require_once('Views/account.phtml');
 }
 
-require('Views/account.phtml');
+
+//if($_POST['user_email']){
+//    echo $_POST['user_email'] . "pllllllll";
+//}
+
+//
+//if (isset($_POST['register'])) {
+//
+////
+////    $userDataSet = new UserDataSet();
+////    $userDataSet->insertUser();
+////
+//}
+
+//require_once('Views/account.phtml');
