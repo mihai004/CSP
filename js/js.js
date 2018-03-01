@@ -104,22 +104,24 @@ $(document).ready(function(){
     });
 
     $(function () {
-        $('a[href="#searches"]').on('click', function(event) {
-            event.preventDefault();
-            $('#searches').addClass('open');
-            $('#searches > form > input[type="searches"]').focus();
+        $('a[href="#searching"]').on('click', function(event) {
+
+            //event.preventDefault();
+            $('#searching').addClass('open');
+            $('#searching > form > input[type="searches"]').focus();
         });
 
-        $('#searches, #searches button.close').on('click keyup', function(event) {
+        $('#searching, #searching button.close').on('click keyup', function(event) {
             if (event.target == this || event.target.className == 'close' || event.keyCode == 27) {
                 $(this).removeClass('open');
             }
         });
 
-
         //Do not include! This prevents the form from submitting for DEMO purposes only!
-        $('form').submit(function(event) {
-            event.preventDefault();
+        $('#form').submit(function(event) {
+            var searchingFor = $("#myText" ).val();
+            alert(searchingFor);
+            event.preventDefauacehollt();
             return false;
         })
     });
