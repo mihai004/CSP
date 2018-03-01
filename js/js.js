@@ -88,6 +88,42 @@ $(document).ready(function(){
         });
     });
 
+    $("button#register").click(function(){
+        $.ajax({
+            type: "POST",
+            url: "register.php",
+            data: $('form.register').serialize(),
+            success: function(message){
+                $("#register").html(message)
+                $("#register-modal").modal('hide');
+            },
+            error: function(){
+                alert("Error");
+            }
+        });
+    });
+
+    $(function () {
+        $('a[href="#searches"]').on('click', function(event) {
+            event.preventDefault();
+            $('#searches').addClass('open');
+            $('#searches > form > input[type="searches"]').focus();
+        });
+
+        $('#searches, #searches button.close').on('click keyup', function(event) {
+            if (event.target == this || event.target.className == 'close' || event.keyCode == 27) {
+                $(this).removeClass('open');
+            }
+        });
+
+
+        //Do not include! This prevents the form from submitting for DEMO purposes only!
+        $('form').submit(function(event) {
+            event.preventDefault();
+            return false;
+        })
+    });
+
     // gets text
     // var inputBox = document.getElementById('chatinput');
     // inputBox.onkeyup = function(){

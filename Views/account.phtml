@@ -1,10 +1,7 @@
 <?php
-require('template/header.phtml');
-?>
-
+require_once('template/header.phtml'); ?>
 <div class="container">
-
-    <div class="row" style="margin-top:50px">
+    <div class="row" style="margin-top:50px; margin-bottom: 100px;">
         <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
 
             <form role="form" method="post" action="../logIn.php">
@@ -12,32 +9,34 @@ require('template/header.phtml');
                     <img src="../images/signUp.jpg" alt="user" class="avatar" width="220" height="211">
                 </div>
 
-                    <h2 align="center" style="color:black;"><b>Or <i>Sign In </i> right away... </b></h2>
-                    <hr class="colorgraph">
-                    <div class="input-group">
-                        <input  type="email" name="email" id="email" class="form-control input-lg" placeholder="Email Address">
-                        <span class="input-group-addon" id="basic-addon1">@example.com</span>
-                    </div>
+                <h2 align="center" style="color:black;"><b>Or <i>Sign In </i> right away... </b></h2>
+                <hr class="colorgraph">
+                <div class="input-group">
+                    <input  type="email" name="email" id="email" class="form-control input-lg" placeholder="Email Address">
+                    <span class="input-group-addon" id="basic-addon1">@example.com</span>
+                </div>
                 <script src="../facebookApp/register.js"></script>
-                    <div class="fb-login-button input" scope="public_profile, email"
-                         onlogin="checkLoginState();">Register</div>
-                    </br>
-                    <div class="form-group1">
-                        <input type="password" name="passwordLogin" id="password" class="form-control input-lg input-group-sm" placeholder="Password">
-                    </div>
-                    </hr>
-                <a href="" data-toggle="modal" data-target="#myModalForgotPasswd"  class="btn btn-link pull-right">Forgot Password?</a>
+                <div class="fb-login-button input" scope="public_profile, email"
+                     onlogin="checkLoginState();">Register</div>
+                </br>
+                <div class="form-group1">
+                    <input type="password" name="passwordLogin" id="password" class="form-control input-lg input-group-sm" placeholder="Password">
+                </div>
+                </hr>
+                    <a href="" data-toggle="modal" data-target="#myModalForgotPasswd"  class="btn btn-link pull-right">Forgot Password?</a>
                 <hr class="colorgraph">
                 <div class="row">
-                    <div class="col-xs-6 col-sm-6 col-md-6">
-                        <input id="button1" type="submit" name="logIn" class="btn btn-lg btn-success btn-block" value="Sign In">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div align="center" class="col-xs-12 col-sm-12 col-md-12" >
+                            <button type="button" name="logIn" class="btn btn-success btn-block">Sign In</button>
+                        </div>
+
+<!--                        <input id="button1" type="submit" name="logIn" class="btn btn-lg btn-success btn-block" value="Sign In">-->
                     </div>
                 </div>
-
             </form>
 
             <form role="form" method="post" action="../resetPassword.php">
-
                 <div class="col-xs-6 col-sm-6 col-md-6">
 
                     <div class="modal fade" id="myModalForgotPasswd" role="dialog">
@@ -55,96 +54,90 @@ require('template/header.phtml');
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button name="resetBtn"  type="submit" class="btn btn-success btn-lg btn-group-justified">Reset Password</button>
+                                    <button name="resetBtn" type="submit" class="btn btn-success btn-lg btn-group-justified">Reset Password</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
+                </div>
             </form>
 
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <a name=register id="button2"  href="" class="btn btn-primary btn-lg  btn-group-justified" data-toggle="modal" data-target="#myModal">Sign Up</a>
+            <div align="center" class="col-xs-12 col-sm-12 col-md-12" id="register">
+                <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#register-modal">Sign Up</button>
+            </div>
+                <div id="register-modal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-dialog modal-xs modal-mm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <a class="close" data-dismiss="modal">×</a>
+                                    <h3>Feel free to complete the form</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="register" name="register">
+                                        <div class="form-group">
+                                            <label for="email" class="control-label">Your e-mail:</label>
+                                            <input name="emailReg" type="email" id="email" class="form-control" placeholder="Email Address" required/>
+                                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                        </div>
 
-                <div class="modal fade" id="myModal" role="dialog">
-                    <div class="modal-dialog modal-xs modal-mm">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times</button>
-                                <h4 class="modal-title text-center"><b>Register with us today</b></h4>
-                            </div>
-                            <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="inputMobileNumber" class="control-label">Mobile Number:</label>
+                                            <input name="mobileNumber" type="text" class="form-control" id="inputMobileNumber" placeholder="Mobile Number" required>
+                                        </div>
 
-                                <form name="innerForm" role="form" method="post" action="../register.php" onsubmit="return validateForm()">
+                                        <div class="form-group">
+                                            <label for="inputNrHouse" class="control-label">Number of the house:</label>
+                                            <input name="houseNumber" type="text" class="form-control" id="inputNrHouse" placeholder="House Number" required>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label for="email" class="control-label">Your e-mail:</label>
-                                        <input name="emailReg" type="email" id="email" class="form-control" placeholder="Email Address" required/>
-                                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="inputStreet" class="control-label">Street name:</label>
+                                            <input name="streetName" type="text" class="form-control" id="inputStreet" placeholder="Street name" required>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label for="inputMobileNumber" class="control-label">Mobile Number:</label>
-                                        <input name="mobileNumber" type="text" class="form-control" id="inputMobileNumber" placeholder="Mobile Number" required>
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="inputCity" class="control-label">City:</label>
+                                            <input name="city" type="text" class="form-control" id="inputCity" placeholder="City Name" required>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label for="inputNrHouse" class="control-label">Number of the house:</label>
-                                        <input name="houseNumber" type="text" class="form-control" id="inputNrHouse" placeholder="House Number" required>
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="inputCountry" class="control-label">Country:</label>
+                                            <input name="country" type="text" class="form-control" id="inputCountry" placeholder="City Name" required>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label for="inputStreet" class="control-label">Street name:</label>
-                                        <input name="streetName" type="text" class="form-control" id="inputStreet" placeholder="Street name" required>
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="inputPostCode" class="control-label">Zip / Post Code:</label>
+                                            <input name="postCode" type="text" class="form-control" id="inputPostCode" placeholder="Post Code" required>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label for="inputCity" class="control-label">City:</label>
-                                        <input name="city" type="text" class="form-control" id="inputCity" placeholder="City Name" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="inputCountry" class="control-label">Country:</label>
-                                        <input name="country" type="text" class="form-control" id="inputCountry" placeholder="City Name" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="inputPostCode" class="control-label">Zip / Post Code:</label>
-                                        <input name="postCode" type="text" class="form-control" id="inputPostCode" placeholder="Post Code" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="inputPassword" class="control-label">Password</label>
-                                        <div class="form-inline row">
-                                            <div class="form-group col-sm-6 col-mm-6">
-                                                <input name="password" type="password" class="form-control" id="inputPassword" placeholder="Password" required>
-                                                <div class="help-block">Minimum of 6 characters</div>
-                                            </div>
-                                            <div class="form-group col-sm-6">
-                                                <input name="passwordConfirm"  type="password" class="form-control" id="inputPasswordConfirm" placeholder="Confirm Password" required>
-                                                <div class="help-block with-errors"></div>
+                                        <div class="form-group">
+                                            <label for="inputPassword" class="control-label">Password</label>
+                                            <div class="form-inline row">
+                                                <div class="form-group col-sm-6 col-mm-6">
+                                                    <input name="password" type="password" class="form-control" id="inputPassword" placeholder="Password" required>
+                                                    <div class="help-block">Minimum of 6 characters</div>
+                                                </div>
+                                                <div class="form-group col-sm-6">
+                                                    <input name="passwordConfirm"  type="password" class="form-control" id="inputPasswordConfirm" placeholder="Confirm Password" required>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="modal-footer">
-                                        <button name="register"  type="submit" class="btn btn-success btn-lg btn-group-justified">Sign Up</button>
-                                    </div>
-
-                                </form>
-
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button name="register" id="register" type="submit" class="btn btn-success btn-lg btn-group-justified">Sign Up</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 
-</div>
-
 <?php
-require('template/footer.phtml');
+require_once('template/footer.phtml');
 ?>
