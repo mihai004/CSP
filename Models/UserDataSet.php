@@ -1,18 +1,10 @@
 <?php
 include ('UserData.php');
 require('Database.php');
-//require ('/Users/blagamihairaul/Desktop/SSP - Assignment /MyBooks/PHPMailer/src/PHPMailer.php');
-//
 require_once (__DIR__ . ' /../vendor/autoload.php');
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-//require ('../vendor/phpmailer/phpmailer/src/PHPMailer.php');
-//use PHPMailer\PHPMailer\PHPMailer;
-//use PHPMailer\PHPMailer\PHPMailer;
-//use PHPMailer\PHPMailer\PHPMailer;
-
-//use PHPMailer\PHPMailer;
-//use PHPMailer\PHPMailer\Exception;
 
 class UserDataSet
 {
@@ -122,13 +114,12 @@ class UserDataSet
                     $mail->isHTML(true);                                  // Set email format to HTML
                     $mail->Subject = 'Confirm Account';
                     $mail->Body    = "<html>
-                                          <head><title>Title</title></head>
+                                          <head><title>Hi :-)</title></head>
                                             <body>
                                           <a href=\"https://eqp326.edu.csesalford.com/
                                           emailConfirm.php?eMail=$eMail&code=$confirmCode\">Click to confirm account</a>
                                             </body>
                                       </html>";
-                    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
                     if($mail->send()){
 
@@ -149,23 +140,6 @@ class UserDataSet
                 catch (Exception $e) {
                     echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
                 }
-
-
-
-
-// OLDER VERSION
-                // working version under
-               // mail($eMail, 'DoNotReply@myBooks.com', $message, "Hi");
-
-//                $sqlQuery = "INSERT INTO Users (eMail, phoneNumber, houseNumber, streetName, city, country,
-//                      postCode, password, confirmed, confirmCode) VALUES ('$eMail', '$mobileNumber', '$houseNumber',
-//                      '$streetName', '$city', '$country', '$postCode', '$passwordHash', 0, '$confirmCode')";
-//                $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
-//                $statement->execute(); // execute the PDO statement
-//
-//                echo '<p style="font-size: 20px; margin-bottom: 15px;"  class="bg-success text-center text-success">
-//                      Registration Complete. Please confirm your e-Mail!
-//            </br></p>';
             }
     }
 
