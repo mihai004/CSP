@@ -60,4 +60,11 @@ if(isset($_SESSION['userID'])) {
 
 }
 
+//if (isset($_POST['test'])) {
+//    echo $_POST['test'];
+//    // $userDataSet->insertUser();
+//    } else {
+//    require_once('Views/shopList.phtml');
+//}
+
 require('Views/shopList.phtml');

@@ -103,10 +103,10 @@ $(document).ready(function(){
         });
     });
 
-    $(function () {
+   // $(function () {
         $('a[href="#searching"]').on('click', function(event) {
 
-            //event.preventDefault();
+            event.preventDefault();
             $('#searching').addClass('open');
             $('#searching > form > input[type="searches"]').focus();
         });
@@ -117,14 +117,51 @@ $(document).ready(function(){
             }
         });
 
-        //Do not include! This prevents the form from submitting for DEMO purposes only!
-        $('#form').submit(function(event) {
+
+        $('form').submit(function(event) {
             var searchingFor = $("#myText" ).val();
             alert(searchingFor);
-            event.preventDefauacehollt();
-            return false;
-        })
-    });
+        });
+
+
+
+         //        data: $('form#myText').serialize(),
+         //        success: function(message){
+         //            //$("#myText" ).html(message);
+         //            alert( $("#myText" ).html(message));
+         //           // $("#register").html(message)
+         //           // $("#register-modal").modal('hide');
+         //            $(this).removeClass('open');
+         //        },
+         //        error: function(){
+         //            alert("Error");
+         //        }
+         //    });
+         //    event.preventDefault();
+         //    return false;
+         // });
+        //     event.preventDefault();
+        //          return false;
+        // });
+  //  });
+
+    // $("button#searchPageBut").click(function(){
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "index.php",
+    //         data: $('form.searchPageForm').serialize(),
+    //         success: function(message){
+    //
+    //             var pl = $("#myText" ).val();
+    //             alert(pl);
+    //             $(this).removeClass('open');
+    //         },
+    //         error: function(){
+    //             alert("Error");
+    //         }
+    //     });
+    // });
+
 
     // gets text
     // var inputBox = document.getElementById('chatinput');
