@@ -94,7 +94,7 @@ $(document).ready(function(){
             url: "register.php",
             data: $('form.register').serialize(),
             success: function(message){
-                $("#register").html(message)
+                //$("#register").html(message);
                 $("#register-modal").modal('hide');
             },
             error: function(){
@@ -120,7 +120,7 @@ $(document).ready(function(){
 
         $('form').submit(function(event) {
             var searchingFor = $("#myText" ).val();
-            alert(searchingFor);
+           // alert(searchingFor);
         });
 
 

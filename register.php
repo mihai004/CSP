@@ -8,7 +8,7 @@ if(isset($_SESSION['userID'])) {
 if (isset($_POST['emailReg'])) {
     $userDataSet = new UserDataSet();
     echo $_POST['emailReg'];
-    // $userDataSet->insertUser();
+    $userDataSet->insertUser();
 } else {
     require_once('Views/account.phtml');
 }

@@ -12,7 +12,7 @@ if(isset($_SESSION['userID'])) {
 }
 
 if(isset($_POST['logIn'])) {
-
+    echo "logIn works";
     $userDataSet = new UserDataSet();
     $user = $userDataSet->test_input($_POST["email"]);
     $view->user = $userDataSet->searchUser('eMail', $user); // get the person obj
