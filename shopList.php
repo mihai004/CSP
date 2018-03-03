@@ -22,7 +22,7 @@ if(isset($_GET['limit'])) {
 }
 else {
 
-    $limit = 10;
+    $limit = 9;
 
 }
 

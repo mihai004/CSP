@@ -16,6 +16,7 @@ html {
 
 #myList {
     padding-top: 130px;
+    min-height: 500px;
 }
 
 
@@ -212,7 +213,10 @@ html {
 
 #shop {
     background-color: #F6F6F6;
-    margin-bottom: 40px;
+    text-align: justify;
+    position: relative;
+    /*margin-bottom: 40px;*/
+    margin: auto;
 }
 
 .btn.btn-link {
@@ -327,6 +331,7 @@ a {
 .bookSet {
 
     font-size: 15px;
+    margin: auto;
     height: 400px;
     text-align: center;
 
