@@ -366,6 +366,7 @@ p {
 .bookSet img {
     border-radius: 10%;
     width: 110px;
+    margin-top: 20px;
 }
 
 .bookSet:hover {
