@@ -14,11 +14,11 @@ class BasketDataSet
     }
 
     /**
-     * The method returns the products of a particular user.
+     * The method returns the number products of a particular user.
      * @param $id
      * @return array
      */
-    public function fetchAllBasket($id, $start, $limit)
+    public function fetchBasketPerPage($id, $start, $limit)
     {
         $sqlQuery = "SELECT * FROM Basket WHERE idUser ='$id' limit $start, $limit";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
@@ -32,21 +32,25 @@ class BasketDataSet
 
     }
 
+    /**
+     * The method returns the products of a particular user.
+     * @param $id
+     * @return array
+     */
+    public function fetchAllBasket($id)
+    {
 
-//    public function fetchAllBasket($id)
-//    {
-//
-//        $sqlQuery = "SELECT * FROM Basket WHERE idUser ='$id'";
-//        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
-//        $statement->execute(); // execute the PDO statement
-//
-//        $basket = [];
-//        while ($row = $statement->fetch()) {
-//            $basket[] = new BasketData($row);
-//        }
-//        return $basket;
-//
-//    }
+        $sqlQuery = "SELECT * FROM Basket WHERE idUser ='$id'";
+        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->execute(); // execute the PDO statement
+
+        $basket = [];
+        while ($row = $statement->fetch()) {
+            $basket[] = new BasketData($row);
+        }
+        return $basket;
+
+    }
 
     /**
      * The method checks for duplicate items in the basket.
