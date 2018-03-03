@@ -103,70 +103,72 @@ $(document).ready(function(){
         });
     });
 
-   // $(function () {
-        $('a[href="#searching"]').on('click', function(event) {
-
-            event.preventDefault();
-            $('#searching').addClass('open');
-            $('#searching > form > input[type="searches"]').focus();
-        });
-
-        $('#searching, #searching button.close').on('click keyup', function(event) {
-            if (event.target == this || event.target.className == 'close' || event.keyCode == 27) {
-                $(this).removeClass('open');
-            }
-        });
-
-
-        $('form').submit(function(event) {
-            var searchingFor = $("#myText" ).val();
-           // alert(searchingFor);
-        });
-
-
-
-         //        data: $('form#myText').serialize(),
-         //        success: function(message){
-         //            //$("#myText" ).html(message);
-         //            alert( $("#myText" ).html(message));
-         //           // $("#register").html(message)
-         //           // $("#register-modal").modal('hide');
-         //            $(this).removeClass('open');
-         //        },
-         //        error: function(){
-         //            alert("Error");
-         //        }
-         //    });
-         //    event.preventDefault();
-         //    return false;
-         // });
-        //     event.preventDefault();
-        //          return false;
-        // });
-  //  });
-
-    // $("button#searchPageBut").click(function(){
-    //     $.ajax({
-    //         type: "POST",
-    //         url: "index.php",
-    //         data: $('form.searchPageForm').serialize(),
-    //         success: function(message){
-    //
-    //             var pl = $("#myText" ).val();
-    //             alert(pl);
-    //             $(this).removeClass('open');
-    //         },
-    //         error: function(){
-    //             alert("Error");
-    //         }
-    //     });
-    // });
-
-
-    // gets text
-    // var inputBox = document.getElementById('chatinput');
-    // inputBox.onkeyup = function(){
-    //     document.getElementById('printchatbox').innerHTML = inputBox.value;
-    // }
-
 });
+
+  //   $(function () {
+  //       $('a[href="#searching"]').on('click', function(event) {
+  //
+  //           event.preventDefault();
+  //           $('#searching').addClass('open');
+  //           $('#searching > form > input[type="searches"]').focus();
+  //       });
+  //
+  //       $('#searching, #searching button.close').on('click keyup', function(event) {
+  //           if (event.target == this || event.target.className == 'close' || event.keyCode == 27) {
+  //               $(this).removeClass('open');
+  //           }
+  //       });
+  //
+  //
+  //       $('form').submit(function(event) {
+  //           var searchingFor = $("#myText" ).val();
+  //          // alert(searchingFor);
+  //       });
+  //
+  //
+  //
+  //        //        data: $('form#myText').serialize(),
+  //        //        success: function(message){
+  //        //            //$("#myText" ).html(message);
+  //        //            alert( $("#myText" ).html(message));
+  //        //           // $("#register").html(message)
+  //        //           // $("#register-modal").modal('hide');
+  //        //            $(this).removeClass('open');
+  //        //        },
+  //        //        error: function(){
+  //        //            alert("Error");
+  //        //        }
+  //        //    });
+  //        //    event.preventDefault();
+  //        //    return false;
+  //        // });
+  //       //     event.preventDefault();
+  //       //          return false;
+  //       // });
+  // //  });
+  //
+  //   // $("button#searchPageBut").click(function(){
+  //   //     $.ajax({
+  //   //         type: "POST",
+  //   //         url: "index.php",
+  //   //         data: $('form.searchPageForm').serialize(),
+  //   //         success: function(message){
+  //   //
+  //   //             var pl = $("#myText" ).val();
+  //   //             alert(pl);
+  //   //             $(this).removeClass('open');
+  //   //         },
+  //   //         error: function(){
+  //   //             alert("Error");
+  //   //         }
+  //   //     });
+  //   // });
+  //
+  //
+  //   // gets text
+  //   // var inputBox = document.getElementById('chatinput');
+  //   // inputBox.onkeyup = function(){
+  //   //     document.getElementById('printchatbox').innerHTML = inputBox.value;
+  //    })
+
+//});

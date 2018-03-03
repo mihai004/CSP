@@ -3,7 +3,10 @@ ini_set('display_errors', 1);       // finding errors
 require('Models/UserDataSet.php');
 require('Models/BookDataSet.php');
 require('Models/BasketDataSet.php');
+//require_once (__DIR__ . 'vendor/autoload.php');
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 $view = new stdClass();
 $view->pageTitle = 'Books';
@@ -51,21 +54,47 @@ if(isset($_POST['checkOut'])){
             }
 
             $eMail = $_SESSION['userEmail'];
+        $basketDataSet->clearCart();
+        $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+        try {
+            //Server settings
+            // $mail->SMTPDebug = 2;                               // Enable verbose debug output
+            $mail->isSMTP();                                      // Set mailer to use SMTP
+            $mail->Host = 'smtp.gmail.com';                       // Specify main and backup SMTP servers
+            $mail->SMTPAuth = true;                               // Enable SMTP authentication
+            $mail->Username = 'bmihairaul@gmail.com';             // SMTP username
+            $mail->Password = 'Em4l4aromagnamami';                // SMTP password
+            $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+            $mail->Port = 465;                                    // TCP port to connect to
+
+            //Recipients
+            $mail->setFrom('bmihairaul@gmail.com', 'MyBooks@library.com');
+            $mail->addAddress($eMail);                 // Add a recipient. Name is optional
+            $mail->addReplyTo('info@example.com', 'Information');
 
             $message = "
               Your order is on the way.
               Thank you for shopping with us.
-              Have a nice day. "
+              You order with the products "
                 . implode(', ', $arrayOfBooks) . "
+              is on the way to you.
               Best regards
               MyBooks Team.
             ";
 
-            mail($eMail, 'DoNotReply@myBooks.com', $message, "Hi");
+            $mail->isHTML(true);                                  // Set email format to HTML
+            $mail->Subject = 'Your order';
+            $mail->Body    = $message;
+
+            $mail->send();
 
             $basketDataSet->clearCart();
             echo '<script>window.location.replace("basket.php?thankYou")</script>';
             // a message is displayed to inform the user that the checkOut process was successful.
+        }
+        catch (Exception $e) {
+                echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
+        }
     }
     else {
         echo '<p style="font-size: 20px; margin-bottom: 15px;"  class="bg-danger text-center text-danger">
