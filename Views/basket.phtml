@@ -84,14 +84,15 @@ if (empty($view->basket) and !(isset($_GET['thankYou']))) {
                       </p>';
 } else {
     echo '<h1 class="panel-heading">Your Orders</h1>
+        <form method="post" onclick="">
                 <div class="panel panel-default panel-table">
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col col-xs-6">
-                                <button type="button" class="btn btn-block btn-danger btn-create">Clear Basket</button>
+                                <button type="button" class="btn btn-block btn-danger btn-clear">Clear Basket</button>
                         </div>
                         <div class="col col-xs-6 text-right">
-                            <button type="button" class="btn btn-block btn-primary btn-create">Checkout</button>
+                            <button type="button" class="btn btn-block btn-primary btn-checkout">Checkout</button>
                         </div>
                     </div>
                 </div>
@@ -165,7 +166,7 @@ if (empty($view->basket) and !(isset($_GET['thankYou']))) {
     }
     ;
 
-    echo '</ul></div></div>';
+    echo '</ul></div></div></form>';
     if (isset($_GET['thankYou'])) {
 
         echo '<h3 class="text-center text-success">Thank you for shopping with us!</h3>';
