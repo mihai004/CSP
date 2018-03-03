@@ -29,7 +29,6 @@ if(isset($_SESSION['userID'])){
     $view->basketDataSet = new BasketDataSet();
 
     if(isset($_GET['page'])) {
-        echo '</br></br><h1> ' . $page = $_GET['page'] . '</h1>';
         $page = $_GET['page'];
     } else {
         $page = 1;
