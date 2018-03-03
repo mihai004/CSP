@@ -26,7 +26,16 @@ if(isset($_SESSION['userID'])){
 
     $view->user = $userDataSet->searchUser('idUser', $_SESSION['userID']);
     $view->booksDataSet = new BooksDataSet();
-    $view->basket = $basketDataSet->fetchAllBasket($_SESSION['userID']);
+
+    if(isset($_GET['page'])) {
+        echo '</br></br><h1> ' . $page = $_GET['page'] . '</h1>';
+        $page = $_GET['page'];
+        $limit = 2;
+        $start = ($page > 1) ? ($page * $limit) - $limit: 0;
+        $view->basket = $basketDataSet->fetchAllBasket($_SESSION['userID'], $start, $limit);
+    }
+
+    //$view->basket = $basketDataSet->fetchAllBasket($_SESSION['userID']);
 
 }
 

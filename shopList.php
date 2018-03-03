@@ -22,8 +22,8 @@ if(isset($_GET['limit'])) {
 }
 else {
 
-    $limit = 9;
-
+    $limit = 9;     // by default the number of items per page is 9
+                    // user can change this value to a smaller number
 }
 
 if(isset($_GET['page'])) {

@@ -1,15 +1,17 @@
 RewriteEngine On
 # remove the index file
-RewriteCond %{THE_REQUEST} ^.*/index
-RewriteRule ^(.*)index$ http://www.example.org/$1 [R=301,L]
+#RewriteCond %{THE_REQUEST} ^.*/index
+#RewriteRule ^(.*)index$ http://www.example.org/$1 [R=301,L]
 
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([^\.]+)$ $1.php [NC,L]
+RewriteRule    ^basket/?$    basket.php    [NC,L]
 
-# remove the .php extension 
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(([^/]+/)*[^.]+)$ $1.php [L]
-
-# redirect from .php to less php
-RewriteCond %{THE_REQUEST} ^[A-Z]+\ /([^/]+/)*[^.#?\ ]+\.php([#?][^\ ]*)?\ HTTP/
-RewriteRule ^(([^/]+/)*[^.]+)\.php http://www.example.org/$1 [R=301,L]
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule ^([^\.]+)$ $1.php [NC,L]
+#
+## remove the .php extension
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule ^(([^/]+/)*[^.]+)$ $1.php [L]
+#
+## redirect from .php to less php
+#RewriteCond %{THE_REQUEST} ^[A-Z]+\ /([^/]+/)*[^.#?\ ]+\.php([#?][^\ ]*)?\ HTTP/
+#RewriteRule ^(([^/]+/)*[^.]+)\.php http://www.example.org/$1 [R=301,L]
