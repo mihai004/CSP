@@ -46,12 +46,33 @@ if(isset($_POST['look'])) {
 
 }
 
-elseif(isset($_GET['sort'])) {
+if(isset($_POST['filter_1']) || isset($_POST['filter_2'])) {
 
-    $total = $booksDataSet->countFilters($_GET['filter_1'], $_GET['filter_2']);
-    $view->booksDataSet = $booksDataSet->searchFor($_GET['filter_1'], $_GET['filter_2'], $start, $limit);
-
+    $total = $booksDataSet->countFilters($_POST['filter_1'], $_POST['filter_2']);
+    $view->booksDataSet = $booksDataSet->searchFor($_POST['filter_1'], $_POST['filter_2'], $start, $limit);
 }
+
+
+
+
+//if(isset($_POST['filter_1'])){
+//    echo $_GET['filter_1'];
+//}
+//elseif(isset($_POST['sort'])) {
+//
+//    $total = $booksDataSet->countFilters($_POST['filter_1'], $_POST['filter_2']);
+//    $view->booksDataSet = $booksDataSet->searchFor($_POST['filter_1'], $_POST['filter_2'], $start, $limit);
+//}
+//}
+
+
+//
+//elseif(isset($_GET['sort'])) {
+//
+//    $total = $booksDataSet->countFilters($_GET['filter_1'], $_GET['filter_2']);
+//    $view->booksDataSet = $booksDataSet->searchFor($_GET['filter_1'], $_GET['filter_2'], $start, $limit);
+//
+////}
 
 
 if(isset($_SESSION['userID'])) {

@@ -1,4 +1,3 @@
-
 body {
     padding-bottom: 40px;
     color: #5a5a5a;
@@ -144,10 +143,12 @@ html {
 
 #sortBut{
     border-radius: 20px;
+
 }
 
 .btn.btn-danger, .btn.btn-success, .btn.btn-primary, .close {
     border-radius: 20px;
+    font-size: 17px;
 }
 
 .btn.btn-info{
@@ -156,42 +157,6 @@ html {
     font-size: 20px;
     border-radius: 20px;
 }
-
-/*.footer {*/
-
-    /*position: absolute;*/
-    /*height: 150px;*/
-    /*right: 0;*/
-    /*bottom: 0;*/
-    /*left: 0;*/
-    /*padding: 1rem;*/
-    /*text-align: center;*/
-    /*overflow: hidden;*/
-    /*background-color: #1b1b1b;*/
-    /*background-image: -moz-linear-gradient(top, #222222, #111111);*/
-    /*background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#222222), to(#111111));*/
-    /*background-image: -webkit-linear-gradient(top, #222222, #111111);*/
-    /*background-image: -o-linear-gradient(top, #222222, #111111);*/
-    /*background-image: linear-gradient(to bottom, #222222, #111111);*/
-    /*background-repeat: repeat-x;*/
-    /*border-color: #252525;*/
-/*}*/
-
-/*.footer a {*/
-    /*color: #2d6ca2;*/
-/*}*/
-
-/*.footer p {*/
-    /*color: lightgrey;*/
-    /*font-size: 18px;*/
-/*}*/
-
-/*#footer {*/
-    /*margin-top: 150px;*/
-    /*text-align: center;*/
-    /*background-color: #000;*/
-    /*color: #fff;*/
-/*}*/
 
 .colorgraph {
     height: 5px;
@@ -303,8 +268,10 @@ html {
 
 .btn-success,
 .btn-danger,
-.btn-info {
-    font-size: 18px;
+.btn-info,
+.btn-primary {
+    border-radius: 20px;
+    height: 40px;
 }
 
 a {
@@ -456,7 +423,7 @@ text {
 
 #sortBut {
     width: 10%;
-    font-size: 15px;
+    text-align: center;
 }
 
 #singleBook {
@@ -625,6 +592,8 @@ textarea {
     }
 
     #sortBut {
+        /*margin-top: 200px;*/
+        text-align: center;
         width: 100%;
     }
 
@@ -669,20 +638,120 @@ textarea {
 }
 
 
+/** Custom Select **/
+
+.custom-select-wrapper {
+    position: relative;
+    display: inline-block;
+    user-select: none;
+}
+.custom-select-wrapper select {
+    display: none;
+}
+.custom-select {
+    position: relative;
+    display: inline-block;
+}
 
 
+#sortBut,.custom-select-trigger {
+    position: relative;
+    display: block;
+    width: 170px;
+    padding: 0 84px 0 22px;
+    font-size: 22px;
+    font-weight: 300;
+    color: #fff;
+    line-height: 60px;
+    background: #5c9cd8;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
+#sortBut {
+    background-color: forestgreen;
+    text-align: center;
+    font-size: 20px;
+    width: 10%;
+}
 
+.custom-select-trigger:after {
+    position: absolute;
+    display: block;
+    content: '';
+    width: 10px; height: 10px;
+    top: 50%; right: 25px;
+    margin-top: -3px;
+    border-bottom: 1px solid #fff;
+    border-right: 1px solid #fff;
+    transform: rotate(45deg) translateY(-50%);
+    transition: all .4s ease-in-out;
+    transform-origin: 50% 0;
+}
+.custom-select.opened .custom-select-trigger:after {
+    margin-top: 3px;
+    transform: rotate(-135deg) translateY(-50%);
+}
+.custom-options {
+    position: absolute;
+    display: block;
+    top: 100%; left: 0; right: 0;
+    min-width: 100%;
+    margin: 15px 0;
+    border: 1px solid #b5b5b5;
+    border-radius: 4px;
+    box-sizing: border-box;
+    box-shadow: 0 2px 1px rgba(0,0,0,.07);
+    background: #fff;
+    transition: all .4s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-15px);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
+.custom-select.opened .custom-options {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+    transform: translateY(0);
+}
+.custom-options:before {
+    position: absolute;
+    display: block;
+    content: '';
+    bottom: 100%; right: 25px;
+    width: 7px; height: 7px;
+    margin-bottom: -4px;
+    border-top: 1px solid #b5b5b5;
+    border-left: 1px solid #b5b5b5;
+    background: #fff;
+    transform: rotate(45deg);
+    transition: all .4s ease-in-out;
+}
+.option-hover:before {
+    background: #f9f9f9;
+}
+.custom-option {
+    position: relative;
+    display: block;
+    padding: 0 22px;
+    border-bottom: 1px solid #b5b5b5;
+    font-size: 18px;
+    font-weight: 600;
+    color: black;
+    line-height: 47px;
+    cursor: pointer;
+    transition: all .4s ease-in-out;
+}
+.custom-option:first-of-type {
+    border-radius: 4px 4px 0 0;
+}
+.custom-option:last-of-type {
+    border-bottom: 0;
+    border-radius: 0 0 4px 4px;
+}
+.custom-option:hover,
+.custom-option.selection {
+    background: silver;
+}

@@ -9,7 +9,7 @@
 
             <nav class="navbar navbar-pills">
 
-                <div class="navbar-header">
+                <div class="navbar-header hidden-xs">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" style="background-color: forestgreen;" data-target="#myNav">
                         <span class="sr-only">Toggle navigation</span>
                         <span style="background-color: whitesmoke;" class="icon-bar"></span>
@@ -20,24 +20,22 @@
                 </div>
 
                 <div id="myNav" class="collapse navbar-collapse">
-                    <form action="../shopList.php" method="get">
+                    <form action="../shopList.php" method="post">
                         <ul class="nav navbar-nav">
-                            <label class="dropdown-toggle" data-toggle="dropdown" href="#" >Category</label>
-                            <select name="filter_1" >
-                                <option value=""></option>
+                            <div class="text-center">
+                            <select name="filter_1" id="sources" class="custom-select sources" placeholder="Category">
                                 <option value="science">Science</option>
                                 <option value="novel">Novel</option>
                                 <option value="poetry">Poetry</option>
                                 <option value="philosophy">Philosophy</option>
                             </select>
-                            <label class="dropdown-toggle" data-toggle="dropdown" href="#" >Price</label>
-                            <select name="filter_2">
-                                <option value=""></option>
-                                <option value="asc">Price Asc</option>
-                                <option value="desc">Price Desc</option>
-                            </select>
+                                <select name="filter_2" id="sources" class="custom-select sources" placeholder="Price">
+                                    <option value="asc">Asc</option>
+                                    <option value="desc">Desc</option>
+                                </select>
+                            </div>
                         </ul>
-                        <input id="sortBut" name="sort" class="btn btn-primary pull-right" type="submit" value="Sort">
+                        <input id="sortBut" name="sort" class="test pull-right" type="submit" placeholder="Sort">
                     </form>
                 </div>
             </nav>
@@ -95,11 +93,14 @@
 
                 ?>
                     <div>
-                    <label class="dropdown-toggle text-center" data-toggle="dropdown" href="#">Items/page</label>
+                    <label onchange="window.location.href='../shopList.php'" class="dropdown-toggle text-center" data-toggle="dropdown" href="#">Items/page</label>
                     <select name="filter_3" onchange="window.location.href=this.value">
-                        <option value="<?php echo $_SERVER['REQUEST_URI'];?>"></option>
-                        <option value="<?php echo $_SERVER['REQUEST_URI'],'?&limit=2';?>">2</option>
-                        <option value="<?php echo $_SERVER['REQUEST_URI'],'?&limit=5';?>">5</option>
+                        <option value="<?php echo '../shopList.php';?>"></option>
+                        <option value="<?php echo '../shopList.php','?&limit=2';?>">2</option>
+                        <option value="<?php echo '../shopList.php','?&limit=3';?>">3</option>
+                        <option value="<?php echo '../shopList.php','?&limit=4';?>">4</option>
+                        <option value="<?php echo '../shopList.php','?&limit=5';?>">5</option>
+                        <option value="<?php echo '../shopList.php','?&limit=10';?>">10</option>
                     </select>
                     </div>
                 </div>
