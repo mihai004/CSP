@@ -27,7 +27,7 @@ class UserDataSet
      * @return array|UserData
      */
     public function searchUser($field, $value) {
-        $sqlQuery = "SELECT * FROM Users WHERE eMail = :f";
+        $sqlQuery = "SELECT * FROM Users WHERE $field = :f";
         $statement = $this->_dbHandle->prepare($sqlQuery);
         $statement->bindParam(":f", $value, PDO::PARAM_STR);
         $statement->execute();
@@ -35,7 +35,6 @@ class UserDataSet
         while($row = $statement->fetch()) {
             $dataSet = new UserData($row);
         }
-        var_dump($dataSet);
         return $dataSet;
     }
 

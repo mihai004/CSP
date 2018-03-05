@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="eqp326@helios.csesalford.com" uuid="5e86f312-6331-43e4-b611-1f76e45c9205">
+    <data-source source="LOCAL" name="@helios.csesalford.com" uuid="08292ea2-54d8-42d4-8500-de39a613ce8e">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://helios.csesalford.com:3306/eqp326</jdbc-url>
+      <jdbc-url>jdbc:mysql://helios.csesalford.com:3306</jdbc-url>
       <driver-properties>
         <property name="autoReconnect" value="true" />
         <property name="zeroDateTimeBehavior" value="convertToNull" />
