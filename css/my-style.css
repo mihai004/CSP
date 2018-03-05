@@ -13,6 +13,16 @@ html {
     box-sizing: border-box;
 }
 
+
+
+/*#livesearch {*/
+    /*font-size: 25px;*/
+    /*color: forestgreen;*/
+    /*position: relative;*/
+    /*top: 40%;*/
+    /*left: 45%;*/
+/*}*/
+
 #myList {
     padding-top: 130px;
     min-height: 500px;
@@ -224,7 +234,7 @@ html {
 
 #searching input[type="search"] {
     position: absolute;
-    top: 50%;
+    top: 30%;
     width: 100%;
     color: rgb(255, 255, 255);
     background: rgba(0, 0, 0, 0);
@@ -754,4 +764,15 @@ textarea {
 .custom-option:hover,
 .custom-option.selection {
     background: silver;
+}
+
+#livesearch {
+    background: silver;
+    text-align: center;
+    top: 35%;
+}
+
+.list-group-item:hover {
+    color: forestgreen;
+    font-size: 20px;
 }

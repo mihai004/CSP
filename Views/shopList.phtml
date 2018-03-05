@@ -1,5 +1,6 @@
 <div id="response" style="font-size: 20px; width: 100%; position: fixed; margin-bottom: 15px;"  class="bg-success text-center text-success"></div>
-<input type="hidden" value="<?php echo $_SESSION['userID'] ?>" id="userID">
+
+<!--<input type="hidden" value="--><?php //echo $_SESSION['userID'] ?><!--" id="userID">-->
 
 <?php require('template/header.phtml') ?>
 
@@ -60,7 +61,7 @@
 
                 echo '<nav aria-label="Page navigation">';
                 echo '<ul class="pagination">';
-
+                $page =0;
                 if($page > 1){
 
                     $previous = $page - 1;

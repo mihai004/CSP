@@ -140,76 +140,65 @@ $(document).ready(function(){
         });
     });
 
+    $(function search(str) {
+        $('a[href="#searching"]').on('click', function(event) {
+
+            event.preventDefault();
+            $('#searching').addClass('open');
+            $('#searching > form > input[type="searches"]').focus();
+
+        });
+
+        $('#searching, #searching button.close').on('click keyup', function(event) {
+            if (event.target == this || event.target.className == 'close' || event.keyCode == 27) {
+                $(this).removeClass('open');
+            }
+        });
+
+
+        // $('searchForm').submit(function(event) {
+        //     var searchingFor = $("#myText" ).val();
+        //      alert(searchingFor);
+        // });
+    });
+
+
+
 });
+//
+function showResult(str) {
+    if (str.length===0) {
+        document.getElementById("livesearch").innerHTML="";
+        document.getElementById("livesearch").style.border="0px";
+        return;
+    }
+    if (window.XMLHttpRequest) {
+        // code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp=new XMLHttpRequest();
+    } else {  // code for IE6, IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function() {
+        if (this.readyState===4 && this.status===200) {
+            document.getElementById("livesearch").innerHTML = this.responseText;
+        }
+    }
+    xmlhttp.open("GET","backend-search.php?q="+str,true);
+    xmlhttp.send();
+}
 
-  //   $(function () {
-  //       $('a[href="#searching"]').on('click', function(event) {
-  //
-  //           event.preventDefault();
-  //           $('#searching').addClass('open');
-  //           $('#searching > form > input[type="searches"]').focus();
-  //       });
-  //
-  //       $('#searching, #searching button.close').on('click keyup', function(event) {
-  //           if (event.target == this || event.target.className == 'close' || event.keyCode == 27) {
-  //               $(this).removeClass('open');
-  //           }
-  //       });
-  //
-  //
-  //       $('form').submit(function(event) {
-  //           var searchingFor = $("#myText" ).val();
-  //          // alert(searchingFor);
-  //       });
-  //
-  //
-  //
-  //        //        data: $('form#myText').serialize(),
-  //        //        success: function(message){
-  //        //            //$("#myText" ).html(message);
-  //        //            alert( $("#myText" ).html(message));
-  //        //           // $("#register").html(message)
-  //        //           // $("#register-modal").modal('hide');
-  //        //            $(this).removeClass('open');
-  //        //        },
-  //        //        error: function(){
-  //        //            alert("Error");
-  //        //        }
-  //        //    });
-  //        //    event.preventDefault();
-  //        //    return false;
-  //        // });
-  //       //     event.preventDefault();
-  //       //          return false;
-  //       // });
-  // //  });
-  //
-  //   // $("button#searchPageBut").click(function(){
-  //   //     $.ajax({
-  //   //         type: "POST",
-  //   //         url: "index.php",
-  //   //         data: $('form.searchPageForm').serialize(),
-  //   //         success: function(message){
-  //   //
-  //   //             var pl = $("#myText" ).val();
-  //   //             alert(pl);
-  //   //             $(this).removeClass('open');
-  //   //         },
-  //   //         error: function(){
-  //   //             alert("Error");
-  //   //         }
-  //   //     });
-  //   // });
-  //
-  //
-  //   // gets text
-  //   // var inputBox = document.getElementById('chatinput');
-  //   // inputBox.onkeyup = function(){
-  //   //     document.getElementById('printchatbox').innerHTML = inputBox.value;
-  //    })
-
-//});
-////////////////////////////////////
-// prerequisite utility functions //
-// the real stuff starts below    //
-////////////////////////////////////
+function getBook($id){
+    //var book = $id; // get the value
+    alert($id);
+    // $.ajax({
+    //     type: "POST",
+    //     url: "shopList.php",
+    //     data: book,
+    //     success: function(message){
+    //         // $("#register").html(message);
+    //     },
+    //     error: function(){
+    //         // alert("Error");
+    //     }
+    // });
+}

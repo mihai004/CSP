@@ -91,15 +91,14 @@
             </ul>
             <div id="searching">
                 <button type="button" class="close"><span class="glyphicon glyphicon-home"></button>
-                <form id="form" class="searchPageForm">
-                    <input name="searchPage"  type="search" id="myText" placeholder="start typing..." />
-                    <button type="submit" id="searchPageBut" onclick="" class="btn btn-primary">Search</button>
+                <form id="searchForm" class="searchPageForm">
+                    <input autocomplete="off" name="q" onkeyup="showResult(this.value)" type="search" size="20" placeholder="start typing..." />
                 </form>
+                <div class="custom-option" id="livesearch"">
             </div>
          </div>
          </div>
         </nav>
     </div>
 </div>
-
 

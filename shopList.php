@@ -52,9 +52,6 @@ if(isset($_POST['filter_1']) || isset($_POST['filter_2'])) {
     $view->booksDataSet = $booksDataSet->searchFor($_POST['filter_1'], $_POST['filter_2'], $start, $limit);
 }
 
-
-
-
 //if(isset($_POST['filter_1'])){
 //    echo $_GET['filter_1'];
 //}
@@ -88,4 +85,7 @@ if(isset($_SESSION['userID'])) {
 //    require_once('Views/shopList.phtml');
 //}
 
+
+
 require('Views/shopList.phtml');
+
