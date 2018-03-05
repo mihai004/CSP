@@ -22,18 +22,21 @@ class UserDataSet
      * The method in called when a user types its e-mail in order to log in.
      * If the user is found, then it may proceed further. Otherwise a message will
      * be displayed.
-     * @param $field
+     * @param $field$field = '$value'";
      * @param $value
      * @return array|UserData
      */
     public function searchUser($field, $value) {
-        $sqlQuery = "SELECT * FROM Users Where $field = '$value'";
+
+        $sqlQuery = "SELECT * FROM Users WHERE eMail = $value";
         $statement = $this->_dbHandle->prepare($sqlQuery);
+        $statement->bindParam(":f", $value, PDO::PARAM_STR);
         $statement->execute();
         $dataSet = [];
         while($row = $statement->fetch()) {
             $dataSet = new UserData($row);
         }
+        var_dump($dataSet);
         return $dataSet;
     }
 
@@ -228,4 +231,53 @@ class UserDataSet
 
     }
 
+    /**
+     * The method is used to log in the system.
+     * @param $post
+     */
+    public function logIn($post){
+        $eMail = $this->test_input($post['email']);
+        $passwd = $this->test_input($post['passwordLogin']);
+        echo $eMail . $passwd;
+        $user = $this->searchUser('eMail', $eMail); // get the person obj
+        if($user) // if the user exists
+        {
+            $password = $this->test_input($_POST["passwordLogin"]);
+            $salt = "alabalaportocala";
+            if(password_verify($password . $salt, $user->getPassword()))
+            {
+
+                if($user->getConfirmed()) {
+
+                    $_SESSION['userID'] = $user->getIdUser();
+                    $_SESSION['userEmail'] = $user->getEMail(); // getting the eMail
+                    header('Location: shopList.php');
+
+                }
+                else {
+
+                    echo '<p style="font-size: 20px; margin-bottom: 15px;"  class="bg-info text-center text-info">
+                    Please confirm your e-mail in order to log in.
+            </br></p>';
+
+                }
+
+            }
+            else {
+
+                echo '<p style="font-size: 20px; margin-bottom: 15px;"  class="bg-danger text-center text-danger">
+                    Password do not match. Please try again!
+            </br></p>';
+
+            }
+        }
+        else {
+
+            echo '<p style="font-size: 20px; margin-bottom: 15px;"  class="bg-danger text-center text-danger">
+                    E-mail not found. Please try again!
+            </br></p>';
+
+        }
+
+    }
 }

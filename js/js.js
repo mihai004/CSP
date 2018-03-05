@@ -140,21 +140,35 @@ $(document).ready(function(){
         });
     });
 
-    $(function search(str) {
+    $("button#register").click(function(){
+        $.ajax({
+            type: "POST",
+            url: "register.php",
+            data: $('form.register').serialize(),
+            success: function(message){
+                $("#register").html(message);
+            },
+            error: function(){
+                alert("Error");
+            }
+        });
+    });
+
+
+    $(function search() {
         $('a[href="#searching"]').on('click', function(event) {
 
             event.preventDefault();
             $('#searching').addClass('open');
-            $('#searching > form > input[type="searches"]').focus();
+            document.forms['searchForm'].elements['q'].focus();
 
         });
 
         $('#searching, #searching button.close').on('click keyup', function(event) {
-            if (event.target == this || event.target.className == 'close' || event.keyCode == 27) {
+            if (event.target === this || event.keyCode === 13 || event.target.className === 'close' || event.keyCode === 27) {
                 $(this).removeClass('open');
             }
         });
-
 
         // $('searchForm').submit(function(event) {
         //     var searchingFor = $("#myText" ).val();

@@ -11,6 +11,8 @@ if (isset($_POST['emailReg'])) {
 } else {
     require_once('Views/account.phtml');
 }
+
+
 //if($_POST['user_email']){
 //    echo $_POST['user_email'] . "pllllllll";
 //}

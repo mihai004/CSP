@@ -1,16 +1,16 @@
-<?php
-require_once('template/header.phtml'); ?>
+<?php require ('template/header.phtml'); ?>
+
 <div class="container">
     <div class="row" id="accountPage">
         <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
 
-            <form role="form" method="post" action="../logIn.php">
                 <div class="imgcontainer" align="center" style="margin-top:80px">
                     <img src="../images/signUp.jpg" alt="user" class="avatar" width="220" height="211">
                 </div>
 
                 <h2 align="center" style="color:black;"><b>Or <i>Sign In </i> right away... </b></h2>
                 <hr class="colorgraph">
+            <form role="form" method="post" action="../logIn.php">
                 <div class="input-group">
                     <input  type="email" name="email" id="email" class="form-control input-lg" placeholder="Email Address">
                     <span class="input-group-addon" id="basic-addon1">@example.com</span>
@@ -30,7 +30,6 @@ require_once('template/header.phtml'); ?>
                         <div align="center" class="col-xs-12 col-sm-12 col-md-12" >
                             <button type="submit" name="logIn" class="btn btn-success btn-block">Sign In</button>
                         </div>
-
 <!--                       <input id="button1" type="submit" name="logIn" class="btn btn-lg btn-success btn-block" value="Sign In">-->
                     </div>
                 </div>
