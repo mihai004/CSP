@@ -110,13 +110,14 @@ class BooksDataSet
      */
     public function searchForBook($field, $value) {
 
-        $sqlQuery = "SELECT * FROM Books Where $field = '$value'";
+        $sqlQuery = "SELECT bookName FROM Books Where $field LIKE '$value' OR 
+        author LIKE $value";
         $statement = $this->_dbHandle->prepare($sqlQuery);
         $statement->execute();
 
         $dataSet = [];
         while($row = $statement->fetch()) {
-            $dataSet = new BookData($row);
+            $dataSet[] = new BookData($row);
         }
         return $dataSet;
     }
