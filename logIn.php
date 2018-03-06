@@ -9,11 +9,13 @@ $view->pageTitle = 'LogIn/Register';
 if(isset($_POST['logIn'])) {
     $userDataSet = new UserDataSet();
     $userDataSet->logIn($_POST);
-    if(isset($_SESSION['userID'])) {
-
-        header('Location: index.php');
-
-    }
+//    $userDataSet->searchUser('eMail', $_POST['email']);
+//    $userDataSet->logIn($_POST);
+//    if(isset($_SESSION['userID'])) {
+//
+//        header('Location: index.php');
+//
+//    }
 }
 
 require('Views/account.phtml');

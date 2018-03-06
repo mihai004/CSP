@@ -18,18 +18,18 @@ class UserDataSet
         $this->_dbHandle = $this->_dbInstance->getdbConnection();
     }
 
-    /**
-     * The method in called when a user types its e-mail in order to log in.
-     * If the user is found, then it may proceed further. Otherwise a message will
-     * be displayed.
-     * @param $field$field = '$value'";
-     * @param $value
-     * @return array|UserData
-     */
-    public function searchUser($field, $value) {
-        $sqlQuery = "SELECT * FROM Users WHERE $field = :f";
+//    /**
+//     * The method in called when a user types its e-mail in order to log in.
+//     * If the user is found, then it may proceed further. Otherwise a message will
+//     * be displayed.
+//     * @param $field
+//     * @param $value
+//     * @return array|UserData
+//     */
+    public function searchUser($value) {
+        $sqlQuery = "SELECT * FROM Users WHERE eMail = ?";
         $statement = $this->_dbHandle->prepare($sqlQuery);
-        $statement->bindParam(":f", $value, PDO::PARAM_STR);
+        $statement->bindParam(1, $value, PDO::PARAM_STR);
         $statement->execute();
         $dataSet = [];
         while($row = $statement->fetch()) {
@@ -217,7 +217,8 @@ class UserDataSet
      * @return bool
      */
     public function checkConfirmation($_eMail, $_insertCode){
-        $userFound = $this->searchUser('eMail', $_eMail);
+        //$userFound = $this->searchUser('eMail', $_eMail);
+        $userFound = $this->searchUser($_eMail);
         $_code = $userFound->getConfirmCode();
         if($_code == $_insertCode) {
             $this->updateUser('confirmed', '1', $_eMail);
@@ -234,10 +235,9 @@ class UserDataSet
      * @param $post
      */
     public function logIn($post){
-        $eMail = $this->test_input($post['email']);
+        $email = $this->test_input($post['email']);
         $passwd = $this->test_input($post['passwordLogin']);
-        echo $eMail . $passwd;
-        $user = $this->searchUser('eMail', $eMail); // get the person obj
+        $user = $this->searchUser($email); // get the person obj
         if($user) // if the user exists
         {
             $password = $this->test_input($_POST["passwordLogin"]);
@@ -248,8 +248,9 @@ class UserDataSet
                 if($user->getConfirmed()) {
 
                     $_SESSION['userID'] = $user->getIdUser();
-                    $_SESSION['userEmail'] = $user->getEMail(); // getting the eMail
-                    header('Location: shopList.php');
+                    echo $_SESSION['userEmail'] = $user->getEMail();
+//                    $_SESSION['userEmail'] = $user->getEMail(); // getting the eMail
+//                    header('Location: shopList.php');
 
                 }
                 else {
