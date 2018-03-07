@@ -4,7 +4,7 @@ require ('Models/BookDataSet.php');
 require ('Models/BasketDataSet.php');
 require ('Models/ReviewDataSet.php');
 
-session_start();
+//session_start();
 $view = new stdClass();
 
 $userDataSet = new UserDataSet();
@@ -23,8 +23,8 @@ if(isset($_SESSION['userEmail'])) {
 // update views for users and visitors
 
 if(isset($_GET['id'])) {
-
-    $view->product = $bookDataSet->searchForBook('idBook', $_GET['id']);
+    $view->product = $bookDataSet->fetchBook($_GET['id']);
+//    $view->product = $bookDataSet->searchForBook('idBook', $_GET['id']);
     $_SESSION['book'] = $view->product;
     $viewChange = $view->product->getViews()+1;
     $view->pageTitle = $view->product->getBookName(); // adds bookName to the page title
@@ -52,7 +52,8 @@ if(isset($_POST['submitCom'])) {
 
 if(isset($_POST['addMoreItems'])){
 
-    $book = $bookDataSet->searchForBook('idBook', $_POST['productID']);
+    $book = $bookDataSet->fetchBook($_POST['productID']);
+//    $book = $bookDataSet->searchForBook('idBook', $_POST['productID']);
     $inStock = $book->getNumberInStock();
     $quantityTobeAdded = $_POST['quantityPerItem'];
 
