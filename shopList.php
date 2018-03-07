@@ -22,7 +22,7 @@ if(isset($_GET['limit'])) {
 }
 else {
 
-    $limit = 9;     // by default the number of items per page is 9
+    $limit = 8;     // by default the number of items per page is 9
                     // user can change this value to a smaller number
 }
 
@@ -40,14 +40,13 @@ if (empty($view->booksDataSet)) {
 
 }
 
-if(isset($_POST['look'])) {
-
-    $view->booksDataSet = $booksDataSet->searchByAttribute($_POST['search']);
-
-}
+//if(isset($_POST['look'])) {
+//
+//    $view->booksDataSet = $booksDataSet->searchByAttribute($_POST['search']);
+//
+//}
 
 if(isset($_POST['filter_1']) || isset($_POST['filter_2'])) {
-
     $total = $booksDataSet->countFilters($_POST['filter_1'], $_POST['filter_2']);
     $view->booksDataSet = $booksDataSet->searchFor($_POST['filter_1'], $_POST['filter_2'], $start, $limit);
 }
@@ -74,7 +73,7 @@ if(isset($_POST['filter_1']) || isset($_POST['filter_2'])) {
 
 if(isset($_SESSION['userID'])) {
 
-    $view->user = $userDataSet->searchUser('idUser', $_SESSION['userID']);
+    $view->user = $userDataSet->searchUser($_SESSION['userID']);
 
 }
 
@@ -84,7 +83,6 @@ if(isset($_SESSION['userID'])) {
 //    } else {
 //    require_once('Views/shopList.phtml');
 //}
-
 
 
 require('Views/shopList.phtml');

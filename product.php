@@ -16,7 +16,7 @@ $reviewDataSet = new ReviewDataSet();
 
 if(isset($_SESSION['userEmail'])) {
 
-    $view->user = $userDataSet->searchUser('idUser', $_SESSION['userID']);
+    $view->user = $userDataSet->searchUser($_SESSION['userID']);
 
 }
 
@@ -29,10 +29,10 @@ if(isset($_GET['id'])) {
     $viewChange = $view->product->getViews()+1;
     $view->pageTitle = $view->product->getBookName(); // adds bookName to the page title
 
-    $bookDataSet->updateProduct('views', $viewChange, $_GET['id']);
-
+//    $bookDataSet->updateProduct('views', $viewChange, $_GET['id']);
+//    what about views?
+    $view->review = $reviewDataSet->getComments($_GET['id']);
 }
-
 
 if(isset($_POST['submitCom'])) {
 
@@ -44,12 +44,12 @@ if(isset($_POST['submitCom'])) {
         $reviewDataSet->insertComment();
     }
 }
-
-// brings the comments for each book item
-    $view->review = $reviewDataSet->getComments($_GET['id']);
-
-//  adding more items
-
+//
+//// brings the comments for each book item
+//    $view->review = $reviewDataSet->getComments($_GET['id']);
+//
+////  adding more items
+//
 if(isset($_POST['addMoreItems'])){
 
     $book = $bookDataSet->fetchBook($_POST['productID']);
@@ -74,7 +74,7 @@ if(isset($_POST['addMoreItems'])){
             }, 2000);
         });
         </script>
-        
+
         ';
 
         $basketDataSet->addToCart($_POST);
@@ -83,5 +83,57 @@ if(isset($_POST['addMoreItems'])){
     }
 
 }
+//$b = new BooksDataSet();
+//$x = $bookDataSet->fetchBooks();
+//$q = null;
+if(isset($_POST['q'])){
+    echo $_POST['q'];
+}
 
-require ('Views/product.phtml');
+$q=null;
+if(isset($_REQUEST['q'])){
+    $q = $_REQUEST['q'];
+}
+
+if($q===null || empty($q)){
+    require ('Views/product.phtml');
+} else
+{
+
+    $x = $bookDataSet->fetchBooks();
+//    var_dump($x);
+    $q = $_REQUEST["q"];
+
+    $hint="";
+    if($q !== ''){
+        $q = strtolower($q);
+        $len = strlen($q);
+        $arr=null;
+        $i=0;
+        foreach ($x as $name) {
+            if(stristr($q, substr($name->getBookName(), 0, $len))){
+                if($hint === ""){
+                    $arr[$i++] = $name->getBookName();
+                } else {
+                    $arr[$i++] = $name->getBookName();
+                }
+            }
+            if(stristr($q, substr($name->getAuthor(), 0, $len))){
+                if($hint === ""){
+                    $arr[$i++] = $name->getAuthor();
+                } else {
+                    $arr[$i++] = $name->getAuthor();
+                }
+            }
+        }
+        if(empty($arr)) {
+            echo 'No results found';
+        } else {
+            echo '<ul class="list-group pre-scrollable">';
+            for($i=0; $i<sizeof($arr); $i++){
+                echo '<option class="list-group-item" value="'.$arr[$i].'" onclick="getBook(this.value)">' . $arr[$i] . '</option>';
+            }
+            echo '</ul>';
+        }
+    }
+}

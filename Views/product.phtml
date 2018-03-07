@@ -54,7 +54,7 @@
         if(empty($view->review))
         {
             echo '<p class="text-center text-info">"No comments for this book"</p>';
-        }
+        } else {
         foreach ($view->review as $reviewData) {
             echo '<div class="review-box">
                         <a href="../product.php?id='. $reviewData->getIdBook() .'">
@@ -62,6 +62,7 @@
                         <p class="text-right"><i> ' . $reviewData->getDateTime() . ' </i></p>
                         <p> ' . $reviewData->getComments() . ' </p></a>
                   </div>';
+        }
         }
         ?>
     </form>

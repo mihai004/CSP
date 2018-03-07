@@ -66,7 +66,7 @@ $(document).ready(function(){
             'productID': productID
         }, function(data) {
             if(userID > 1) {
-                $("#response").html("The Book was successfully added");
+                $("#response").html("The Book was successfully added").focus();
                 setTimeout(function () {
                     $("#response").html(" ");
                 }, 2500);
@@ -125,20 +125,20 @@ $(document).ready(function(){
         });
     });
 
-    $("button#register").click(function(){
-        $.ajax({
-            type: "POST",
-            url: "register.php",
-            data: $('form.register').serialize(),
-            success: function(message){
-                $("#register").html(message);
-                $("#register-modal").modal('hide');
-            },
-            error: function(){
-                alert("Error");
-            }
-        });
-    });
+    // $("button#register").click(function(){
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "register.php",
+    //         data: $('form.register').serialize(),
+    //         success: function(message){
+    //             $("#register").html(message);
+    //             $("#register-modal").modal('hide');
+    //         },
+    //         error: function(){
+    //             alert("Error");
+    //         }
+    //     });
+    // });
 
     $("button#register").click(function(){
         $.ajax({
@@ -153,33 +153,87 @@ $(document).ready(function(){
             }
         });
     });
+
 
 
     $(function search() {
+
         $('a[href="#searching"]').on('click', function(event) {
 
             event.preventDefault();
             $('#searching').addClass('open');
             document.forms['searchForm'].elements['q'].focus();
-
         });
 
         $('#searching, #searching button.close').on('click keyup', function(event) {
-            if (event.target === this || event.keyCode === 13 || event.target.className === 'close' || event.keyCode === 27) {
+            if(event.keyCode === 13){
+                var input = document.getElementById("mySearch").value;
+                    alert('enter' + input); // no value found
+            }
+            if (event.target === this || event.target.className === 'close' || event.keyCode === 27) {
                 $(this).removeClass('open');
             }
         });
 
-        // $('searchForm').submit(function(event) {
-        //     var searchingFor = $("#myText" ).val();
-        //      alert(searchingFor);
+        // $('q').search("keypress", function (e) {
+        //     if (e.keyCode === 13) {
+        //         alert('s');
+        //     }
+        // });
+
+        // $('#searchForm').onkeypress('keypress', function (event) {
+        //    if (event.keyCode === 8){
+        //        alert("live");
+        //    }
+        // })
+        // $('q').search(function(event) {
+        //     if(event.keyCode === 8){
+        //     // var searchingFor = $("#myText" ).val();
+        //     alert("pl");
+        //     }
         // });
     });
 
-
+    // function showResult(str) {
+    //     if (str.length===0) {
+    //         document.getElementById("livesearch").innerHTML="";
+    //         document.getElementById("livesearch").style.border="0px";
+    //         return;
+    //     }
+    //     if (window.XMLHttpRequest) {
+    //         // code for IE7+, Firefox, Chrome, Opera, Safari
+    //         xmlhttp=new XMLHttpRequest();
+    //     } else {  // code for IE6, IE5
+    //         xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    //     }
+    //     xmlhttp.onreadystatechange=function() {
+    //         if (this.readyState===4 && this.status===200) {
+    //             document.getElementById("livesearch").innerHTML = this.responseText;
+    //         }
+    //     }
+    //     xmlhttp.open("GET","backend-search.php?q="+str,true);
+    //     xmlhttp.send();
+    // }
+    //
+    // function getBook($book){
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "backend-search.php",
+    //         data: $book,
+    //         success: function(message){
+    //             alert("yes" + book);
+    //             // $("#register").html(message);
+    //         },
+    //         error: function(){
+    //             alert("Error");
+    //         }
+    //
+    //     })
+    // };
+    $
 
 });
-//
+// //
 function showResult(str) {
     if (str.length===0) {
         document.getElementById("livesearch").innerHTML="";
@@ -197,22 +251,25 @@ function showResult(str) {
             document.getElementById("livesearch").innerHTML = this.responseText;
         }
     }
-    xmlhttp.open("GET","backend-search.php?q="+str,true);
+    xmlhttp.open("GET","product.php?q=" + str, true);
+    // xmlhttp.open("GET","backend-search.php?q="+str,true);
     xmlhttp.send();
 }
 
-function getBook($id){
-    //var book = $id; // get the value
-    alert($id);
-    // $.ajax({
-    //     type: "POST",
-    //     url: "shopList.php",
-    //     data: book,
-    //     success: function(message){
-    //         // $("#register").html(message);
-    //     },
-    //     error: function(){
-    //         // alert("Error");
-    //     }
-    // });
-}
+function getBook(book){
+    //alert(book);
+     $.ajax({
+        type: "POST",
+        url: "product.php",
+         data: book,
+        success: function(){
+             location.href = 'product.php?q=' + book;
+            // $('#searching').removeClass('open');
+            // alert("yes");
+            // $("#register").html(message);
+        },
+        error: function(){
+             alert("Error");
+        }
+    });
+ }

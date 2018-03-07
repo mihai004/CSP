@@ -39,8 +39,9 @@ class BooksDataSet
      */
     public function fetchBook($id) {
 
-        $sqlQuery = 'SELECT * FROM Books WHERE idBook = '. $id;
+        $sqlQuery = "SELECT * FROM Books WHERE idBook =  ?";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(1, $id, PDO::PARAM_STR);
         $statement->execute(); // execute the PDO statement
 
         $row = $statement->fetch();
@@ -59,19 +60,19 @@ class BooksDataSet
      */
     public function searchFor($category, $price, $start, $limit)
     {
-
+        $order = $this->test_input($price);
         $sqlQuery = "SELECT * FROM Books WHERE idBook > 0";
         if($category != "" && $category != null){
-            $sqlQuery .= " AND category = '$category' ";
+            $sqlQuery .= " AND category = ? ";
         }
-
         if ($price != "" && $price != null) {
-            $sqlQuery .= " ORDER BY price $price limit $start, $limit";
+            $sqlQuery .= " ORDER BY price $order limit $start, $limit";
         }
-
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(1,$category, PDO::PARAM_STR);
+//        $statement->bindParam(2,$start, PDO::PARAM_INT);
+//        $statement->bindParam(3,$limit, PDO::PARAM_INT);
         $statement->execute(); // execute the PDO statement
-
 
         $dataSet = [];
         while ($row = $statement->fetch()) {
@@ -79,7 +80,6 @@ class BooksDataSet
 
         }
         return $dataSet;
-
     }
 
     /**
@@ -89,8 +89,27 @@ class BooksDataSet
      */
     public function fetchAllBooks($start, $limit)
     {
+        $sqlQuery = "SELECT * FROM Books WHERE numberInStock > 0 LIMIT ?, ?";
+        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindValue(1, (int) trim($start), PDO::PARAM_INT);
+        $statement->bindValue(2,(int) trim($limit), PDO::PARAM_INT);
+        $statement->execute(); // execute the PDO statement
 
-        $sqlQuery = "SELECT * FROM Books WHERE numberInStock > 0 limit $start, $limit";
+        $dataSet = [];
+        while ($row = $statement->fetch()) {
+            $dataSet[] = new BookData($row);
+        }
+        return $dataSet;
+    }
+
+    /**
+     * The method returns all the books from the database according to specific parameters passed for
+     * displaying items on the shop list dynamically.
+     * @return array
+     */
+    public function fetchBooks()
+    {
+        $sqlQuery = "SELECT * FROM Books WHERE numberInStock > 0";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
         $statement->execute(); // execute the PDO statement
 
@@ -100,6 +119,8 @@ class BooksDataSet
         }
         return $dataSet;
     }
+
+
 
     /**
      * The method returns a particular by passing two parameters as conditions for the product to be
@@ -125,50 +146,51 @@ class BooksDataSet
     /**
      * The method is invoked to update the status of a book object, and it si flexible in doing it do
      * because of its parameters.
-     * @param $field
      * @param $value
      * @param $id
      */
-    public function updateProduct($field, $value, $id){
+    public function updateProduct($value, $id){
 
-        $sqlQuery = "UPDATE Books set $field='$value' Where idBook = '$id'";
+        $sqlQuery = "UPDATE Books SET numberInStock = ? WHERE idBook = ?";
         $statement = $this->_dbHandle->prepare($sqlQuery);
+        $statement->bindParam(1, $value, PDO::PARAM_STR);
+        $statement->bindValue(2, $id, PDO::PARAM_INT);
         $statement->execute();
     }
 
-
-    /**
-     * The method is invoked when a searches for a book based on some text, either author name or
-     * book name, for instance.
-     * @param $attribute
-     * @return array
-     */
-    public function searchByAttribute($attribute)
-    {
-        $attributeTested = $this->test_input($attribute);
-        $sqlQuery = "SELECT * FROM Books WHERE idBook > 0";
-        if  ($attributeTested != "" && $attributeTested != null) {
-            $sqlQuery .= " AND (bookName LIKE '%$attributeTested%' OR author LIKE '%$attributeTested%') ";
-        }
-
-        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
-        $statement->execute(); // execute the PDO statement
-
-        $dataSet = [];
-        while ($row = $statement->fetch()) {
-            $dataSet[] = new BookData($row);
-        }
-
-        if(empty($dataSet)){
-            echo '<script>alert("No results found! Please try again.")</script>';
-            return $dataSet;
-        }
-        else {
-            return $dataSet;
-        }
-
-
-    }
+// search back end !
+//    /**
+//     * The method is invoked when a searches for a book based on some text, either author name or
+//     * book name, for instance.
+//     * @param $attribute
+//     * @return array
+//     */
+//    public function searchByAttribute($attribute)
+//    {
+//        $attributeTested = $this->test_input($attribute);
+//        $sqlQuery = "SELECT * FROM Books WHERE idBook > 0";
+//        if  ($attributeTested != "" && $attributeTested != null) {
+//            $sqlQuery .= " AND (bookName LIKE '%$attributeTested%' OR author LIKE '%$attributeTested%') ";
+//        }
+//
+//        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+//        $statement->execute(); // execute the PDO statement
+//
+//        $dataSet = [];
+//        while ($row = $statement->fetch()) {
+//            $dataSet[] = new BookData($row);
+//        }
+//
+//        if(empty($dataSet)){
+//            echo '<script>alert("No results found! Please try again.")</script>';
+//            return $dataSet;
+//        }
+//        else {
+//            return $dataSet;
+//        }
+//
+//
+//    }
 
     /**
      * The method counts the number of items from the Book relation and it is used as part of the
@@ -187,14 +209,14 @@ class BooksDataSet
 
         $sqlQuery = "SELECT * FROM Books WHERE idBook > 0";
         if($category != "" && $category != null){
-            $sqlQuery .= " AND category = '$category' ";
+            $sqlQuery .= " AND category = ? ";
         }
-
         if ($price != "" && $price != null) {
-            $sqlQuery .= " ORDER BY price $price";
+            $sqlQuery .= " ORDER BY ?";
         }
-
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(1,$category, PDO::PARAM_STR);
+        $statement->bindParam(2,$price, PDO::PARAM_STR);
         $statement->execute(); // execute the PDO statement
 
         return $statement->rowCount();

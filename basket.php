@@ -24,7 +24,7 @@ if(!(isset($_SESSION['userID']))) {
 
 if(isset($_SESSION['userID'])){
 
-    $view->user = $userDataSet->searchUser('idUser', $_SESSION['userID']);
+    $view->user = $userDataSet->searchUser( $_SESSION['userID']);
     $view->booksDataSet = new BooksDataSet();
     $view->basketDataSet = new BasketDataSet();
 
@@ -60,6 +60,7 @@ if(isset($_POST['checkOut'])){
             $book = $booksDataSet->fetchBook($item->getBookID());
             $newQuantity = $book->getNumberInStock() - $item->getQuantity();
             $booksDataSet->updateProduct('numberInStock', $newQuantity, $book->getIdBook());
+//            $booksDataSet->updateProduct('numberInStock', $newQuantity, $book->getIdBook());
 
             $arrayOfBooks[] = $book->getBookName();
             }
