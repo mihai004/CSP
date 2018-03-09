@@ -9,7 +9,7 @@ $view->pageTitle = 'Homepage';
 $userDataSet = new UserDataSet();
 if(isset($_SESSION['userID'])) {
 
-    $view->user = $userDataSet->searchUser('idUser', $_SESSION['userID']);
+    $view->user = $userDataSet->searchUser($_SESSION['userID']);
 
 }
 

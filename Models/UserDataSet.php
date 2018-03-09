@@ -18,14 +18,13 @@ class UserDataSet
         $this->_dbHandle = $this->_dbInstance->getdbConnection();
     }
 
-//    /**
-//     * The method in called when a user types its e-mail in order to log in.
-//     * If the user is found, then it may proceed further. Otherwise a message will
-//     * be displayed.
-//     * @param $field
-//     * @param $value
-//     * @return array|UserData
-//     */
+    /**
+     * The method in called when a user types its e-mail in order to log in.
+     * If the user is found, then it may proceed further. Otherwise a message will
+     * be displayed.
+     * @param $value
+     * @return array|UserData
+     */
     public function searchUser($value) {
         $sqlQuery = "SELECT * FROM Users WHERE eMail = ?";
         $statement = $this->_dbHandle->prepare($sqlQuery);

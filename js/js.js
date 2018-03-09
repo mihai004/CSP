@@ -155,7 +155,6 @@ $(document).ready(function(){
     });
 
 
-
     $(function search() {
 
         $('a[href="#searching"]').on('click', function(event) {
@@ -165,19 +164,33 @@ $(document).ready(function(){
             document.forms['searchForm'].elements['q'].focus();
         });
 
+        if(event.keyCode === 13){
+            event.preventDefault();
+        }
+
         $('#searching, #searching button.close').on('click keyup', function(event) {
-            if(event.keyCode === 13){
-                var input = document.getElementById("mySearch").value;
-                    alert('enter' + input); // no value found
-            }
-            if (event.target === this || event.target.className === 'close' || event.keyCode === 27) {
-                $(this).removeClass('open');
-            }
+            var input = document.getElementById("mySearch").value;
+          //  if(input.length !== 0) {
+          //       if(event.keyCode === 13){
+          //        //var input = document.getElementById("mySearch").value;
+          //           alert("No input detected" + input);
+          //       }
+                if (event.target === this || event.target.className === 'close' || event.keyCode === 27) {
+                    $(this).removeClass('open');
+                }
+            // } else {
+            //          alert("else");
+            // }
         });
+
+
+
+
 
         // $('q').search("keypress", function (e) {
         //     if (e.keyCode === 13) {
-        //         alert('s');
+        //         e.preventDefault();
+        //         e.stopPropagation();
         //     }
         // });
 
@@ -238,6 +251,7 @@ function showResult(str) {
     if (str.length===0) {
         document.getElementById("livesearch").innerHTML="";
         document.getElementById("livesearch").style.border="0px";
+        document.getElementById("livesearch").innerHTML = "No input";
         return;
     }
     if (window.XMLHttpRequest) {
@@ -250,17 +264,16 @@ function showResult(str) {
         if (this.readyState===4 && this.status===200) {
             document.getElementById("livesearch").innerHTML = this.responseText;
         }
-    }
+    };
     xmlhttp.open("GET","product.php?q=" + str, true);
-    // xmlhttp.open("GET","backend-search.php?q="+str,true);
     xmlhttp.send();
 }
 
 function getBook(book){
     //alert(book);
      $.ajax({
-        type: "POST",
-        url: "product.php",
+         type: "POST",
+         url: "product.php",
          data: book,
         success: function(){
              location.href = 'product.php?q=' + book;

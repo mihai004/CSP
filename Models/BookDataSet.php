@@ -66,12 +66,12 @@ class BooksDataSet
             $sqlQuery .= " AND category = ? ";
         }
         if ($price != "" && $price != null) {
-            $sqlQuery .= " ORDER BY price $order limit $start, $limit";
+            $sqlQuery .= " ORDER BY price $order limit ?, ?";
         }
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
         $statement->bindParam(1,$category, PDO::PARAM_STR);
-//        $statement->bindParam(2,$start, PDO::PARAM_INT);
-//        $statement->bindParam(3,$limit, PDO::PARAM_INT);
+        $statement->bindValue(2, (int) trim($start), PDO::PARAM_INT);
+        $statement->bindValue(3,(int) trim($limit), PDO::PARAM_INT);
         $statement->execute(); // execute the PDO statement
 
         $dataSet = [];
