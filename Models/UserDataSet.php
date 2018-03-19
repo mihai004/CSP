@@ -229,28 +229,21 @@ class UserDataSet
 
     }
 
-    /**
-     * The method is used to log in the system.
-     * @param $post
-     */
+
     public function logIn($post){
-        $email = $this->test_input($post['email']);
-        $passwd = $this->test_input($post['passwordLogin']);
+        $email = $this->test_input($post['emailLogIn']);
         $user = $this->searchUser($email); // get the person obj
         if($user) // if the user exists
         {
-            $password = $this->test_input($_POST["passwordLogin"]);
+            $password = $this->test_input($_POST["passwordLogIn"]);
             $salt = "alabalaportocala";
             if(password_verify($password . $salt, $user->getPassword()))
             {
 
                 if($user->getConfirmed()) {
-
                     $_SESSION['userID'] = $user->getIdUser();
-                    echo $_SESSION['userEmail'] = $user->getEMail();
-//                    $_SESSION['userEmail'] = $user->getEMail(); // getting the eMail
-//                    header('Location: shopList.php');
-
+                    $_SESSION['userEmail'] = $user->getEMail();
+                    return true;
                 }
                 else {
 
@@ -264,7 +257,7 @@ class UserDataSet
             else {
 
                 echo '<p style="font-size: 20px; margin-bottom: 15px;"  class="bg-danger text-center text-danger">
-                    Password do not match. Please try again!
+                    Password do not match. Please, try again!
             </br></p>';
 
             }
@@ -277,5 +270,7 @@ class UserDataSet
 
         }
 
+    return false;
     }
+
 }

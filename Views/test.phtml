@@ -1,0 +1,133 @@
+
+<br>
+<head>
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+    <script type="text/javascript" src="../js/AjaxKitClass.js"></script>
+</head>
+
+<!--<p><b>Start typing a name in the input field below:</b></p>-->
+<!--<script>-->
+<!--    //let x = new AjaxKitClass()-->
+<!--</script>-->
+<!--<form>-->
+<!--    <label>-->
+<!--    First name: <input type="text" onkeyup="test(this.value)">-->
+<!--    </label>-->
+<!--    <button id="myButton">Click me!</button>-->
+<!--</form>-->
+<!--<p>Suggestions: <span id="txtHint"></span></p>-->
+
+<!--<script type="text/javascript">-->
+<!--    /* Usage */-->
+<!--    // window.onload = function (){-->
+<!--    //     ajax_form( 'my-form', 'my-button', 'my-result', 'post' );-->
+<!--    // };-->
+<!--</script>-->
+<!---->
+<!--<form action="../test.php" id="my-form" enctype="multipart/form-data">-->
+<!--    <input id="test" type="text" name="some-name" value="" >-->
+<!--    <input type="submit" name="submit" value="Send me!" id="my-button">-->
+<!--<!--    <button onclick="ajax_form(this.form, this.button, this.result,this.method)"></button>-->-->
+<!--</form>-->
+<!--<div id="my-result"></div>-->
+<!--<div id="fade"></div>-->
+
+<!--<form name="myForm" id="myForm" action="/test.php" onsubmit="validateForm(this.id);" method="get">-->
+<!--    Name: <input type="text" name="fname">-->
+<!--    <input type="submit" value="Submit">-->
+<!--</form>-->
+<!--<div id="output-box"></div>-->
+
+
+
+
+
+<!---->
+<!--<label>Your name:-->
+<!--    <input type="text" id="ajaxTextbox" />-->
+<!--</label>-->
+<!--<span id="ajaxButton" style="cursor: pointer; text-decoration: underline">-->
+<!--  Make a request-->
+<!--</span>-->
+
+
+
+<!--<div id="modal">-->
+<!--    <img id="loader" src="../images/logo.png" />-->
+<!--</div>-->
+
+<!--<div id="content">-->
+<!--    <h2>Ajax Demo with "Loading" Spinner</h2>-->
+<!--    <p>In this demo, clicking the link below will execute a JavaScript function that gets data using Ajax.-->
+<!--        While Ajax is waiting on the data from the web server, a "loading" gif is displayed so that the visitor-->
+<!--        waits for the data to be displayed.  In addition to image being displayed, the background is dimmed to keep-->
+<!--        the user's focus on the image.  An additional div element is sitting between the content and the loader so-->
+<!--        that the visitor is not able to interact with the page while the load is occurring.</p>-->
+<!--    <a href="/articles/1506-how-to-display-image-spinner-ajax-request">Click here to return to the-->
+<!--        tutorial.</a><br /><br />-->
+<!---->
+<!--    <h2>Demo</h2>-->
+<!--    <a href="javascript: void(0);loadAjax();">Click to load get data via Ajax!</a><br /><br />-->
+<!--    <div id="results"><!-- Results are displayed here -->
+<!--    <div id="fade"></div>-->
+<!--    <div id="modal">-->
+<!--        <img id="loader" src="images/loading.gif" />-->
+<!--    </div>-->
+<!--</div>-->
+
+<script type="text/javascript">
+    /* Usage */
+    window.onload = function (){
+        ajax_form( 'my-form', 'my-button', 'my-result', 'post' );
+    };
+</script>
+
+</br></br></br>
+
+<form action="/test.php" id="my-form">
+    <input type="text" name="some-name" value="">
+    <input type="submit" name="submit" value="Send me!" id="my-button">
+</form>
+<div id="my-result"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<body>-->
+<!--<h1>Title</h1>-->
+<!--<p id="demo"></p>-->
+
+<!--WORKSHOP 15.4-->
+
+<!--<script>-->
+<!--     function onclickHandler(event) {-->
+<!--        document.getElementById('out').innerText = 'fetching...';-->
+<!---->
+<!--        fetch('test.php').then(function (response) {-->
+<!--            return response.text()-->
+<!--        }).then(function (data) {-->
+<!--            document.getElementById('out').innerText = 'Hi';-->
+<!--        }).catch(function (error) {-->
+<!--            document.getElementById('out').innerText = 'Error' + error;-->
+<!--        })-->
+<!--    }-->
+<!--    // let myFather = new Person("Vio", "Doe", 50, "blue");-->
+<!--    // document.getElementById("demo").innerHTML = "My father " + myFather.details();-->
+<!--</script>-->
+<!--<button id="goButton">Press me</button>-->
+<!--<p style="border: 1px solid blue;" id="out">Output</p>-->
+<!--<script>-->
+<!--    document.getElementById('goButton').addEventListener('click', onclickHandler, false);-->
+<!--</script>-->
+
+</body>
+</html>

@@ -62,23 +62,27 @@ class BooksDataSet
     {
         $order = $this->test_input($price);
         $sqlQuery = "SELECT * FROM Books WHERE idBook > 0";
+        $findings = array();
         if($category != "" && $category != null){
-            $sqlQuery .= " AND category = ? ";
+            $sqlQuery .= " AND category = :category ";
+            $findings['category'] = $category;
         }
         if ($price != "" && $price != null) {
-            $sqlQuery .= " ORDER BY price $order limit ?, ?";
+            $sqlQuery .= " ORDER BY price $order limit :start, :end";
+            $findings['start'] = $start;
+            $findings['limit'] = $limit;
         }
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
-        $statement->bindParam(1,$category, PDO::PARAM_STR);
-        $statement->bindValue(2, (int) trim($start), PDO::PARAM_INT);
-        $statement->bindValue(3,(int) trim($limit), PDO::PARAM_INT);
-        $statement->execute(); // execute the PDO statement
+//        $statement->bindParam(':cat',$category, PDO::PARAM_STR);
+//        $statement->bindValue(1, (int) trim($start), PDO::PARAM_INT);
+//        $statement->bindValue(2, (int) trim($limit), PDO::PARAM_INT);
+        $statement->execute($findings); // execute the PDO statement
 
         $dataSet = [];
         while ($row = $statement->fetch()) {
             $dataSet[] = new BookData($row);
-
         }
+        var_dump($dataSet);
         return $dataSet;
     }
 
@@ -96,10 +100,28 @@ class BooksDataSet
         $statement->execute(); // execute the PDO statement
 
         $dataSet = [];
-        while ($row = $statement->fetch()) {
+        $j = array();
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $j['AllBooks'][] = $row;
             $dataSet[] = new BookData($row);
         }
+//        $obj = $dataSet[0];
+//        $arr = json_encode($obj->getBookName());
+//        var_dump($arr);
+//        echo json_encode($j);
+//        echo '</br>';
+//        var_dump($dataSet);
         return $dataSet;
+    }
+
+    /**
+     * @return PDO
+     */
+    public function generateJSON($object){
+        for($i=0; $i<sizeof($object); $i++){
+            var_dump(json_encode(serialize($object)));
+        }
+        return $object;
     }
 
     /**

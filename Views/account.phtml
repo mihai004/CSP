@@ -10,9 +10,40 @@
 
                 <h2 align="center" style="color:black;"><b>Or <i>Sign In </i> right away... </b></h2>
                 <hr class="colorgraph">
-            <form role="form" method="post" action="../logIn.php">
+<!--            <script type="text/javascript">-->
+<!--                /* Usage */-->
+<!--                window.onload = function (){-->
+<!--                    ajax_form( 'my-form', 'my-button', 'my-result', 'post' );-->
+<!--                };-->
+<!--            </script>-->
+<!---->
+<!--            <form id="my-form" action="/register.php">-->
+<!--                <div class="input-group">-->
+<!--                    <input  type="email" name="emailLogIn" id="emailLogIn" class="form-control input-lg" placeholder="Email Address">-->
+<!--                    <span class="input-group-addon" id="basic-addon1">@example.com</span>-->
+<!--                </div>-->
+<!--                <script src="../facebookApp/register.js"></script>-->
+<!--                <div class="fb-login-button input" scope="public_profile, email"-->
+<!--                     onlogin="checkLoginState();">Register</div>-->
+<!--                </br>-->
+<!--                <div class="form-group1">-->
+<!--                    <input type="password" name="passwordLogIn" id="passwordLogIn" class="form-control input-lg input-group-sm" placeholder="Password">-->
+<!--                </div>-->
+<!--                </hr>-->
+<!--                <a href="" data-toggle="modal" data-target="#myModalForgotPasswd"  class="btn btn-link pull-right">Forgot Password?</a>-->
+<!--                <hr class="colorgraph">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-xs-12 col-sm-12 col-md-12">-->
+<!--                        <div align="center" class="col-xs-12 col-sm-12 col-md-12" >-->
+<!--                            <input type="submit" name="submit" value="Send me!" id="my-button">-->
+<!--                    </div>-->
+<!--            </form>-->
+<!--            <div id="my-result"></div>-->
+
+<!--      working      -->
+            <form id="logInForm" method="post" action="/register.php">
                 <div class="input-group">
-                    <input  type="email" name="email" id="email" class="form-control input-lg" placeholder="Email Address">
+                    <input  type="email" name="emailLogIn" id="emailLogIn" class="form-control input-lg" placeholder="Email Address">
                     <span class="input-group-addon" id="basic-addon1">@example.com</span>
                 </div>
                 <script src="../facebookApp/register.js"></script>
@@ -20,20 +51,47 @@
                      onlogin="checkLoginState();">Register</div>
                 </br>
                 <div class="form-group1">
-                    <input type="password" name="passwordLogin" id="password" class="form-control input-lg input-group-sm" placeholder="Password">
+                    <input type="password" name="passwordLogIn" id="passwordLogIn" class="form-control input-lg input-group-sm" placeholder="Password">
                 </div>
                 </hr>
-                    <a href="" data-toggle="modal" data-target="#myModalForgotPasswd"  class="btn btn-link pull-right">Forgot Password?</a>
+                <a href="" data-toggle="modal" data-target="#myModalForgotPasswd"  class="btn btn-link pull-right">Forgot Password?</a>
                 <hr class="colorgraph">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div align="center" class="col-xs-12 col-sm-12 col-md-12" >
-                            <button type="submit" name="logIn" class="btn btn-success btn-block">Sign In</button>
-                        </div>
-<!--                       <input id="button1" type="submit" name="logIn" class="btn btn-lg btn-success btn-block" value="Sign In">-->
+                            <input id="logIn" name="myBtn" type="submit" value="Submit Data" class="btn btn-lg btn-success btn-block" onclick="logIn_form(this.form.id);">
                     </div>
                 </div>
             </form>
+            <div id="output-box"></div>
+
+
+<!--            <form role="form" method="post" action="../logIn.php">-->
+<!--            <form method="post" id="logInForm">-->
+<!--                <div class="input-group">-->
+<!--                    <input  type="email" name="email" id="emailLogin" class="form-control input-lg" placeholder="Email Address">-->
+<!--                    <span class="input-group-addon" id="basic-addon1">@example.com</span>-->
+<!--                </div>-->
+<!--                <script src="../facebookApp/register.js"></script>-->
+<!--                <div class="fb-login-button input" scope="public_profile, email"-->
+<!--                     onlogin="checkLoginState();">Register</div>-->
+<!--                </br>-->
+<!--                <div class="form-group1">-->
+<!--                    <input type="password" name="passwordLogin" id="passwordLogin" class="form-control input-lg input-group-sm" placeholder="Password">-->
+<!--                </div>-->
+<!--                </hr>-->
+<!--                    <a href="" data-toggle="modal" data-target="#myModalForgotPasswd"  class="btn btn-link pull-right">Forgot Password?</a>-->
+<!--                <hr class="colorgraph">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-xs-12 col-sm-12 col-md-12">-->
+<!--                        <div align="center" class="col-xs-12 col-sm-12 col-md-12" >-->
+<!--                            <button type="submit" id="logIn" value="Submit" class="btn btn-success btn-block">Sign In</button>-->
+<!--                        </div>-->
+<!--<!--                       <input id="button1" type="submit" name="logIn" class="btn btn-lg btn-success btn-block" value="Sign In">-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </form>-->
+            <div style="color: red;" id="reply"></div>
 
             <form role="form" method="post" action="../resetPassword.php">
                 <div class="col-xs-6 col-sm-6 col-md-6">
@@ -48,7 +106,7 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="email" class="control-label">Your e-mail:</label>
-                                        <input name="emailReset" type="email" id="email" class="form-control" placeholder="Email Address" required/>
+                                        <input name="emailReset" type="email" id="emailReset" class="form-control" placeholder="Email Address" required/>
                                         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                                     </div>
                                 </div>
@@ -61,6 +119,7 @@
                 </div>
             </form>
             </br>
+
             <div align="center" class="col-xs-12 col-sm-12 col-md-12" id="register">
                 <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#register-modal">Sign Up</button>
             </div>
