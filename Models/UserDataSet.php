@@ -42,8 +42,13 @@ class UserDataSet
      *  The method is invoked when a person wants to register. In this case, all the data that the
      * user types will be tested in a securely manner before adding that persons' details to the database.
      */
-     public function insertUser()
+     public function registerUser($post)
     {
+        if(empty($post['emailReg'])){
+            var_dump($post);
+            echo 'Empty';
+            return false;
+        }{
             $eMail = $mobileNumber = $houseNumber = $streetName = $city = $country = $postCode = $password = null;
 
             $eMail = $this->test_input($_POST['emailReg']);
@@ -58,28 +63,28 @@ class UserDataSet
             $passwordConfirm = $this->test_input($_POST['passwordConfirm']);
 
             if ($this->checkEmail($eMail) == true) {
-                echo '<script>alert("We already have your eMail")</script>';
+                echo 'We already have your eMail';
             } else if (!(filter_var($eMail, FILTER_VALIDATE_EMAIL))) {
-                echo '<script>alert("Invalid eMail format")</script>';
+                echo 'Invalid eMail format';
             } else if ($this->checkPhoneNumber($mobileNumber)) {
-                echo '<script>alert("Oops! Someone is already using your mobile ")</script>';
+                echo 'Oops! Someone is already using your mobile';
             } else if (!(is_numeric($mobileNumber))) {
-                echo '<script>alert("Invalid mobile number format")</script>';
+                echo 'Invalid mobile number format';
             } else if (!(is_numeric($houseNumber))) {
-                echo '<script>alert("Invalid house number format")</script>';
+                echo 'Invalid house number format';
             } else if (!preg_match("/^[a-zA-Z ]*$/", $streetName)) {
-                echo '<script>alert("Only letters and white space allowed for Street Name")</script>';
+                echo 'Only letters and white space allowed for Street Name';
             } else if (!preg_match("/^[a-zA-Z ]*$/", $city)) {
-                echo '<script>alert("Only letters and white space allowed for City Name")</script>';
+                echo 'Only letters and white space allowed for City Name';
             } else if (!preg_match("/^[a-zA-Z ]*$/", $country)) {
-                echo '<script>alert("Only letters and white space allowed for Country Name")</script>';
+                echo 'Only letters and white space allowed for Country Name';
             } else if (!preg_match($regPostcode, $postCode)) {
-                echo '<script>alert("Invalid post code format")</script>';
+                echo 'Invalid post code format';
             } else if ($password != $passwordConfirm) {
-                echo '<script>alert("Passwords do not match")</script>';
+                echo 'Passwords do not match';
             } else if(!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/', $password)) {
-                echo '<script>alert("The password should be at least 6 - 32 characters long." +
-                    "\\nHaving at least one capital letter and one digit")</script>';
+                echo 'The password should be at least 6 - 32 characters long." +
+                    "\\nHaving at least one capital letter and one digit';
             }
             else {
 
@@ -132,6 +137,7 @@ class UserDataSet
                         echo '<p style="font-size: 20px; margin-bottom: 15px;"  class="bg-success text-center text-success">
                                 Registration Complete. Please confirm your e-Mail!
                         </br></p>';
+                        return true;
                     }
                     else {
                         echo 'Mail not sent';
@@ -140,7 +146,9 @@ class UserDataSet
                 catch (Exception $e) {
                     echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
                 }
+                return false;
             }
+        }
     }
 
     /**
@@ -151,7 +159,7 @@ class UserDataSet
     public function test_input($data) {
         if(empty($data) || is_null($data))
         {
-            echo '<script>alert("You need to complete all the fields in order to proceed!")</script>';
+            echo 'You need to complete all the fields in order to proceed!';
         }
         else {
             $data = trim($data);

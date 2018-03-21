@@ -52,7 +52,9 @@
                                     <p><b>Available:</b> ' . $bookData->getNumberInStock() . ' </p>
                                     <p><b>Price: £</b>'.$bookData->getPrice() . ' </p>
                                     </a>
-                                    <p>' . '<button data-id="' . $bookData->getIdBook() . '" class="btn btn-primary btn-success addToCart"><b>Add to</b><span class="glyphicon glyphicon-shopping-cart"></span></button>' . ' </p>
+                                    <p>' . '<button data-id="' . $bookData->getIdBook() . '" 
+                                    onclick="addCart(' . $bookData->getIdBook() . ')" 
+                                    class="btn btn-primary btn-success addToCart"><b>Add to</b><span class="glyphicon glyphicon-shopping-cart"></span></button>' . ' </p>
                                 </div>';
                         } ?>
                 </div>

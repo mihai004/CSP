@@ -56,7 +56,7 @@ if (isset($accessToken)) {
        "confirmCode" => $confirmCode
 ];
 
-   $userDataSet->insertUser($user);
+   $userDataSet->registerUser($user);
    $userDataSet->updateUser('userPhoto', $url ,$_SESSION['userID']);
   
  //header('Location: ../profile.php');   exit;

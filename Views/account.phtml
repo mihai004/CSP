@@ -1,8 +1,10 @@
-<?php require ('template/header.phtml'); ?>
+<?php
+require('template/header.phtml');
+?>
 
-<div class="container">
-    <div class="row" id="accountPage">
-        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+    <div class="container">
+        <div class="row" id="accountPage">
+            <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
 
                 <div class="imgcontainer" align="center" style="margin-top:80px">
                     <img src="../images/signUp.jpg" alt="user" class="avatar" width="220" height="211">
@@ -10,135 +12,75 @@
 
                 <h2 align="center" style="color:black;"><b>Or <i>Sign In </i> right away... </b></h2>
                 <hr class="colorgraph">
-<!--            <script type="text/javascript">-->
-<!--                /* Usage */-->
-<!--                window.onload = function (){-->
-<!--                    ajax_form( 'my-form', 'my-button', 'my-result', 'post' );-->
-<!--                };-->
-<!--            </script>-->
-<!---->
-<!--            <form id="my-form" action="/register.php">-->
-<!--                <div class="input-group">-->
-<!--                    <input  type="email" name="emailLogIn" id="emailLogIn" class="form-control input-lg" placeholder="Email Address">-->
-<!--                    <span class="input-group-addon" id="basic-addon1">@example.com</span>-->
-<!--                </div>-->
-<!--                <script src="../facebookApp/register.js"></script>-->
-<!--                <div class="fb-login-button input" scope="public_profile, email"-->
-<!--                     onlogin="checkLoginState();">Register</div>-->
-<!--                </br>-->
-<!--                <div class="form-group1">-->
-<!--                    <input type="password" name="passwordLogIn" id="passwordLogIn" class="form-control input-lg input-group-sm" placeholder="Password">-->
-<!--                </div>-->
-<!--                </hr>-->
-<!--                <a href="" data-toggle="modal" data-target="#myModalForgotPasswd"  class="btn btn-link pull-right">Forgot Password?</a>-->
-<!--                <hr class="colorgraph">-->
-<!--                <div class="row">-->
-<!--                    <div class="col-xs-12 col-sm-12 col-md-12">-->
-<!--                        <div align="center" class="col-xs-12 col-sm-12 col-md-12" >-->
-<!--                            <input type="submit" name="submit" value="Send me!" id="my-button">-->
-<!--                    </div>-->
-<!--            </form>-->
-<!--            <div id="my-result"></div>-->
-
-<!--      working      -->
-            <form id="logInForm" method="post" action="/register.php">
-                <div class="input-group">
-                    <input  type="email" name="emailLogIn" id="emailLogIn" class="form-control input-lg" placeholder="Email Address">
-                    <span class="input-group-addon" id="basic-addon1">@example.com</span>
-                </div>
-                <script src="../facebookApp/register.js"></script>
-                <div class="fb-login-button input" scope="public_profile, email"
-                     onlogin="checkLoginState();">Register</div>
-                </br>
-                <div class="form-group1">
-                    <input type="password" name="passwordLogIn" id="passwordLogIn" class="form-control input-lg input-group-sm" placeholder="Password">
-                </div>
-                </hr>
-                <a href="" data-toggle="modal" data-target="#myModalForgotPasswd"  class="btn btn-link pull-right">Forgot Password?</a>
-                <hr class="colorgraph">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12">
-                        <div align="center" class="col-xs-12 col-sm-12 col-md-12" >
-                            <input id="logIn" name="myBtn" type="submit" value="Submit Data" class="btn btn-lg btn-success btn-block" onclick="logIn_form(this.form.id);">
+                <form id="logInForm" method="post" action="/logIn.php">
+                    <div class="input-group">
+                        <input  type="email" name="emailLogIn" id="emailLogIn" class="form-control input-lg" placeholder="Email Address">
+                        <span class="input-group-addon" id="basic-addon1">@example.com</span>
                     </div>
-                </div>
-            </form>
-            <div id="output-box"></div>
+                    <script src="../facebookApp/register.js"></script>
+                    <div class="fb-login-button input" scope="public_profile, email"
+                         onlogin="checkLoginState();">Register</div>
+                    </br>
+                    <div class="form-group1">
+                        <input type="password" name="passwordLogIn" id="passwordLogIn" class="form-control input-lg input-group-sm" placeholder="Password">
+                    </div>
+                    </hr>
+                    <a href="" data-toggle="modal" data-target="#myModalForgotPasswd"  class="btn btn-link pull-right">Forgot Password?</a>
+                    <hr class="colorgraph">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div align="center" class="col-xs-12 col-sm-12 col-md-12" >
+                                <input id="logIn" name="myBtn" type="submit" value="Submit Data"
+                                       class="btn btn-lg btn-success btn-block" onclick="logIn_form(this.form.id);">
+                            </div>
+                        </div>
+                </form>
+                <div id="output-box"></div>
+                <form role="form" method="post" action="../resetPassword.php">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
 
-
-<!--            <form role="form" method="post" action="../logIn.php">-->
-<!--            <form method="post" id="logInForm">-->
-<!--                <div class="input-group">-->
-<!--                    <input  type="email" name="email" id="emailLogin" class="form-control input-lg" placeholder="Email Address">-->
-<!--                    <span class="input-group-addon" id="basic-addon1">@example.com</span>-->
-<!--                </div>-->
-<!--                <script src="../facebookApp/register.js"></script>-->
-<!--                <div class="fb-login-button input" scope="public_profile, email"-->
-<!--                     onlogin="checkLoginState();">Register</div>-->
-<!--                </br>-->
-<!--                <div class="form-group1">-->
-<!--                    <input type="password" name="passwordLogin" id="passwordLogin" class="form-control input-lg input-group-sm" placeholder="Password">-->
-<!--                </div>-->
-<!--                </hr>-->
-<!--                    <a href="" data-toggle="modal" data-target="#myModalForgotPasswd"  class="btn btn-link pull-right">Forgot Password?</a>-->
-<!--                <hr class="colorgraph">-->
-<!--                <div class="row">-->
-<!--                    <div class="col-xs-12 col-sm-12 col-md-12">-->
-<!--                        <div align="center" class="col-xs-12 col-sm-12 col-md-12" >-->
-<!--                            <button type="submit" id="logIn" value="Submit" class="btn btn-success btn-block">Sign In</button>-->
-<!--                        </div>-->
-<!--<!--                       <input id="button1" type="submit" name="logIn" class="btn btn-lg btn-success btn-block" value="Sign In">-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </form>-->
-            <div style="color: red;" id="reply"></div>
-
-            <form role="form" method="post" action="../resetPassword.php">
-                <div class="col-xs-6 col-sm-6 col-md-6">
-
-                    <div class="modal fade" id="myModalForgotPasswd" role="dialog">
-                        <div class="modal-dialog modal-xs modal-mm">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times</button>
-                                    <h4 class="modal-title text-center"><b>Reset Password</b></h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label for="email" class="control-label">Your e-mail:</label>
-                                        <input name="emailReset" type="email" id="emailReset" class="form-control" placeholder="Email Address" required/>
-                                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                        <div class="modal fade" id="myModalForgotPasswd" role="dialog">
+                            <div class="modal-dialog modal-xs modal-mm">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times</button>
+                                        <h4 class="modal-title text-center"><b>Reset Password</b></h4>
                                     </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button name="resetBtn" type="submit" class="btn btn-success btn-lg btn-group-justified">Reset Password</button>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="email" class="control-label">Your e-mail:</label>
+                                            <input name="emailReset" type="email" id="emailReset" class="form-control" placeholder="Email Address" required/>
+                                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button name="resetBtn" type="submit" class="btn btn-success btn-lg btn-group-justified">Reset Password</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </form>
+                </br>
+                <div align="center" class="col-xs-12 col-sm-12 col-md-12" id="register">
+                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+                            data-target="#register-modal">Sign Up</button>
                 </div>
-            </form>
-            </br>
-
-            <div align="center" class="col-xs-12 col-sm-12 col-md-12" id="register">
-                <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#register-modal">Sign Up</button>
-            </div>
                 <div id="register-modal" class="modal fade" role="dialog">
                     <div class="modal-dialog">
                         <div class="modal-dialog modal-xs modal-mm">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <a class="close" data-dismiss="modal">×</a>
-                                    <h3>Feel free to complete the form</h3>
-                                </div>
-                                <div class="modal-body">
-                                    <form class="register" name="register">
+                            <form id="registerForm" action="/register.php" method="post">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <a class="close" data-dismiss="modal">×</a>
+                                        <h3>Feel free to complete the form</h3>
+                                    </div>
+                                    <div class="modal-body">
                                         <div class="form-group">
                                             <label for="email" class="control-label">Your e-mail:</label>
-                                            <input name="emailReg" type="email" id="email" class="form-control" placeholder="Email Address" required/>
+                                            <input name="emailReg" type="email" id="email" class="form-control" placeholder="Email Address" required>
                                             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                                         </div>
-
                                         <div class="form-group">
                                             <label for="inputMobileNumber" class="control-label">Mobile Number:</label>
                                             <input name="mobileNumber" type="text" class="form-control" id="inputMobileNumber" placeholder="Mobile Number" required>
@@ -182,18 +124,18 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button name="register" id="register" type="submit" class="btn btn-success btn-lg btn-group-justified">Sign Up</button>
-                                </div>
-                            </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input onclick="register_form(this.form.id)" type="submit" value="Register"
+                                               class="btn btn-success btn-lg btn-group-justified"/>
+                                    </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
 <?php

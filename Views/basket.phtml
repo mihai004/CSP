@@ -47,12 +47,32 @@
                         <p><b>Price: £</b>' . $book->getPrice() . ' </p>
                         <p><b>Total price: £</b>' . ($basketData->getQuantity() * $book->getPrice()) . '</p>
                         <p><b>Quantity:</b>
-                        <a style="color: green;" class="removeFromCartMinus glyphicon glyphicon-minus-sign" data-quantity="itemQuantity' . $basketData->getBookID() . '" data-id=" ' . $basketData->getBookID() . '">
-                        <span id="itemQuantity' . $basketData->getBookID() . '" > ' . $basketData->getQuantity() . '</span> </a>
-                         <a style="color: green;" class="addToCartPlus glyphicon glyphicon-plus-sign" data-quantity="itemQuantity' . $basketData->getBookID() . '" data-id=" ' . $basketData->getBookID() . ' "></a>
+                        <a style="color: green;" class="removeFromCartMinus glyphicon 
+                        glyphicon-minus-sign" onclick=removeFromCartMinus("' . $basketData->getBookID() . '","' . $basketData->getQuantity() . '")></a>
+                        
+                        <span id="itemQuantity' . $basketData->getBookID() . '" >
+                         ' . $basketData->getQuantity() . '</span>
+                      
+                       <a style="color: green;" class="glyphicon glyphicon-plus-sign" 
+                       onclick=addCartPlus("' . $basketData->getBookID() . '","' . $basketData->getQuantity() . '")></a>
                          </p>
-                      <p>' . '<button data-id="' . $basketData->getIdBasket() . '" class="removeFromCart"><b>Remove</b><span class="glyphicon glyphicon-shopping-cart"></span></button>' . ' </p>
+                      <p>' . '<button onclick=removeFromCart("' . $basketData->getIdBasket() . '","'. $basketData->getBookID(). '") class="removeFromCart"><b>Remove</b><span class="glyphicon glyphicon-shopping-cart"></span></button>' . ' </p>
                 </div> ';
+
+//                            echo '
+//                <div id="bookSet' . $basketData->getBookID() . '" class="bookSet col-sm-12" data-id="' . $basketData->getIdBasket() . '">
+//                        <p>' . '<img src="../images/' . $book->getPhotoName() . ' " alt="no pic" />' . '</p>
+//                        <p><b>Name:</b> ' . $book->getBookName() . ' </p>
+//                        <p><b>Available: </b>' . $book->getNumberInStock() . ' </p>
+//                        <p><b>Price: £</b>' . $book->getPrice() . ' </p>
+//                        <p><b>Total price: £</b>' . ($basketData->getQuantity() * $book->getPrice()) . '</p>
+//                        <p><b>Quantity:</b>
+//                        <a style="color: green;" class="removeFromCartMinus glyphicon glyphicon-minus-sign" data-quantity="itemQuantity' . $basketData->getBookID() . '" data-id=" ' . $basketData->getBookID() . '">
+//                        <span id="itemQuantity' . $basketData->getBookID() . '" > ' . $basketData->getQuantity() . '</span> </a>
+//                       <a style="color: green;" class="addToCartPlus glyphicon glyphicon-plus-sign" data-quantity="itemQuantity' . $basketData->getBookID() . '" data-id=" ' . $basketData->getBookID() . ' "></a>
+//                         </p>
+//                      <p>' . '<button data-id="' . $basketData->getIdBasket() . '" class="removeFromCart"><b>Remove</b><span class="glyphicon glyphicon-shopping-cart"></span></button>' . ' </p>
+//                </div> ';
                         }
 
                         //                echo '<p><b>Total price £: </b>' . $finalPrice . ' </p>';

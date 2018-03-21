@@ -52,20 +52,18 @@ if(isset($_POST['checkOut'])){
             $countItems += 1;
         }
     }
-    if($countItems == count($basket))    // if there all enough copies for each item, the customer
+    if($countItems === count($basket))    // if there all enough copies for each item, the customer
     {                                    // would proceed, otherwise a message would be displayed
 
         $arrayOfBooks = [];
         foreach ($basket as $item) {
             $book = $booksDataSet->fetchBook($item->getBookID());
             $newQuantity = $book->getNumberInStock() - $item->getQuantity();
-            $booksDataSet->updateProduct('numberInStock', $newQuantity, $book->getIdBook());
-//            $booksDataSet->updateProduct('numberInStock', $newQuantity, $book->getIdBook());
-
+            $booksDataSet->updateProduct($newQuantity, $book->getIdBook());
             $arrayOfBooks[] = $book->getBookName();
-            }
+        }
 
-            $eMail = $_SESSION['userEmail'];
+        $eMail = $_SESSION['userEmail'];
         $basketDataSet->clearCart();
         $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
         try {

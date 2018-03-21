@@ -1,71 +1,149 @@
+function checkOut() {
+    
+}
+
+
+function removeFromCart(idBasket, idBook){
+    event.preventDefault();
+
+    let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    // open the httpRequest
+    httpRequest.open('POST', '/cartFunctions.php', true);
+    // Set content type header information for sending url encoded variables in the request
+    httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    // Security measurement against XSS attack
+    httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
+    // send data
+    httpRequest.send('removeFromCart=' + idBasket);
+    console.log('aici' + idBook);
+    httpRequest.onreadystatechange = function () {
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+                $('#bookSet'+idBook).remove();
+            } else {
+                alert('error');
+            }
+        }
+    };
+}
+
+
+function removeFromCartMinus(id, quantity){
+    event.preventDefault();
+
+    let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    // open the httpRequest
+    httpRequest.open('POST', '/cartFunctions.php', true);
+    // Set content type header information for sending url encoded variables in the request
+    httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    // Security measurement against XSS attack
+    httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
+    // send data
+    httpRequest.send('removeForProductID=' + id + '&quantity=' + quantity);
+    httpRequest.onreadystatechange = function () {
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+                $('#itemQuantity'+id).html(this.response);
+            } else {
+                alert('error');
+            }
+        }
+    };
+}
+
+
+function addCartPlus(id){
+    event.preventDefault();
+
+    let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    // open the httpRequest
+    httpRequest.open('POST', '/cartFunctions.php', true);
+    // Set content type header information for sending url encoded variables in the request
+    httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    // Security measurement against XSS attack
+    httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
+    // send data
+    httpRequest.send('addForProductID=' + id);
+    httpRequest.onreadystatechange = function () {
+    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+        if (httpRequest.status === 200) {
+            $('#itemQuantity'+id).html(this.response);
+        } else {
+            alert('error');
+        }
+        }
+    };
+}
 
 
 
-// function ajax_form(formID, buttonID, resultID, method) {
-//     // event.preventDefault();
-//     let selectForm = document.getElementById(formID); // Select the form by ID.
-//     let selectButton = document.getElementById(buttonID); // Select the button by ID.
-//     let selectResult = document.getElementById(resultID); // Select result element by ID.
-//     let formAction = document.getElementById(formID).getAttribute('action'); // Get the form action.
-//     let formInputs = document.getElementById(formID).querySelectorAll("input"); // Get the form inputs.
-//     let formMethod = method;
-//
-//     alert(selectForm + selectButton + selectResult + formAction + formInputs + formMethod);
-//     function create_XML_http() {
-//             let httpRequest = new XMLHttpRequest();
-//             let formData = new FormData();
-//
-//             for (let i = 0; i < formInputs.length-1; i++) { // the button is ignored
-//                 if(formInputs[i].value.length < 1){
-//                     displayWarning('Alert');
-//                     // checkForm(formInputs[i].value);
-//                     // selectForm.onsubmit = function () {
-//                     //     return false;                   // it prevents refresh
-//                     // };
-//                 } else {
-//                     console.log(formInputs[i].value.length);
-//                     formData.append(formInputs[i].name, formInputs[i].value); // Add all inputs inside formData().
-//                 }
-//             }
-//             httpRequest.onreadystatechange = function () {
-//                 if (httpRequest.readyState === 4 && httpRequest.DONE) {
-//                     alert(this.responseText);
-//                     selectResult.innerHTML = this.responseText; // Display the result inside result element.
-//                 }
-//             };
-//             httpRequest.open(formMethod, formAction, true);
-//             httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-//             httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
-//             httpRequest.send(formData);
-//         }
-//
-//     selectButton.onclick = function () { // If clicked on the button.
-//         create_XML_http();
-//     };
-//
-//     selectForm.onsubmit = function () {
-//         alert('es');
-//         return false;                   // it prevents refresh
-//     };
-// }
+function addCart(id){
+    event.preventDefault();
+    let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    // open the httpRequest
+    httpRequest.open('POST', '/cartFunctions.php', true);
+    // Set content type header information for sending url encoded variables in the request
+    httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    // Security measurement against XSS attack
+    httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
+    // send data
+    httpRequest.send('addForProductID=' + id);
+}
 
-// }
 
-// function newForm(){
-//     validateForm()
-// }
 
-// function checkForm(myForm){
-//     event.preventDefault();                   // stops page from refreshing
-//     let form = document.getElementById(myForm);
-//     for (let i = 0; i < form.length-1; i++) { // never take into account the button
-//         if(form.elements[i].value.length > 0){
-//
-//         }
-//     }
-//     //alert(form);
-// }
 
+function register_form(formID) {
+    event.preventDefault();
+
+    let message = Object;
+    message.loading = 'Complete the form..';
+    message.success = 'Thank you for registering with us';
+    message.failure = 'Whoops! There was a problem signing you up!';
+
+    let selectForm = document.getElementById(formID);
+   // let statusMessage = document.createElement('div');
+   // statusMessage.className = 'status';
+
+    let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    let formMethod = document.getElementById(formID).getAttribute('method').toUpperCase();
+    let formAction = document.getElementById(formID).getAttribute('action').toLowerCase();
+
+    let formInputs = document.getElementById(formID).querySelectorAll("input");
+
+    selectForm.addEventListener('click', function () {
+
+        let formData = new FormData();                  // creates a formData object
+
+        for (let i = 0; i < formInputs.length-1; i++) { // the button is ignored
+            console.log(formInputs[i].value);
+            formData.append(formInputs[i].name, formInputs[i].value); // Add all inputs inside formData().
+        }
+
+        //selectForm.appendChild(statusMessage);
+        // open the httpRequest
+        httpRequest.open(formMethod, formAction, true);
+        // Set content type header information for sending url encoded variables in the request
+        httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        // Security measurement against XSS attack
+        httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
+        // send data
+        httpRequest.send(formData);
+
+        httpRequest.onreadystatechange = function () {
+            if(httpRequest.readyState < 4){
+                   selectForm.reset();                 // input fields are reset
+            } else if (httpRequest.readyState === 4){
+                if (httpRequest.status === 200 && httpRequest.DONE) {
+                    $("#register-modal").modal('hide');
+                    displaMsg(this.responseText);
+                } else{
+                    selectForm.insertAdjacentHTML('beforeend', message.failure);
+                }
+            }
+        }
+    });
+}
 
 function logIn_form(formID){
     // prevent reload or refresh of the page
@@ -74,18 +152,17 @@ function logIn_form(formID){
     // get the method and the action of the form
     let formMethod = document.getElementById(formID).getAttribute('method').toUpperCase();
     let formAction = document.getElementById(formID).getAttribute('action').toLowerCase();
-
+    console.log(formAction);
     // get values of the field
     let firstField = document.getElementById(formID).elements.namedItem('emailLogIn').value;
     let secondField = document.getElementById(formID).elements.namedItem('passwordLogIn').value;
-    let selectResult = document.getElementById('output-box');
 
     // check input fields
     if (firstField === "" || firstField === null) {
-        displayWarning("Email must be filled out");         // display error message if true
+        displaMsg("Email must be filled out");         // display error message if true
     }
     else if (secondField === "" || secondField === null) {
-        displayWarning("Password must be filled out");      // display error message if true
+        displaMsg("Password must be filled out");      // display error message if true
     } else {
         // initialise httpRequest
         let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
@@ -96,115 +173,21 @@ function logIn_form(formID){
         // Set content type header information for sending url encoded variables in the request
         httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         // Access the onreadystatechange event for the XMLHttpRequest object
+
+        let vars = "emailLogIn="+firstField+"&passwordLogIn="+secondField;
+        httpRequest.send(vars);
+
         httpRequest.onreadystatechange = function () {
             if (httpRequest.readyState === 4 && httpRequest.DONE) {
                 document.getElementById(formID).elements.namedItem('emailLogIn').value = '';
                 document.getElementById(formID).elements.namedItem('passwordLogIn').value = '';
-                displayWarning(this.responseText);      // display result
+                displaMsg(this.responseText);      // display result
             }
         };
-        // prepare variables to be sent
-        let vars = "emailLogIn="+firstField+"&passwordLogIn="+secondField;
-        // Send the data to PHP now... and wait for response to update the status div
-        httpRequest.send(vars);      // Actually execute the request
-        //selectResult.innerHTML = "Loading...";
     }
 }
 
-
-//
-// function ajax_post(){
-//     // Create our XMLHttpRequest object
-//     let hr = new XMLHttpRequest();
-//     // Create some variables we need to send to our PHP file
-//     let url = "logIn.php";
-//     let fn = document.getElementById("emailLogIn").value;
-//     let ln = document.getElementById("passwordLogIn").value;
-//     if (fn === "" || fn === null) {
-//         alert("Email must be filled out");
-//     }
-//     else if (ln === "" ||ln === null) {
-//         alert("Password must be filled out");
-//     } else {
-//     let vars = "email="+fn+"&password="+ln;
-//     hr.open("POST", url, true);
-//     // Set content type header information for sending url encoded variables in the request
-//     hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//     // Access the onreadystatechange event for the XMLHttpRequest object
-//     hr.onreadystatechange = function() {
-//         if(hr.readyState === 4 && hr.status === 200) {
-//             document.getElementById("output-box").innerHTML = hr.responseText;
-//         }
-//     };
-//     // Send the data to PHP now... and wait for response to update the status div
-//     hr.send(vars); // Actually execute the request
-//     document.getElementById("output-box").innerHTML = "processing...";
-//     }
-// }
-//
-//
-//
-// //
-// function validate_form(formID) {
-//     event.preventDefault();                                                      // prevents the submission of the form.
-//     let form = document.getElementById(formID);
-//     let formMethod = document.getElementById(formID).getAttribute('method').toUpperCase();
-//     let formAction = document.getElementById(formID).getAttribute('action').toLowerCase();
-//                                                                                             // get values of the field
-//     let firstField = document.getElementById(formID).elements.namedItem('emailLogIn').value;
-//     let secondField = document.getElementById(formID).elements.namedItem('passwordLogIn').value;
-//     let formInputs = document.getElementById(formID).querySelectorAll("input");
-//     let selectResult = document.getElementById('output-box');                            // Select result element by ID.
-//     if (firstField === "" || firstField === null) {
-//         displayWarning("Email must be filled out");
-//     }
-//     else if (secondField === "" || secondField === null) {
-//         displayWarning("Password must be filled out");
-//     } else {
-//        // sendData(form, formMethod, formAction, selectResult);
-// //        let httpRequest = new XMLHttpRequest();
-//
-//         httpRequest.onreadystatechange = function () {
-//             if (httpRequest.readyState === 4 && httpRequest.DONE) {
-//                 console.log(this.responseText);
-//                 document.getElementById('output-box').innerHTML = 'print';
-//                 //selectResult.innerHTML = 'test' + this.response;
-//             }
-//         };//
-//
-//         httpRequest.open('POST', 'logIn.php', true);
-//        // httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
-//         httpRequest.send();
-//     }
-// }
-//
-// function sendData(form, formMethod, formAction, selectResult){
-//     // let httpRequest = new XMLHttpRequest();
-//     //
-//     //
-//     // httpRequest.onreadystatechange = function () {
-//     //     if (httpRequest.readyState === 4 && httpRequest.DONE) {
-//     //         document.getElementById('output-box').innerHTML = this.responseText;
-//     //         //selectResult.innerHTML = 'test' + this.response;
-//     //     }
-//     // };
-//     //
-//     // httpRequest.open(formMethod, formAction, true);
-//     // httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
-//     // httpRequest.send();
-//
-// }
-//
-//
-// // function displaySuccess(msg){
-// //     let successTimeout = 0;
-// //     let successBox = document.createElement("div");
-// //     successBox.className = "success alert alert-success";
-// // }
-//
-//
-//
-function displayWarning(msg) {
+function displaMsg(msg) {
 
     let warningTimeout = 0;
     let warningBox = document.createElement("div");
@@ -241,49 +224,6 @@ function displayWarning(msg) {
 //     document.getElementById('fade').style.display = 'none';
 // }
 
-// window.onload = function(){
-//     document.getElementById("ajaxButton").onclick = function() {
-//         let userName = document.getElementById("ajaxTextbox").value;
-//         makeRequest('test.php', userName);
-//     };
-//
-//     function makeRequest(url, userName) {
-//         let httpRequest = new XMLHttpRequest();
-//
-//         if (!httpRequest) {
-//             alert('Giving up :( Cannot create an XMLHTTP instance');
-//             return false;
-//         }
-//         httpRequest.onreadystatechange = alertContents(httpRequest);
-//         httpRequest.open('GET', url);
-//         httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-//         httpRequest.send();
-//     }
-//
-//     function alertContents(httpRequest) {
-//         if (httpRequest.readyState === XMLHttpRequest.DONE) {
-//             if (httpRequest.status === 200) {
-//                 return httpRequest.responseText;
-//             } else {
-//                 alert('There was a problem with the request.');
-//                 return null;
-//             }
-//         }
-//     }
-// };
-
-
-
-// function alertContents(httpRequest) {
-//     if (httpRequest.readyState === XMLHttpRequest.DONE) {
-//         if (httpRequest.status === 200) {
-//             alert(httpRequest.responseText);
-//         } else {
-//             alert('There was a problem with the request.');
-//         }
-//     }
-// }
-
 
 
 
@@ -306,9 +246,7 @@ function displayWarning(msg) {
 //     }
 // }
 
-// //$(document).ready(function() {
-//
-// //});
+
 //
 //
 // class AjaxKitClass {

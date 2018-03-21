@@ -129,18 +129,17 @@ class BasketDataSet
     public function addToCart($post)
     {
         $user = $_SESSION['userID'];
-        $product = $post['productID'];
-        if ($this->checkDuplicates($user, $product) == true) {
+        $product = $post['addForProductID'];
+        if ($this->checkDuplicates($user, $product) === true) {
             $this->updateQuantity($user, $product, 1);
         } else {
             $sqlQuery = "INSERT INTO Basket (idUser, idBook, quantity) VALUES('$user','$product', '1')";
             if ($this->_dbHandle->exec($sqlQuery)) {
-              //  echo "successful";
                 echo '<div id="response" style="font-size: 20px; margin-bottom: 15px;"  class="bg-success text-center text-success">
                         Successfully added
                        </div>';
             } else {
-               // echo "failed";
+                echo "failed";
             }
         }
     }
@@ -176,12 +175,11 @@ class BasketDataSet
     /**
      * The method removes one item at a time.
      * @param $post
-     * @return bool
      */
     public function removeItem($post)
     {
         $user = $_SESSION['userID'];
-        $itemID = $post['productID'];
+        $itemID = $post['removeForProductID'];
         $basket = $this->findBasketID($user, $itemID);
         $basketID = $basket->getIdBasket();
 
@@ -203,7 +201,7 @@ class BasketDataSet
      */
     public function removeItems($post)
     {
-        $itemID = $post['productID'];
+        $itemID = $post['removeFromCart'];
 
         $sqlQuery = "DELETE FROM Basket WHERE idBasket = '$itemID'";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
@@ -213,7 +211,6 @@ class BasketDataSet
 
     /**
      * The method clears the cart.
-     * @return PDO
      */
     public function clearCart()
     {
