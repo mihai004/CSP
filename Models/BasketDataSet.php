@@ -14,14 +14,18 @@ class BasketDataSet
     }
 
     /**
-     * The method returns the number products of a particular user.
      * @param $id
+     * @param $start
+     * @param $limit
      * @return array
      */
     public function fetchBasketPerPage($id, $start, $limit)
     {
-        $sqlQuery = "SELECT * FROM Basket WHERE idUser ='$id' limit $start, $limit";
+        $sqlQuery = "SELECT * FROM Basket WHERE idUser = ? LIMIT ?, ?";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(1,$id);
+        $statement->bindValue(2, $start, PDO::PARAM_INT);
+        $statement->bindValue(3, $limit, PDO::PARAM_INT);
         $statement->execute(); // execute the PDO statement
 
         $basket = [];
@@ -32,24 +36,29 @@ class BasketDataSet
 
     }
 
-    /**
-     * The method returns the products of a particular user.
-     * @param $id
-     * @return array
-     */
+
     public function fetchAllBasket($id)
     {
 
-        $sqlQuery = "SELECT * FROM Basket WHERE idUser ='$id'";
+        $sqlQuery = "SELECT * FROM Basket WHERE idUser = ?";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindValue(1, $id, PDO::PARAM_INT);
         $statement->execute(); // execute the PDO statement
-
         $basket = [];
-        while ($row = $statement->fetch()) {
+//        $json = array();
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+           // var_dump(json_encode($row));
+//            $json['Basket'][] = $row;
             $basket[] = new BasketData($row);
         }
+//        echo $newJson = json_encode($json, JSON_PRETTY_PRINT);
+//        $decode = json_decode($newJson, true);
+//        echo $decode['Basket'][1]['idBasket'];
+//        foreach ($obj as $newJson){
+//            $obj->idBasket;
+//        }
+//        return $decode['Basket'][1]['idBasket'];
         return $basket;
-
     }
 
     /**
@@ -58,10 +67,13 @@ class BasketDataSet
      * @param $productID
      * @return bool
      */
-    public function checkDuplicates($userID,$productID){
+    public function checkDuplicates($userID,$productID)
+    {
 
-        $sqlQuery = "SELECT * FROM Basket WHERE idUser ='$userID' AND idBook = '$productID'";
+        $sqlQuery = "SELECT * FROM Basket WHERE idUser = ? AND idBook = ?";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(1,$userID);
+        $statement->bindParam(2,$productID);
         $statement->execute(); // execute the PDO statement
 
         if($statement->rowCount() > 0){
@@ -81,10 +93,11 @@ class BasketDataSet
     public function findBasketID($userID, $bookID)
     {
 
-        $sqlQuery = "SELECT * FROM Basket WHERE idUser ='$userID' AND idBook = '$bookID'";
+        $sqlQuery = "SELECT * FROM Basket WHERE idUser = ? AND idBook = ?";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindValue(1,$userID);
+        $statement->bindValue(2,$bookID);
         $statement->execute(); // execute the PDO statement
-
         $row = $statement->fetch();
         $basket = new BasketData($row);
 
@@ -93,9 +106,9 @@ class BasketDataSet
     }
 
     /**
-     * The method updates the quantity according to the method in which it is invoked.
      * @param $userID
      * @param $bookID
+     * @param $quantity
      * @return bool
      */
     public function updateQuantity($userID, $bookID, $quantity){
@@ -105,9 +118,10 @@ class BasketDataSet
 
         $newQuantity = $basket->getQuantity() + $quantity;
 
-        $sqlQuery = "UPDATE Basket SET quantity = '$newQuantity'  WHERE idBasket = '$id'";
+        $sqlQuery = "UPDATE Basket SET quantity = ?  WHERE idBasket = ?";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
-        $statement->execute(); // execute the PDO statement
+        $statement->bindValue(1, $newQuantity);
+        $statement->bindParam(2, $id);
         if($statement->execute())
         {
             echo $newQuantity;  // the new quantity when plus is clicked for a new book copy
@@ -128,13 +142,18 @@ class BasketDataSet
      */
     public function addToCart($post)
     {
-        $user = $_SESSION['userID'];
-        $product = $post['addForProductID'];
-        if ($this->checkDuplicates($user, $product) === true) {
-            $this->updateQuantity($user, $product, 1);
+        $userID = $_SESSION['userID'];
+        $productID = $post['addForProductID'];
+        $value = 1;
+        if ($this->checkDuplicates($userID, $productID) === true) {
+            $this->updateQuantity($userID, $productID, 1);
         } else {
-            $sqlQuery = "INSERT INTO Basket (idUser, idBook, quantity) VALUES('$user','$product', '1')";
-            if ($this->_dbHandle->exec($sqlQuery)) {
+            $sqlQuery = "INSERT INTO Basket (idUser, idBook, quantity) VALUES(?, ?, ?)";
+            $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+            $statement->bindParam(1,$userID);
+            $statement->bindParam(2,$productID);
+            $statement->bindParam(3, $value);
+            if ($statement->execute()) {
                 echo '<div id="response" style="font-size: 20px; margin-bottom: 15px;"  class="bg-success text-center text-success">
                         Successfully added
                        </div>';
@@ -162,8 +181,9 @@ class BasketDataSet
      * @return mixed
      */
     public function findQuantity($basketID){
-        $sqlQuery = "SELECT quantity FROM Basket WHERE idBasket ='$basketID'";
+        $sqlQuery = "SELECT quantity FROM Basket WHERE idBasket = ?";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(1,$basketID);
         $statement->execute(); // execute the PDO statement
 
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
@@ -178,19 +198,21 @@ class BasketDataSet
      */
     public function removeItem($post)
     {
-        $user = $_SESSION['userID'];
+        $userID = $_SESSION['userID'];
         $itemID = $post['removeForProductID'];
-        $basket = $this->findBasketID($user, $itemID);
+        $basket = $this->findBasketID($userID, $itemID);
         $basketID = $basket->getIdBasket();
 
         $newQuantity = $this->findQuantity($basketID);
 
-        if($newQuantity > 1) {
-            $this->updateQuantity($user, $itemID, - 1);
+        if($newQuantity > 0) {
+            $this->updateQuantity($userID, $itemID, - 1);
         }
         else {
-            $sqlQuery = "DELETE FROM Basket WHERE idUser = '$user' AND idBook = '$itemID'";
+            $sqlQuery = "DELETE FROM Basket WHERE idUser = ? AND idBook = ?";
             $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+            $statement->bindParam(1,$userID);
+            $statement->bindParam(2,$itemID);
             $statement->execute(); // execute the PDO statement
         }
     }
@@ -202,9 +224,9 @@ class BasketDataSet
     public function removeItems($post)
     {
         $itemID = $post['removeFromCart'];
-
-        $sqlQuery = "DELETE FROM Basket WHERE idBasket = '$itemID'";
+        $sqlQuery = "DELETE FROM Basket WHERE idBasket = ?";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(1,$itemID);
         $statement->execute(); // execute the PDO statement
 
     }
@@ -215,10 +237,23 @@ class BasketDataSet
     public function clearCart()
     {
         $userID = $_SESSION['userID'];
-        $sqlQuery = "DELETE FROM Basket WHERE idUser = '$userID'";
+        $sqlQuery = "DELETE FROM Basket WHERE idUser = ?";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(1,$userID);
         $statement->execute(); // execute the PDO statement
     }
 
-
+    /**
+     * The method counts the number of books left in the basket
+     * @return int
+     */
+    public function selectUniqueBooks(){
+        $userID = $_SESSION['userID'];
+        $sqlQuery = "SELECT DISTINCT idBook FROM Basket WHERE idUser = ?";
+        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(1,$userID);
+        $statement->execute(); // execute the PDO statement
+        $count = $statement->rowCount();
+        return $count;
+    }
 }

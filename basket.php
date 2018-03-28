@@ -33,9 +33,10 @@ if(isset($_SESSION['userID'])){
     } else {
         $page = 1;
     }
-    $limit = 2;
+    $limit = 5;
     $start = ($page > 1) ? ($page * $limit) - $limit: 0;
     $view->basket = $basketDataSet->fetchBasketPerPage($_SESSION['userID'], $start, $limit);
+    $view->noOfBooks = $basketDataSet->selectUniqueBooks();
 
     //$view->basket = $basketDataSet->fetchAllBasket($_SESSION['userID']);
 
@@ -113,5 +114,4 @@ if(isset($_POST['checkOut'])){
     }
 
 }
-
 require('Views/basket.phtml');

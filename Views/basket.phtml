@@ -1,99 +1,9 @@
 <?php require('template/header.phtml'); ?>
 
     <input type="hidden" value="<?php echo $_SESSION['userID']; ?>" id="userID">
-    <div class="container">
+    <input type="hidden" id="nrOfBooks" value="<?php echo $view->noOfBooks; ?>">
 
-        <div class="col-lg-offset-0">
-
-            <div id="myList">
-
-                <form action="<?php
-                echo $_SERVER['PHP_SELF'];
-                ?>" method="post">
-                    <?php
-                    if (empty($view->basket) and !(isset($_GET['thankYou']))) {
-                        echo '<p  style="text-align: center; font-size: 20px;">
-                            Your basket is empty. Feel free to <a style="color: #2b669a" href="../shopList.php">
-                            <b>check</b></a> out our latest offers!
-                          </p>';
-
-                    } else {
-
-                        echo '
-
-                        <nav class="nav navbar-fixed">
-
-                        <div class="col-xs-12">
-                            <button class="clearCart btn btn-danger">Clear Cart</button>
-                            <input type="submit" class="btn btn-success pull-right" name="checkOut" value="CheckOut">
-
-                        </div>
-                        </nav>';
-
-                        $totalPrice = 0; // variable for price
-                        $finalPrice = 0;
-                        foreach ($view->basket as $basketData) {
-
-                            $basketBookId = $basketData->getBookID();
-                            $book         = $view->booksDataSet->searchBook('idBook', $basketBookId);
-                            $totalPrice += ($basketData->getQuantity() * $book->getPrice());
-                            $finalPrice += $totalPrice;
-
-                            echo '
-                <div id="bookSet' . $basketData->getBookID() . '" class="bookSet col-sm-12" data-id="' . $basketData->getIdBasket() . '">
-                        <p>' . '<img src="../images/' . $book->getPhotoName() . ' " alt="no pic" />' . '</p>
-                        <p><b>Name:</b> ' . $book->getBookName() . ' </p>
-                        <p><b>Available: </b>' . $book->getNumberInStock() . ' </p>
-                        <p><b>Price: £</b>' . $book->getPrice() . ' </p>
-                        <p><b>Total price: £</b>' . ($basketData->getQuantity() * $book->getPrice()) . '</p>
-                        <p><b>Quantity:</b>
-                        <a style="color: green;" class="removeFromCartMinus glyphicon 
-                        glyphicon-minus-sign" onclick=removeFromCartMinus("' . $basketData->getBookID() . '","' . $basketData->getQuantity() . '")></a>
-                        
-                        <span id="itemQuantity' . $basketData->getBookID() . '" >
-                         ' . $basketData->getQuantity() . '</span>
-                      
-                       <a style="color: green;" class="glyphicon glyphicon-plus-sign" 
-                       onclick=addCartPlus("' . $basketData->getBookID() . '","' . $basketData->getQuantity() . '")></a>
-                         </p>
-                      <p>' . '<button onclick=removeFromCart("' . $basketData->getIdBasket() . '","'. $basketData->getBookID(). '") class="removeFromCart"><b>Remove</b><span class="glyphicon glyphicon-shopping-cart"></span></button>' . ' </p>
-                </div> ';
-
-//                            echo '
-//                <div id="bookSet' . $basketData->getBookID() . '" class="bookSet col-sm-12" data-id="' . $basketData->getIdBasket() . '">
-//                        <p>' . '<img src="../images/' . $book->getPhotoName() . ' " alt="no pic" />' . '</p>
-//                        <p><b>Name:</b> ' . $book->getBookName() . ' </p>
-//                        <p><b>Available: </b>' . $book->getNumberInStock() . ' </p>
-//                        <p><b>Price: £</b>' . $book->getPrice() . ' </p>
-//                        <p><b>Total price: £</b>' . ($basketData->getQuantity() * $book->getPrice()) . '</p>
-//                        <p><b>Quantity:</b>
-//                        <a style="color: green;" class="removeFromCartMinus glyphicon glyphicon-minus-sign" data-quantity="itemQuantity' . $basketData->getBookID() . '" data-id=" ' . $basketData->getBookID() . '">
-//                        <span id="itemQuantity' . $basketData->getBookID() . '" > ' . $basketData->getQuantity() . '</span> </a>
-//                       <a style="color: green;" class="addToCartPlus glyphicon glyphicon-plus-sign" data-quantity="itemQuantity' . $basketData->getBookID() . '" data-id=" ' . $basketData->getBookID() . ' "></a>
-//                         </p>
-//                      <p>' . '<button data-id="' . $basketData->getIdBasket() . '" class="removeFromCart"><b>Remove</b><span class="glyphicon glyphicon-shopping-cart"></span></button>' . ' </p>
-//                </div> ';
-                        }
-
-                        //                echo '<p><b>Total price £: </b>' . $finalPrice . ' </p>';
-                    }
-
-                    if (isset($_GET['thankYou'])) {
-
-                        echo '<h3 class="text-center text-success">Thank you for shopping with us!</h3>';
-                    }
-
-                    ?>
-
-                </form>
-
-            </div>
-        </div>
-    </div>
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
-
-    <div class="container">
+    <div class="container" id="shop">
         <div class="row">
             <div id="myList" class="col-md-10 col-md-offset-1">
 <?php
@@ -120,40 +30,61 @@ if (empty($view->basket) and !(isset($_GET['thankYou']))) {
                     <table class="table table-striped table-bordered table-list">
                         <thead>
                         <tr>
+                           
+                            <th class="hidden-xs">Book Image</th>
                             <th>Book Name</th>
-                            <th>Quantity</th>
-                            <th><em class="fa fa-cog"></em></th>
+                            <th>Number in Stock</th>
+                            <th class="hidden-xs">Item Price</th>
+                            <th class="hidden-xs">Quantity</th>
+                            <th>Total Price</th>
+                            <th style="text-align: right;"><em class=" fa fa-cog"></em></th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>';
+                        <div id="output-box"></div>
+                        ';
     $totalPrice = 0; // variable for price
     $finalPrice = 0;
 
     $pages = ceil(count($view->basketDataSet->fetchAllBasket($_SESSION['userID'])) / $limit);
-
+    $i=0;
+    setlocale(LC_MONETARY, 'en_GB');
     foreach ($view->basket as $basketData) {
-
         $basketBookId = $basketData->getBookID();
         $book         = $view->booksDataSet->searchBook('idBook', $basketBookId);
-        $totalPrice += ($basketData->getQuantity() * $book->getPrice());
-        $finalPrice += $totalPrice;
+        $totalPrice += $basketData->getQuantity() * $book->getPrice();
+
         echo '
-            <td id="bookSet' . $basketData->getBookID() . '" class="hidden col-sm-12"
-                data-id="' . $basketData->getIdBasket() . '">
-            <td>' . $book->getBookName() . '</td>
-            <td> ' . $basketData->getQuantity() . '</td>
+            <tr id="bookSets' . $basketData->getBookID() . '">
+           <div id="bookSet' . $basketData->getBookID() . '" class="col-sm-12"
+                data-id="' . $basketData->getIdBasket() . '">  
+            <td class="hidden-xs"><p  style="text-align: center;">'.'<img height="60xp" width="50px" src="../images/' . $book->getPhotoName() . ' " alt="no pic" />' . '</p></td>   
+            <td  style="text-align:center;">' . $book->getBookName() . '</td>
+            <td>' . $book->getNumberInStock() . ' </td>
+            <td  class="hidden-xs" id="priceForItem' . $basketData->getBookID() . '">' . money_format("%n",$book->getPrice()) . '</td>
+            <td  class="hidden-xs" id="itemQuantity' . $basketData->getBookID() . '">' . $basketData->getQuantity() . '</td>
+            <td><p class="remove" id="totalPriceForItem' . $basketData->getBookID() . '">' .
+            money_format("%n", number_format($totalPrice,2)) . ' </p></td>
             </td>
-            <td align="center">
-                <a class="btn btn-lg btn-primary"><em class="glyphicon glyphicon-plus-sign"></em></a>
-                <a class="btn btn-lg btn-primary"><em class="glyphicon glyphicon-minus-sign"></em></a>
-                <a class="btn btn-lg btn-danger"><em class="glyphicon glyphicon-remove"></em></a>
+            <td id="remove" align="center">
+                <a id="remove" class="btn btn-lg btn-primary" style="margin: 5px;" onclick=addCartPlus("' . $basketData->getBookID() . '")>
+                <em class="glyphicon glyphicon-plus-sign"></em></a>
+                <a id="remove" class="btn btn-lg btn-primary" style="margin: 5px;" onclick=removeFromCartMinus("'. $basketData->getIdBasket() .'","' .
+            $basketData->getBookID() . '","' . $basketData->getQuantity() . '")>
+                <em class="glyphicon glyphicon-minus-sign"></em></a>
+                <a id="remove" class="btn btn-lg btn-danger" style="margin: 5px;" onclick=removeFromCart("' . $basketData->getIdBasket() . '","'
+            . $basketData->getBookID(). '")><em class="glyphicon glyphicon-remove"></em></a>
             </td>
-            </tr>';
+        </div>
+    </tr>'
+           ;
+        $finalPrice += $totalPrice;
+        $totalPrice = 0;
     }
+
     echo '</tbody>
-            </table>
-            <b> Total price £: ' . $totalPrice . ' </b>
+            </table>     
+            
                 </div>
             <div class="panel-footer">
                 <div class="row">';
@@ -192,3 +123,5 @@ if (empty($view->basket) and !(isset($_GET['thankYou']))) {
         echo '<h3 class="text-center text-success">Thank you for shopping with us!</h3>';
     }
 }
+echo '</div></div></div>';
+require ('template/footer.phtml');

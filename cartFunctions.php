@@ -1,6 +1,6 @@
 <?php require ('Models/BasketDataSet.php');
 
-session_start();
+//session_start();
 
 $view = new stdClass();
 $view->pageTitle = 'Cart';
@@ -17,16 +17,11 @@ if (isset($_SESSION['userID']) and (isset($_POST['addForProductID']))) {
 if (isset($_SESSION['userID']) and (isset($_POST['removeFromCart']))) {
 
         $basket->removeItems($_POST);
-
 }
 
 // the user is logged in, thereby one can remove an item at a time from the basket
 if (isset($_SESSION['userID']) and (isset($_POST['removeForProductID']))) {
-    if($_POST['quantity'] === 1){
-        $basket->removeItems($_POST['removeFromCart']);
-    } else {
         $basket->removeItem($_POST);
-    }
 }
 
 // the user is logged in, thereby one can clear the items from the basket

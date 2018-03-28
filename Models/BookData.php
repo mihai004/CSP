@@ -68,7 +68,7 @@ class BookData
      */
     public function getPrice()
     {
-        return $this->_price;
+        return number_format($this->_price, 2);
     }
 
     /**

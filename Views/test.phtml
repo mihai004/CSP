@@ -1,9 +1,9 @@
-
-<br>
-<head>
-<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
-    <script type="text/javascript" src="../js/AjaxKitClass.js"></script>
-</head>
+<?php //require('template/header.phtml'); ?>
+<!--<br>-->
+<!--<head>-->
+<!--<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->-->
+<!--<!--    <script type="text/javascript" src="../js/AjaxKitClass.js"></script>-->-->
+<!--</head>-->
 
 <!--<p><b>Start typing a name in the input field below:</b></p>-->
 <!--<script>-->
@@ -75,21 +75,289 @@
 <!--    </div>-->
 <!--</div>-->
 
+<!--<script type="text/javascript">-->
+<!--    /* Usage */-->
+<!--    window.onload = function (){-->
+<!--        ajax_form( 'my-form', 'my-button', 'my-result', 'post' );-->
+<!--    };-->
+<!--</script>-->
+<!---->
+<!--</br></br></br>-->
+<!---->
+<!--<form action="/test.php" id="my-form">-->
+<!--    <input type="text" name="some-name" value="">-->
+<!--    <input type="submit" name="submit" value="Send me!" id="my-button">-->
+<!--</form>-->
+<!--<div id="my-result"></div>-->
+
+<!--</br></br></br>-->
+<!--<input type="file" onchange="previewFile()" id="fileButton">-->
+<!--</br>-->
+<!--<img id="previewImage" height="200" src="" alt="Image preview...">-->
+<!--<p id="fileDetails"></p>-->
+<head>
+    <title>Upload File</title>
+</head>
+
+<body>
+</br></br></br></br></br></br></br></br></br>
+<form id="form1" enctype="multipart/form-data" method="post" action="upload.php">
+    <div class="row">
+        <label for="fileToUpload">Select File</label></br>
+        <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();">
+    </div>
+    <div id="fileName"></div>
+    <div id="fileSize"></div>
+    <div id="fileType"></div>
+    <div class="row">
+        <input type="button" value="Upload" onclick="uploadFile();">
+    </div>
+    <div id="progressNumber"></div>
+</form>
+</br>
+<!--<form action="upload.php" method="post" enctype="multipart/form-data">-->
+<!--    Select image to upload:-->
+<!--    <input type="file" name="fileToUpload" id="fileToUpload">-->
+<!--    <input type="submit" value="Upload Image" name="submit">-->
+<!--</form>-->
+<!--<form enctype="multipart/form-data" method="post" action="upload.php">-->
+<!--    <div class="row">-->
+<!--        <label for="fileToUpload">Select Files to Upload</label><br />-->
+<!--        <input type="file" name="filesToUpload[]" id="filesToUpload" multiple="multiple" />-->
+<!--        <output id="filesInfo"></output>-->
+<!--    </div>-->
+<!--    <div class="row">-->
+<!--        <input type="submit" value="Upload" />-->
+<!--    </div>-->
+<!--</form>-->
+
+<!--<input id="imageFile" type="file">-->
+<!--<input type="button" value="Resize Image"  onclick="resizeImage()"/>-->
+<!--<img src="" id="output">-->
+
+<form enctype="multipart/form-data" method="post" action="upload.php">
+    <div class="row">
+        <label for="fileToUpload">Select Files to Upload</label><br />
+        <input type="file" name="filesToUpload[]" id="filesToUpload" multiple="multiple" />
+        <output id="filesInfo"></output>
+    </div>
+    <div class="row">
+        <input type="submit" value="Upload" />
+    </div>
+</form>
+
+
 <script type="text/javascript">
-    /* Usage */
-    window.onload = function (){
-        ajax_form( 'my-form', 'my-button', 'my-result', 'post' );
-    };
+
+    function fileSelect(evt) {
+        event.preventDefault();
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            let files = evt.target.files;
+
+            let result = '';
+            let file;
+            for (let i = 0; file = files[i]; i++) {
+                // if the file is not an image, continue
+                if (!file.type.match('image.*')) {
+                    continue;
+                }
+
+                let reader = new FileReader();
+                reader.onload = (function (tFile) {
+                    return function (evt) {
+                        event.preventDefault();
+                        let div = document.createElement('div');
+                        div.innerHTML = '<img style="width: 90px;" src="' + evt.target.result + '" />';
+                         document.getElementById('filesInfo').appendChild(div);
+
+                       // document.getElementById('filesToUpload').onchange = function(){
+                            event.preventDefault();
+                            // let xhr = new XMLHttpRequest();
+                            // xhr.onreadystatechange = function(ev){
+                            //     document.getElementById('filesInfo').innerHTML = 'Done!';
+                            // };
+                            //xhr.open('POST', 'upload.php', true);
+                            let file = document.getElementById('filesToUpload').files[0];
+                            resizeAndUpload(file);
+                            // let data = new FormData();
+                            // data.append('fileToUpload', file);
+                            // xhr.send(data);
+                      //  };
+
+                    };
+                }(file));
+                reader.readAsDataURL(file);
+
+
+            }
+        } else {
+            alert('The File APIs are not fully supported in this browser.');
+        }
+    }
+
+    document.getElementById('filesToUpload').addEventListener('change', fileSelect, false);
+
+    function resizeAndUpload(file) {
+        let reader = new FileReader();
+        reader.onloadend = function() {
+
+            let tempImg = new Image();
+            tempImg.src = reader.result;
+            tempImg.onload = function() {
+
+                let MAX_WIDTH = 150;
+                let MAX_HEIGHT = 150;
+                let tempW = tempImg.width;
+                let tempH = tempImg.height;
+                if (tempW > tempH) {
+                    if (tempW > MAX_WIDTH) {
+                        tempH *= MAX_WIDTH / tempW;
+                        tempW = MAX_WIDTH;
+                    }
+                } else {
+                    if (tempH > MAX_HEIGHT) {
+                        tempW *= MAX_HEIGHT / tempH;
+                        tempH = MAX_HEIGHT;
+                    }
+                }
+
+                let canvas = document.createElement('canvas');
+                canvas.width = tempW;
+                canvas.height = tempH;
+                let ctx = canvas.getContext("2d");
+                ctx.drawImage(this, 0, 0, tempW, tempH);
+                let dataURL = canvas.toDataURL("image/jpeg");
+                event.preventDefault();
+                let xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(ev){
+                    document.getElementById('filesInfo').innerHTML = 'Done!';
+                };
+
+                xhr.open('POST', 'test.php', true);
+                xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                let data = 'image=' + dataURL;
+                xhr.send(data);
+            }
+
+        };
+        reader.readAsDataURL(file);
+    }
+
+
+
+//
+//    function resizeImage() {
+//        let file = document.getElementById('imageFile').files[0];
+//        // Create an image
+//        let img = document.createElement("img");
+//        // Create a file reader
+//        let reader = new FileReader();
+//        // Set the image once loaded into file reader
+//        reader.onload = function(e) {
+//            img.src = e.target.result;
+//
+//            let canvas = document.createElement("canvas");
+//
+//            let ctx = canvas.getContext("2d");
+//            ctx.drawImage(img, 0, 0);
+//
+//            let MAX_WIDTH = 150;
+//            let MAX_HEIGHT = 150;
+//            let width = img.width;
+//            let height = img.height;
+//
+//            if (width > height) {
+//                if (width > MAX_WIDTH) {
+//                    height *= MAX_WIDTH / width;
+//                    width = MAX_WIDTH;
+//                }
+//            } else {
+//                if (height > MAX_HEIGHT) {
+//                    width *= MAX_HEIGHT / height;
+//                    height = MAX_HEIGHT;
+//                }
+//            }
+//            canvas.width = width;
+//            canvas.height = height;
+//            let ctx2 = canvas.getContext("2d");
+//            ctx2.drawImage(img, 0, 0, width, height);
+//            document.getElementById('output').src = canvas.toDataURL("image/png", 1.0);
+//            console.log(canvas.toDataURL("image/png", 1.0));
+//        };
+//        // Load files into file reader
+//        reader.readAsDataURL(file);
+//    }
+
+
+
+    function fileSelected() {
+        let file = document.getElementById('fileToUpload').files[0];
+        if(file){
+            let fileSize = 0;
+
+            if(file.size > 1024 * 1024){
+                fileSize = (Math.round(file.size * 100/(1024*1024))/100).toString() + 'MB';
+            } else {
+                fileSize = (Math.round(file.size * 100/1024)/100).toString() + 'MB';
+            }
+            document.getElementById('fileName').innerHTML = 'Name ' + file.name;
+            document.getElementById('fileSize').innerHTML = 'Size ' + fileSize;
+            document.getElementById('fileType').innerHTML = 'Type ' + file.type;
+
+        }
+    }
+
+    function uploadFile() {
+        event.preventDefault();
+        let fd = new FormData();
+        let file = document.getElementById('fileToUpload').files[0];
+        fd.append("fileToUpload", file);
+        let xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener("progress", uploadProgress, false);
+        xhr.addEventListener("load", uploadComplete, false);
+        xhr.addEventListener("error", uploadFailed, false);
+        xhr.addEventListener("abort", uploadAborted, false);
+       // xhr.open('POST', 'test.php', true);
+        xhr.open("POST", "upload.php", true);
+        //xhr.setRequestHeader("X-File-Name", file.name);
+        //xhr.setRequestHeader("Content-Type", "application/octet-stream");
+        xhr.send(fd);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    xhr.responseText;
+                } else {
+                    alert('error');
+                }
+            }
+        };
+    }
+
+    function uploadProgress(evt){
+        if(evt.lengthComputable){
+            let percentComplete = Math.round(evt.loaded * 100/ evt.total);
+            document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+        } else {
+            document.getElementById('progressNumber').innerHTML = "unable to compute";
+        }
+    }
+
+    function uploadComplete() {
+        alert("works");
+    }
+    function uploadFailed() {
+        alert("failed");
+    }
+    function uploadAborted() {
+        alert("aborted");
+    }
+
+
 </script>
 
-</br></br></br>
 
-<form action="/test.php" id="my-form">
-    <input type="text" name="some-name" value="">
-    <input type="submit" name="submit" value="Send me!" id="my-button">
-</form>
-<div id="my-result"></div>
-
+</body>
+</html>
 
 
 

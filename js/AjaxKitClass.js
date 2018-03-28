@@ -1,10 +1,44 @@
+
+function json() {
+    event.preventDefault();
+    let obj, dbParam, xmlhttp, myObj, x, txt = "";
+    obj = { "table":"customers", "limit":2 };
+    dbParam = JSON.stringify(obj);
+    xmlhttp = new XMLHttpRequest();
+     xmlhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 200) {
+             let data = JSON.parse(this.responseText);
+             console.log(data);
+             // for (x in data) {
+             //     txt += data[x].a + "<br>";
+             // }
+             document.getElementById("demo").innerHTML = data;
+             // document.getElementById("demo").innerHTML = this.responseText;
+         }
+    //         let myObj = JSON.parse(this.responseText);
+    //         console.log(myObj);
+    //         for (x in myObj) {
+    //             txt += myObj[x].name + "<br>";
+    //         }
+    //         document.getElementById("demo").innerHTML = txt;
+    //     }
+     };
+    xmlhttp.open("POST", "my_parse_file.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("x=" + dbParam);
+}
+
+
 function checkOut() {
-    
+
 }
 
 
 function removeFromCart(idBasket, idBook){
     event.preventDefault();
+    console.log('bookSet'+idBook);
+    console.log(document.getElementById('bookSet'+idBook));
+    document.getElementById('bookSet'+idBook).innerHTML = '';
 
     let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     // open the httpRequest
@@ -15,11 +49,12 @@ function removeFromCart(idBasket, idBook){
     httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
     // send data
     httpRequest.send('removeFromCart=' + idBasket);
-    console.log('aici' + idBook);
+
     httpRequest.onreadystatechange = function () {
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === 200) {
-                $('#bookSet'+idBook).remove();
+                displayMsg('Item Removed', 'success');
+                document.getElementById('bookSets'+idBook).remove();        // remove from list
             } else {
                 alert('error');
             }
@@ -27,8 +62,15 @@ function removeFromCart(idBasket, idBook){
     };
 }
 
+function calculatePrice(id, quantity){
+    let price = document.getElementById('priceForItem'+id).innerHTML;
+    let result = (parseFloat(price.replace(/[£,]+/g,"")) * parseInt(quantity));
+    return ('£'+result.toFixed(2));
 
-function removeFromCartMinus(id, quantity){
+}
+
+
+function removeFromCartMinus(idBasket, idBook){
     event.preventDefault();
 
     let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
@@ -39,16 +81,30 @@ function removeFromCartMinus(id, quantity){
     // Security measurement against XSS attack
     httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
     // send data
-    httpRequest.send('removeForProductID=' + id + '&quantity=' + quantity);
-    httpRequest.onreadystatechange = function () {
-        if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            if (httpRequest.status === 200) {
-                $('#itemQuantity'+id).html(this.response);
-            } else {
-                alert('error');
+    let quantity = document.getElementById('itemQuantity'+idBook).innerHTML;
+    let nrOfBooks = document.getElementById('nrOfBooks').value;
+
+    if(nrOfBooks <= 1 && quantity <= 1){
+        document.getElementById('clearCart').style.display = 'none';
+        document.getElementById('checkOut').style.display = 'none';
+    }
+    if(quantity <= 1){
+        removeFromCart(idBasket, idBook);
+        document.getElementById('nrOfBooks').value = --nrOfBooks;
+    } else {
+        httpRequest.send('removeForProductID=' + idBook);
+        httpRequest.onreadystatechange = function () {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    displayMsg('Item removed', 'warning');
+                    $('#totalPriceForItem'+idBook).html(calculatePrice(idBook, --quantity));
+                    $('#itemQuantity'+idBook).html(this.responseText);
+                } else {
+                    alert('error');
+                }
             }
-        }
-    };
+        };
+    }
 }
 
 
@@ -64,18 +120,94 @@ function addCartPlus(id){
     httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
     // send data
     httpRequest.send('addForProductID=' + id);
+    let quantity = document.getElementById('itemQuantity' + id).innerHTML;
     httpRequest.onreadystatechange = function () {
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
         if (httpRequest.status === 200) {
+            displayMsg('Item added', 'success');
+            $('#totalPriceForItem'+id).html(calculatePrice(id, ++quantity));
             $('#itemQuantity'+id).html(this.response);
         } else {
+            displayMsg('Item could not be added', 'warning');
             alert('error');
         }
         }
     };
 }
 
+function loadDoc() {
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("demo").innerHTML = this.responseText;
+        }
+    };
+    xhttp.open("POST", "my_parse_file.php", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("fname=Henry&lname=Ford");
+}
 
+
+
+function c() {
+
+    let xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+    xmlhttp.open("POST", "my_parse_file.php");
+    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlhttp.send(JSON.stringify({name:"John Rambo", time:"2pm"}));
+
+    // let url = "my_parse_file.php";
+    //
+    // let data = {};
+    // data.firstname = "John";
+    // data.lastname  = "Snow";
+    // let json = JSON.stringify(data);
+    //
+    // let xhr = new XMLHttpRequest();
+    // xhr.open("POST", url, true);
+    // xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+    // xhr.onload = function () {
+    //     let users = JSON.parse(xhr.responseText);
+    //     if (xhr.readyState == 4 && xhr.status == "201") {
+    //         console.table(users);
+    //     } else {
+    //         console.error(users);
+    //     }
+    // };
+    // xhr.send(json);
+
+
+    // let xhr = new XMLHttpRequest();
+    // let url = "/my_parse_file.php";
+    // xhr.open("POST", url, true);
+    // //xhr.setRequestHeader("Content-type", "application/json");
+    // // let jsonData = {
+    // //     address: 'address',
+    // //     address1: 'address1',
+    // //     address2: 'address2'
+    // // };
+    // // let out = JSON.stringify({'myPostData' : JSON.stringify(jsonData) });
+    // let out ="test";
+    // xhr.send(out);
+    // xhr.onreadystatechange = function () {
+    //     if (xhr.readyState === 4 && xhr.status === 200) {
+    //        // let json = JSON.parse(xhr.responseText);
+    //        // console.log(json.email + ", " + json.password);
+    //     }
+    // };
+}
+
+
+
+function clickButton() {
+    let s = document.createElement("script");
+    s.src = "my_parse_file.php";
+    document.body.appendChild(s);
+}
+
+function myFunc(myObj) {
+    document.getElementById("demo").innerHTML = myObj.name;
+}
 
 function addCart(id){
     event.preventDefault();
@@ -88,8 +220,47 @@ function addCart(id){
     httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
     // send data
     httpRequest.send('addForProductID=' + id);
+    displayMsg('Item added', 'success');
+
 }
 
+
+function sendComment(formID){
+    // prevent reload or refresh of the page
+    event.preventDefault();
+
+    // get the method and the action of the form
+    let formMethod = document.getElementById(formID).getAttribute('method').toUpperCase();
+    let formAction = document.getElementById(formID).getAttribute('action').toLowerCase();
+
+    // get values of the field
+    let message = document.getElementById(formID).elements.namedItem('message').value;
+    console.log(formID);
+    // check input fields
+    if (message === "" || message === null) {
+        displayMsg("Your review is empty!", 'warning');         // display error message if true
+    } else {
+        // initialise httpRequest
+        let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+        // open the httpRequest
+        httpRequest.open(formMethod, formAction, true);
+        // Security measurement against XSS attack
+        httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
+        // Set content type header information for sending url encoded variables in the request
+        httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        // Access the onreadystatechange event for the XMLHttpRequest object
+        let vars = "message="+message;
+        httpRequest.send(vars);
+
+        httpRequest.onreadystatechange = function () {
+            if (httpRequest.readyState === 4 && httpRequest.DONE) {
+                document.getElementById(formID).elements.namedItem('message').value = '';
+                displayMsg('Thank you for your time', 'success');      // display result
+            }
+        };
+    }
+
+}
 
 
 
@@ -136,7 +307,7 @@ function register_form(formID) {
             } else if (httpRequest.readyState === 4){
                 if (httpRequest.status === 200 && httpRequest.DONE) {
                     $("#register-modal").modal('hide');
-                    displaMsg(this.responseText);
+                    displayMsg(this.responseText);
                 } else{
                     selectForm.insertAdjacentHTML('beforeend', message.failure);
                 }
@@ -159,10 +330,10 @@ function logIn_form(formID){
 
     // check input fields
     if (firstField === "" || firstField === null) {
-        displaMsg("Email must be filled out");         // display error message if true
+        displayMsg("Email must be filled out");         // display error message if true
     }
     else if (secondField === "" || secondField === null) {
-        displaMsg("Password must be filled out");      // display error message if true
+        displayMsg("Password must be filled out");      // display error message if true
     } else {
         // initialise httpRequest
         let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
@@ -181,36 +352,115 @@ function logIn_form(formID){
             if (httpRequest.readyState === 4 && httpRequest.DONE) {
                 document.getElementById(formID).elements.namedItem('emailLogIn').value = '';
                 document.getElementById(formID).elements.namedItem('passwordLogIn').value = '';
-                displaMsg(this.responseText);      // display result
+                displayMsg(this.responseText);      // display result
             }
         };
     }
 }
 
-function displaMsg(msg) {
+function styleBox(displayBox){
+    displayBox.style.position = 'relative';
+    displayBox.style.textAlign = 'center';
+    displayBox.style.fontSize = '20px';
+    return displayBox;
+}
 
-    let warningTimeout = 0;
-    let warningBox = document.createElement("div");
-    warningBox.className = "warning alert alert-warning";
 
-    warningBox.style.position = 'relative';
-    warningBox.style.textAlign = 'center';
-    warningBox.style.fontSize = '20px';
-    warningBox.innerHTML = msg;
+function displayMsg(msg, type) {
 
-    if (document.body.contains(warningBox)) {
-        window.clearTimeout(warningTimeout);
-    } else {
-        let myTextBox = document.getElementById('output-box');
-        // insert warningBox after myTextbox
-        myTextBox.parentNode.insertBefore(warningBox, myTextBox.previousSibling);
+    let boxTimeout = 0;
+    let displayBox = document.createElement("div");
+    if(type === 'warning'){
+        displayBox.className = "alert alert-warning";
+    }
+    else if(type === 'success'){
+        displayBox.className = "alert alert-success";
+    }
+    else if (type === 'info') {
+        displayBox.className = "alert alert-info";
+    } else if (type === 'danger') {
+        displayBox.className = "alert alert-danger";
     }
 
-    warningTimeout = window.setTimeout(function() {
-        warningBox.parentNode.removeChild(warningBox);
-        warningTimeout = -1;
+    displayBox = styleBox(displayBox);
+    displayBox.innerHTML = msg;
+
+    if (document.body.contains(displayBox)) {
+        clearTimeout(boxTimeout);
+    } else {
+        let myTextBox = document.getElementById('output-box');
+        myTextBox.parentNode.insertBefore(displayBox, myTextBox.previousSibling);
+    }
+
+    setTimeout(function() {
+        displayBox.parentNode.removeChild(displayBox);
+        boxTimeout = -1;
     }, 2000);
 }
+//
+// $(document).ready(function() {
+//
+//     $(".custom-select").each(function () {
+//         var classes = $(this).attr("class"),
+//             id = $(this).attr("id"),
+//             name = $(this).attr("name");
+//         var template = '<div class="' + classes + '">';
+//         template += '<span class="custom-select-trigger">' + $(this).attr("placeholder") + '</span>';
+//         template += '<div class="custom-options">';
+//         $(this).find("option").each(function () {
+//             template += '<span  class="custom-option ' + $(this).attr("class") + '" data-value="' + $(this).attr("value") + '">' + $(this).html() + '</span>';
+//         });
+//         template += '</div></div>';
+//
+//         $(this).wrap('<div class="custom-select-wrapper"></div>');
+//         $(this).hide();
+//         $(this).after(template);
+//     });
+//     $(".custom-option:first-of-type").hover(function () {
+//         $(this).parents(".custom-options").addClass("option-hover");
+//     }, function () {
+//         $(this).parents(".custom-options").removeClass("option-hover");
+//     });
+//     $(".custom-select-trigger").on("click", function () {
+//         $('html').one('click', function () {
+//             $(".custom-select").removeClass("opened");
+//         });
+//         $(this).parents(".custom-select").toggleClass("opened");
+//         event.stopPropagation();
+//     });
+//     $(".custom-option").on("click", function () {
+//         $(this).parents(".custom-select-wrapper").find("select").val($(this).data("value"));
+//         $(this).parents(".custom-options").find(".custom-option").removeClass("selection");
+//         $(this).addClass("selection");
+//         $(this).parents(".custom-select").removeClass("opened");
+//         $(this).parents(".custom-select").find(".custom-select-trigger").text($(this).text());
+//     });
+//
+//
+//     $("#myCarousel").carousel();
+//
+//     // Enable Carousel Indicators
+//     $(".item1").click(function () {
+//         $("#myCarousel").carousel(0);
+//     });
+//     $(".item2").click(function () {
+//         $("#myCarousel").carousel(1);
+//     });
+//     $(".item3").click(function () {
+//         $("#myCarousel").carousel(2);
+//     });
+//
+//     // Enable Carousel Controls
+//     $(".left").click(function () {
+//         $("#myCarousel").carousel("prev");
+//     });
+//     $(".right").click(function () {
+//         $("#myCarousel").carousel("next");
+//     });
+//
+// });
+//
+
 //
 //
 //

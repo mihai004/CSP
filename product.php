@@ -34,22 +34,7 @@ if(isset($_GET['id'])) {
     $view->review = $reviewDataSet->getComments($_GET['id']);
 }
 
-if(isset($_POST['submitCom'])) {
 
-        // the user needs to be logged in to comment
-    if(!(isset($_SESSION['userEmail']))) {
-        echo '<p class="text-center alert-danger">"You need to log in first"</p>';
-    }else {
-        // comment is addressed
-        $reviewDataSet->insertComment();
-    }
-}
-//
-//// brings the comments for each book item
-//    $view->review = $reviewDataSet->getComments($_GET['id']);
-//
-////  adding more items
-//
 if(isset($_POST['addMoreItems'])){
 
     $book = $bookDataSet->fetchBook($_POST['productID']);
@@ -83,8 +68,8 @@ if(isset($_POST['addMoreItems'])){
     }
 
 }
-//$b = new BooksDataSet();
-//$x = $bookDataSet->fetchBooks();
+$b = new BooksDataSet();
+$x = $bookDataSet->fetchBooks();
 //$q = null;
 if(isset($_POST['q'])){
     echo $_POST['q'];
@@ -95,10 +80,10 @@ if(isset($_REQUEST['q'])){
     $q = $_REQUEST['q'];
 }
 
-if($q===null || empty($q)){
+if(($q===null || empty($q)) || !(isset($_POST['message']))){
     require ('Views/product.phtml');
-} else
-{
+}
+else {
 
     $x = $bookDataSet->fetchBooks();
 //    var_dump($x);
@@ -135,5 +120,15 @@ if($q===null || empty($q)){
             }
             echo '</ul>';
         }
+    }
+}
+
+// the new submit
+if(isset($_POST['message'])){
+    if(!(isset($_SESSION['userEmail']))) {
+        echo '<p class="text-center alert-danger">"You need to log in first"</p>';
+    }else {
+        // comment is addressed
+        $reviewDataSet->insertComment($_POST);
     }
 }

@@ -7,48 +7,68 @@
 
 <div class="container" id="shop">
 
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<!--    <form action="--><?php //echo $_SERVER['PHP_SELF']; ?><!--" method="post">-->
 
     <div class="row">
-        <div class="col-sm-12">
-            <?php
+        <div class="col-sm-12" style="margin-top: 100px;">
+<!--            --><?php
+//
+//            echo '<a href="/product.php?id='. $view->product->getIdBook() .'"> <div id="singleBook">
+//                        <p style="float: right; font-size: 25px; color: #4876FF;"><b><i> ' . $view->product->getBookName() . ' </i></b></p>
+//                        </div></a>';
+//            ?>
 
-            echo '<a href="product.php?id='. $view->product->getIdBook() .'"> <div id="singleBook">
-                        <p style="float: right; font-size: 25px; color: #4876FF;"><b><i> ' . $view->product->getBookName() . ' </i></b></p>
-                        </div></a>';
-            ?>
-
-            <div class="col-xs-12 col-sm-6 text-right">
+            <div class="col-xs-11 col-sm-6">
 
                 <?php
-                echo '<a href="product.php?id='. $view->product->getIdBook() .'"> <div id="aloneBook">
-                        <p>' . '<img src="images/'. $view->product->getPhotoName()  . ' " alt="no pic" />' . '</p> </div></a>';
+                echo '
+                       <div href="product.php?id='. $view->product->getIdBook() .'"> 
+                        <div id="aloneBook">
+                            <p style="font-size:15px;text-align: justify; margin-right: 20px; text-indent: 3em;"><img style="float:left;width:175px;height:250px;margin-right:15px;" 
+                            src="/images/'. $view->product->getPhotoName()  . ' " 
+                            alt="no pic" />
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus imperdiet, nulla et dictum interdum, n
+                            isi lorem egestas odio, vitae scelerisque enim ligula venenatis dolor.
+                            Maecenas nisl est, ultrices nec congue eget, auctor vitae massa. Fusce luctus ve
+                            stibulum augue ut aliquet. Mauris ante ligula, facilisis sed ornare eu, lobortis in odio.
+                            Praesent convallis urna a lacus interdum ut hendrerit risus congue. Nunc sagittis dictum nisi,
+                            sed ullamcorper ipsum dignissim ac. In at libero sed nunc venenatis imperdiet sed ornare 
+                            turpis. Donec vitae dui eget tellus gravida venenatis. Integer fringilla congue eros non 
+                            fermentum. Sed dapibus
+                            pulvinar nibh tempor porta. Cras ac leo purus. Mauris quis diam velit.</span> 
+                        </div>
+                      </div>';
                 ?>
 
             </div>
-            <div class="col-xs-12 col-sm-6">
-
+            <div style="font-size: 20px; padding-right: 30px;" class="col-xs-11 col-sm-6">
                 <?php
-                echo '<a href="product.php?id='. $view->product->getIdBook() .'"> 
+                echo '<div href="product.php?id='. $view->product->getIdBook() .'"> 
                     <div id="singleBook">
+                        <p style="font-size: 25px; color: #4876FF;"><b><i> ' . $view->product->getBookName() . ' 
+                        </i></b>
+                        </p>
                         <p><b>Author:</b> ' . $view->product->getAuthor() . ' </p>
                         <p><b>Available:</b> ' . $view->product->getNumberInStock() . ' </p>
                         <p><b>Price: £</b>'.$view->product->getPrice() . ' </p>
-                    </div></a>';
+                    </div>
+                    </div>';
                 ?>
-
-                <p><b>Quantity:</b></p>
-                <p><input type="hidden" value=" <?php echo $view->product->getIdBook() ?>" name="productID"></p>
-                <p><input type="number" name="quantityPerItem" min="1" max=" <?php echo $view->product->getNumberInStock() ?>  "></p>
-                <p><button type="submit" name="addMoreItems">Add to Basket</button></p>
-
+                <div id="output-box"></div>
+                <div class="w3-container w3-blue">
+                    <h2>Quantity</h2>
+                </div>
+                <p><input type="hidden" value=" <?php echo $view->product->getIdBook(); ?>" name="productID"></p>
+                <p><input class="w3-border w3-input" type="number" name="quantityPerItem" min="1" max=" <?php echo $view->product->getNumberInStock() ?>  "></p>
             </div>
         </div>
+        <p><button class="btn-lg btn-success glyphicon-plus" onclick="addCart('<?php echo $view->product->getIdBook(); ?>')"
+                   type="submit" name="addMoreItems">  Add to Basket</button></p>
     </div>
 
-    </form>
+<!--    </form>-->
 
-    <h2 class="text-center text">Tell us what you think?</h2>
+    <h2 class="text-center text" style="color: #f0ad4e;">Tell us what you think?</h2>
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
         <?php
         if(empty($view->review))
@@ -56,27 +76,67 @@
             echo '<p class="text-center text-info">"No comments for this book"</p>';
         } else {
         foreach ($view->review as $reviewData) {
-            echo '<div class="review-box">
-                        <a href="../product.php?id='. $reviewData->getIdBook() .'">
+            echo '
+                <div class="w3-card-4 review-box">
+                <div class="w3-container w3-light-grey">
+                 <div class="row">
+                     <div class="col-xs-12 col-sm-3" style="padding-top:50px;">
+                        <img src="/images/default_avatar.png" alt="Avatar" class="img-circle">
                         <p><b> ' . $reviewData->getUserEmail() . ' </b></p>
-                        <p class="text-right"><i> ' . $reviewData->getDateTime() . ' </i></p>
-                        <p> ' . $reviewData->getComments() . ' </p></a>
-                  </div>';
+                     </div>
+                 <div class="col-sm-12 col-sm-4">
+                  
+                          <p class="text-left" style="text-indent: 60px; 
+                          font-size: 20px; margin-right: 20px; font-family: Arial; padding-top: 40px; 
+                          color: #2b669a;"> ' . $reviewData->getComments() . ' </p>
+          
+                    </div>
+                </div>
+            
+                <footer class="w3-container">
+                <h5> <p class="text-right"><b><i> ' . $reviewData->getDateTime() . ' </i></b></p></h5>
+                </footer>
+                </div>
+                </div>';
         }
         }
         ?>
     </form>
-
+    <div id="output-box"></div>
+<!--    <form action="../product.php?id=' . $view->product->getIdBook() . '" method="post">-->
     <?php
-    echo '<form action="../product.php?id=' . $view->product->getIdBook() . '" method="post">
+    echo '<form id="reviewForm" action="/product.php" method="post">
     <div id="comment">
         <input type="hidden" name="ids" value" ' . $view->product->getIdBook() . ' ">
         <input type="hidden" name="date" value="" ' . date('Y-m-d') . '">
-        <textarea name="message" class="text-center" placeholder="Share your opinion..."></textarea></br>
-        <button class="btn btn-primary" name="submitCom" type="submit">Comment</button>
+        <textarea name="message" style="font-size: 20px; padding-top: " class="text-center" placeholder="Share your opinion..."></textarea></br>
+        <button class="btn btn-success btn-lg" type="button" onclick="sendComment(this.form.id)">Add Review</button>
     </div>
-        </form>';
+        </form>
+<form action="/action_page.php" class="w3-container w3-card-4 w3-light-grey w3-text-blue w3-margin">
+<h2 class="w3-center">Contact Us</h2>
+ 
+<div class="w3-row w3-section">
+  <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-user"></i></div>
+    <div class="w3-rest">
+      <input class="w3-input w3-border" name="first" type="text" placeholder="First Name">
+    </div>
+</div>
+
+<div class="w3-row w3-section">
+  <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-pencil"></i></div>
+    <div class="w3-rest">
+      <input class="w3-input w3-border" name="message" type="text" placeholder="Message">
+    </div>
+</div>
+<button class="btn btn-success btn-group-justified" type="button" onclick="sendComment(this.form.id)">Add Review</button>
+
+</form>
+        ';
     ?>
+    <div style="margin-top: 100px;" id="demo"></div>
+    <button style="margin-bottom: 100px;" onclick="clickButton()">Click me!</button>
+
 
 </div>
 
