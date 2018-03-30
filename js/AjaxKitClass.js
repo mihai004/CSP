@@ -1,8 +1,42 @@
 
-function loadReviews() {
+function displayMsg(msg, type) {
+
+    let boxTimeout = 0;
+    let displayBox = document.createElement("div");
+    if(type === 'warning'){
+        displayBox.className = "alert alert-warning";
+    }
+    else if(type === 'success'){
+        displayBox.className = "alert alert-success";
+    }
+    else if (type === 'info') {
+        displayBox.className = "alert alert-info";
+    } else if (type === 'danger') {
+        displayBox.className = "alert alert-danger";
+    }
+
+    displayBox = styleBox(displayBox);
+    displayBox.innerHTML = msg;
+
+    if (document.body.contains(displayBox)) {
+        clearTimeout(boxTimeout);
+    } else {
+        let myTextBox = document.getElementById('output-box');
+        myTextBox.parentNode.insertBefore(displayBox, myTextBox.previousSibling);
+    }
+
+    setTimeout(function() {
+        displayBox.parentNode.removeChild(displayBox);
+        boxTimeout = -1;
+    }, 2000);
+}
+
+
+function loadReviews(id) {
     event.preventDefault();
-    let obj, dbParam, xmlhttp, myObj, x, txt = "";
-    obj = { "start":"5", "end": "10" };
+    //console.log("The id of the book is:" + id);
+    let obj, dbParam, xmlhttp, myValues = "";
+    obj = { "bookId":id, "start":"1", "end": "5" };
     dbParam = JSON.stringify(obj);
     xmlhttp = new XMLHttpRequest();
 
@@ -11,51 +45,65 @@ function loadReviews() {
     xmlhttp.send('load='+dbParam);
 
     xmlhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log(this.responseText);
-            let myValues = JSON.parse(this.responseText);
-            let obj = myValues[0];
-
-            Object.keys(obj).forEach(function (key){
-                console.log(obj[key]);
-                console.log(obj[key]);
-            });
-
-            //console.log(obj._idReviews);
-            // console.log(myValues[1]['_idBook']);
+        if (this.readyState === 4 && this.status === 200) {
 
 
+                myValues = JSON.parse(this.responseText);
 
-            //console.log(myValues[0]['\\u0000*\\u0000_idReviews']);
-            //console.log(myValues[1]);
+                myValues.forEach(function (key) {
+                    let grandParent = document.createElement('div');
+                    grandParent.className = "w3-card-4 review-box";
+                    grandParent.id = 'testId';
+                    grandParent.style.height = '200px';
+                    let parent = document.createElement('div');
+                    parent.className = "w3-container w3-light-grey";
+                    grandParent.appendChild(parent);
 
+                    let child = document.createElement('div');
+                    child.className = "row";
 
-            // let data = this.responseText;
-            // console.log(JSON.parse(data));
-            //console.log(data);
-            //
-            // let data = this.responseText.split('}');
-            //
-            // let first = new Object();
-            // first = (data[0] + '}');
-            // console.log(first);
-            // let second = (data[1] + '}');
-            // console.log(second);
-            // console.log(data[1]);
-            // console.log(data[2]);
-            // console.log(data[3]);
-            // console.log(data[4]);
+                    let innerleftChild = document.createElement('div');
+                    innerleftChild.className = 'col-xs-12 col-sm-3';
+                    innerleftChild.style.paddingTop = '50px';
 
+                    let image = document.createElement('img');
+                    image.src = '/images/default_avatar.png';
+                    image.className = 'img-circle';
+                    innerleftChild.appendChild(image);
 
+                    let name = document.createElement('p');
+                    name.innerHTML = key._emailUser;
+                    name.id = 'userComment';
+                    innerleftChild.appendChild(name);
 
-           // console.log(JSON.parse(this.responseText));
+                    let innertrightChild = document.createElement('div');
+                    innertrightChild.className = 'col-sm-12 col-sm-4';
+
+                    let comment = document.createElement('p');
+                    comment.innerHTML = key._comments;
+                    comment.id = 'comment';
+                    innertrightChild.appendChild(comment);
+
+                    child.appendChild(innerleftChild);
+                    child.appendChild(innertrightChild);
+
+                    parent.appendChild(child);
+                    let d = document.getElementById('print');
+                    d.insertAdjacentElement('beforebegin', grandParent);
+
+                });
 
         }
     };
-
-
 }
 
+
+// infinite scrolling
+// let divH = 0;
+// divH = document.getElementById('testId').offsetHeight;
+// if(divH > 0) { console.log( divH); }
+// console.log(window.innerHeight);
+// console.log(window.pageYOffset);
 
 
 function json() {
@@ -425,37 +473,6 @@ function styleBox(displayBox){
 }
 
 
-function displayMsg(msg, type) {
-
-    let boxTimeout = 0;
-    let displayBox = document.createElement("div");
-    if(type === 'warning'){
-        displayBox.className = "alert alert-warning";
-    }
-    else if(type === 'success'){
-        displayBox.className = "alert alert-success";
-    }
-    else if (type === 'info') {
-        displayBox.className = "alert alert-info";
-    } else if (type === 'danger') {
-        displayBox.className = "alert alert-danger";
-    }
-
-    displayBox = styleBox(displayBox);
-    displayBox.innerHTML = msg;
-
-    if (document.body.contains(displayBox)) {
-        clearTimeout(boxTimeout);
-    } else {
-        let myTextBox = document.getElementById('output-box');
-        myTextBox.parentNode.insertBefore(displayBox, myTextBox.previousSibling);
-    }
-
-    setTimeout(function() {
-        displayBox.parentNode.removeChild(displayBox);
-        boxTimeout = -1;
-    }, 2000);
-}
 //
 // $(document).ready(function() {
 //

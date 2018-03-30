@@ -300,6 +300,30 @@ html {
     font-size: 27px;
 }
 
+#loadBtn {
+    margin-bottom: 30px;
+    margin-top: 30px;
+    text-align: center;
+    border-radius: 10px;
+    width: auto;
+    background: #faa635;
+}
+#loadBtn a {
+    /*background: #faa635;*/
+    /*text-decoration: silver;*/
+    width: 100%;
+    text-underline-mode: none;
+    color: white;
+    display: inline-block;
+    padding: 10px 30px;
+    transition: all 0.25s ease-out;
+}
+#loadBtn a:hover {
+    /*background-color: #042a63;*/
+}
+
+
+
 .btn-success,
 .btn-danger,
 .btn-info,
@@ -795,4 +819,20 @@ textarea {
 .list-group-item:hover {
     color: forestgreen;
     font-size: 20px;
+}
+
+
+#userComment {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+#comment {
+    text-align: left;
+    text-indent: 60px;
+    font-size: 20px;
+    margin-right: 20px;
+    font-family: Arial;
+    padding-top: 40px;
+    color: #2b669a;
 }

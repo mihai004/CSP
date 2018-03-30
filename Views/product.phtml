@@ -4,7 +4,7 @@
     date_default_timezone_set('Europe/London');
    // $view->product = $_SESSION['book'];
 ?>
-
+<body>
 <div class="container" id="shop">
 
 <!--    <form action="--><?php //echo $_SERVER['PHP_SELF']; ?><!--" method="post">-->
@@ -104,44 +104,47 @@
     </form>
     <div id="output-box"></div>
 <!--    <form action="../product.php?id=' . $view->product->getIdBook() . '" method="post">-->
-    <?php
-    echo '<form id="reviewForm" action="/product.php" method="post">
-    <div id="comment">
-        <input type="hidden" name="ids" value" ' . $view->product->getIdBook() . ' ">
-        <input type="hidden" name="date" value="" ' . date('Y-m-d') . '">
-        <textarea name="message" style="font-size: 20px; padding-top: " class="text-center" placeholder="Share your opinion..."></textarea></br>
-        <button class="btn btn-success btn-lg" type="button" onclick="sendComment(this.form.id)">Add Review</button>
-    </div>
-        </form>
-<form action="/action_page.php" class="w3-container w3-card-4 w3-light-grey w3-text-blue w3-margin">
-<h2 class="w3-center">Contact Us</h2>
- 
-<div class="w3-row w3-section">
-  <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-user"></i></div>
-    <div class="w3-rest">
-      <input class="w3-input w3-border" name="first" type="text" placeholder="First Name">
-    </div>
-</div>
-
-<div class="w3-row w3-section">
-  <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-pencil"></i></div>
-    <div class="w3-rest">
-      <input class="w3-input w3-border" name="message" type="text" placeholder="Message">
-    </div>
-</div>
-<button class="btn btn-success btn-group-justified" type="button" onclick="sendComment(this.form.id)">Add Review</button>
-
-</form>
-        ';
-    ?>
+<!--    --><?php
+//    echo '<form id="reviewForm" action="/product.php" method="post">
+//    <div id="comment">
+//        <input type="hidden" name="ids" value" ' . $view->product->getIdBook() . ' ">
+//        <input type="hidden" name="date" value="" ' . date('Y-m-d') . '">
+//        <textarea name="message" style="font-size: 20px; padding-top: " class="text-center" placeholder="Share your opinion..."></textarea></br>
+//        <button class="btn btn-success btn-lg" type="button" onclick="sendComment(this.form.id)">Add Review</button>
+//    </div>
+//        </form>
+//<form action="/action_page.php" class="w3-container w3-card-4 w3-light-grey w3-text-blue w3-margin">
+//<h2 class="w3-center">Contact Us</h2>
+//
+//<div class="w3-row w3-section">
+//  <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-user"></i></div>
+//    <div class="w3-rest">
+//      <input class="w3-input w3-border" name="first" type="text" placeholder="First Name">
+//    </div>
+//</div>
+//
+//<div class="w3-row w3-section">
+//  <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-pencil"></i></div>
+//    <div class="w3-rest">
+//      <input class="w3-input w3-border" name="message" type="text" placeholder="Message">
+//    </div>
+//</div>
+//<button class="btn btn-success btn-group-justified" type="button" onclick="sendComment(this.form.id)">Add Review</button>
+//
+//</form>
+//        ';
+//    ?>
 <!--    <div style="margin-top: 100px;" id="demo"></div>-->
+<!--    //id="loadBtn"-->
 <!--    <button style="margin-bottom: 100px;" onclick="clickButton()">Click me!</button>-->
 
-    <div>
-        <button id="loadBtn" onclick="return loadReviews();">Load Reviews</button>
-    </div>
-
-
+    <div id="print"></div>
 </div>
 
+<div style="margin: auto;">
+    <button id="loadBtn" onclick="return loadReviews(<?php echo $view->product->getIdBook(); ?>)">
+        Load More Reviews</button>
+</div>
+
+</body>
 <?php require('template/footer.phtml'); ?>

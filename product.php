@@ -21,17 +21,19 @@ $reviewDataSet = new ReviewDataSet();
 //}
 //
 
-if(!(empty($_POST))) {
-   // var_dump($_POST);
+if(!(empty($_POST['load']))) {
+    // receives input
     $test = json_decode($_POST['load']);
-    //echo $test;
+
+    // looks for specific entries in the database
     $start = $test->start;
     $end = $test->end;
-    $rev = $reviewDataSet->getComments(5);
+    $bookId = $test->bookId;
+    $rev = $reviewDataSet->getComments($bookId);
+
+    // returns json format by following the Pattern Strategy
     $reviewDataSet->setOutput(new JsonStringOutput());
     $reviewsJson = $reviewDataSet->loadOutput($rev);
-//    var_dump($reviewsJson);
-//    echo $reviewsJson[0];
 
 }
 else {
