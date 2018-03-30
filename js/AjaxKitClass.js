@@ -1,4 +1,63 @@
 
+function loadReviews() {
+    event.preventDefault();
+    let obj, dbParam, xmlhttp, myObj, x, txt = "";
+    obj = { "start":"5", "end": "10" };
+    dbParam = JSON.stringify(obj);
+    xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.open("POST", "product.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send('load='+dbParam);
+
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);
+            let myValues = JSON.parse(this.responseText);
+            let obj = myValues[0];
+
+            Object.keys(obj).forEach(function (key){
+                console.log(obj[key]);
+                console.log(obj[key]);
+            });
+
+            //console.log(obj._idReviews);
+            // console.log(myValues[1]['_idBook']);
+
+
+
+            //console.log(myValues[0]['\\u0000*\\u0000_idReviews']);
+            //console.log(myValues[1]);
+
+
+            // let data = this.responseText;
+            // console.log(JSON.parse(data));
+            //console.log(data);
+            //
+            // let data = this.responseText.split('}');
+            //
+            // let first = new Object();
+            // first = (data[0] + '}');
+            // console.log(first);
+            // let second = (data[1] + '}');
+            // console.log(second);
+            // console.log(data[1]);
+            // console.log(data[2]);
+            // console.log(data[3]);
+            // console.log(data[4]);
+
+
+
+           // console.log(JSON.parse(this.responseText));
+
+        }
+    };
+
+
+}
+
+
+
 function json() {
     event.preventDefault();
     let obj, dbParam, xmlhttp, myObj, x, txt = "";

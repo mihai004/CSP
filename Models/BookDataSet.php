@@ -26,6 +26,7 @@ class BooksDataSet
         $sqlQuery = "SELECT * FROM Books WHERE $field = '$idBook'";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
         $statement->execute(); // execute the PDO statement
+        $dataSet = [];
         while ($row = $statement->fetch()) {
             $dataSet = new BookData($row);
         }

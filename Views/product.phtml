@@ -2,7 +2,7 @@
 <?php require('template/header.phtml'); ?>
 <?php
     date_default_timezone_set('Europe/London');
-    $view->product = $_SESSION['book'];
+   // $view->product = $_SESSION['book'];
 ?>
 
 <div class="container" id="shop">
@@ -134,8 +134,12 @@
 </form>
         ';
     ?>
-    <div style="margin-top: 100px;" id="demo"></div>
-    <button style="margin-bottom: 100px;" onclick="clickButton()">Click me!</button>
+<!--    <div style="margin-top: 100px;" id="demo"></div>-->
+<!--    <button style="margin-bottom: 100px;" onclick="clickButton()">Click me!</button>-->
+
+    <div>
+        <button id="loadBtn" onclick="return loadReviews();">Load Reviews</button>
+    </div>
 
 
 </div>
