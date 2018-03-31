@@ -3,7 +3,7 @@ body {
     color: #5a5a5a;
     position: relative;
     margin: 0;
-    min-height: 100%;
+    min-height: 105%;
     font-family: "Helvetica Neue", Arial, sans-serif;
     font-size: 16px;
 }
@@ -301,28 +301,29 @@ html {
 }
 
 #loadBtn {
+
+    height: 50px;
+    width: 210px;
+    border-radius: 10px;
+    background: #f0ad4e;
+    cursor: pointer;
     margin-bottom: 30px;
     margin-top: 30px;
-    text-align: center;
-    border-radius: 10px;
-    width: auto;
-    background: #faa635;
+    font-size: 18px;
+    color: white;
+
 }
 #loadBtn a {
-    /*background: #faa635;*/
-    /*text-decoration: silver;*/
-    width: 100%;
-    text-underline-mode: none;
+
+    text-align: center;
     color: white;
     display: inline-block;
-    padding: 10px 30px;
+    padding: 10px 10px;
     transition: all 0.25s ease-out;
 }
 #loadBtn a:hover {
-    /*background-color: #042a63;*/
+    font-size: 20px;
 }
-
-
 
 .btn-success,
 .btn-danger,
@@ -483,10 +484,9 @@ text {
     text-align: center;
 }
 
-#comment {
-    padding-top: 100px;
-    padding-bottom: 150px;
-    text-align:center;
+#review-wrapper{
+    max-width:700px;
+    margin:auto;
 }
 
 .review-box {
@@ -567,8 +567,9 @@ textarea {
 
 @media (max-width : 765px) {
 
-
-
+    #loadBtn {
+        margin-top: 50px;
+    }
     #myCarousel {
         display: none;
     }
@@ -723,7 +724,7 @@ textarea {
 }
 
 #sortBut {
-    background-color: #5cb85c;;
+    background-color: #5cb85c;
     text-align: center;
     font-size: 20px;
     width: 10%;
@@ -827,12 +828,30 @@ textarea {
     font-size: 18px;
 }
 
+#dateDisplay {
+    text-align: right;
+    margin-right: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    font-style: italic;
+}
+
 #comment {
     text-align: left;
     text-indent: 60px;
     font-size: 20px;
     margin-right: 20px;
-    font-family: Arial;
     padding-top: 40px;
     color: #2b669a;
+}
+
+#myProgress {
+    width: 100%;
+    background-color: #ddd;
+}
+
+#myBar {
+    width: 0%;
+    height: 30px;
+    background-color: #4CAF50;
 }

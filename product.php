@@ -21,7 +21,18 @@ $reviewDataSet = new ReviewDataSet();
 //}
 //
 
-if(!(empty($_POST['load']))) {
+
+//echo $_POST['message'];
+if(isset($_POST['message'])){
+
+    if(!(isset($_SESSION['userEmail']))) {
+        echo '"You need to log in first';
+    }else {
+        // comment is addressed
+        $test = json_decode($_POST['message']);
+        $reviewDataSet->insertComment($test->bookId, $test->message);
+    }
+} else if(!(empty($_POST['load']))) {
     // receives input
     $test = json_decode($_POST['load']);
 
@@ -29,11 +40,15 @@ if(!(empty($_POST['load']))) {
     $start = $test->start;
     $end = $test->end;
     $bookId = $test->bookId;
-    $rev = $reviewDataSet->getComments($bookId);
+    $rev = $reviewDataSet->getReviews($bookId, $start, $end);
 
     // returns json format by following the Pattern Strategy
     $reviewDataSet->setOutput(new JsonStringOutput());
-    $reviewsJson = $reviewDataSet->loadOutput($rev);
+    if(empty($rev)){
+        echo 'No more reviews! Feel free to share one';
+    } else {
+        $reviewsJson = $reviewDataSet->loadOutput($rev);
+    }
 
 }
 else {
@@ -45,6 +60,7 @@ else {
     }
     require ('Views/product.phtml');
 }
+
 //if(!empty($_POST['load'])){
 //    $obj = json_decode($_POST['load'], false);
 //    echo 'obk' . $obj;

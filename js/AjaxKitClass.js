@@ -1,27 +1,26 @@
 
-function displayMsg(msg, type) {
+function displayMsg(msg, type, textBox) {
 
     let boxTimeout = 0;
     let displayBox = document.createElement("div");
-    if(type === 'warning'){
+    if(type == 'warning'){
         displayBox.className = "alert alert-warning";
     }
-    else if(type === 'success'){
+    else if(type == 'success'){
         displayBox.className = "alert alert-success";
     }
-    else if (type === 'info') {
+    else if (type == 'info') {
         displayBox.className = "alert alert-info";
-    } else if (type === 'danger') {
+    } else if (type == 'danger') {
         displayBox.className = "alert alert-danger";
     }
-
     displayBox = styleBox(displayBox);
     displayBox.innerHTML = msg;
 
     if (document.body.contains(displayBox)) {
         clearTimeout(boxTimeout);
     } else {
-        let myTextBox = document.getElementById('output-box');
+        let myTextBox = document.getElementById(textBox);
         myTextBox.parentNode.insertBefore(displayBox, myTextBox.previousSibling);
     }
 
@@ -31,33 +30,66 @@ function displayMsg(msg, type) {
     }, 2000);
 }
 
+function move() {
+    let elem = document.getElementById("myBar");
+    let width = 0;
+    let id = setInterval(frame, 0);
+    function frame() {
+        if (width >= 100) {
+            clearInterval(id);
+        } else {
+            width++;
+            elem.style.width = width + '%';
+            elem.innerHTML = width * 1  + '%';
+        }
+    }
+}
+
+
+
 
 function loadReviews(id) {
-    event.preventDefault();
-    //console.log("The id of the book is:" + id);
-    let obj, dbParam, xmlhttp, myValues = "";
-    obj = { "bookId":id, "start":"1", "end": "5" };
+
+    let obj, dbParam, start=0, end, xmlhttp, myValues = "";
+    end = +5;
+    start += +document.getElementById('loadBtn').value + +0;
+    obj = { "bookId":id, "start":start, "end":end };
     dbParam = JSON.stringify(obj);
     xmlhttp = new XMLHttpRequest();
-
     xmlhttp.open("POST", "product.php", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.addEventListener("progress", onProgress, false);
+    xmlhttp.addEventListener("load", loadComplete, false);
+    xmlhttp.addEventListener("error", loadInComplete, false);
+
+    function loadInComplete(){
+        displayMsg('No more reviews for this book. Feel free to share yours!', 'warning', 'progress-box');
+    }
+
+    function onProgress() {
+        move();
+    }
+
+    function loadComplete() {
+        let newBtn = document.getElementById('loadBtn');
+        newBtn.textContent = 'Show More';
+        document.getElementById('loadBtn').value = + document.getElementById('loadBtn').value + +5;
+    }
+
+
     xmlhttp.send('load='+dbParam);
 
     xmlhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-
-
+            try {
                 myValues = JSON.parse(this.responseText);
 
                 myValues.forEach(function (key) {
                     let grandParent = document.createElement('div');
                     grandParent.className = "w3-card-4 review-box";
-                    grandParent.id = 'testId';
-                    grandParent.style.height = '200px';
+
                     let parent = document.createElement('div');
                     parent.className = "w3-container w3-light-grey";
-                    grandParent.appendChild(parent);
 
                     let child = document.createElement('div');
                     child.className = "row";
@@ -87,52 +119,28 @@ function loadReviews(id) {
                     child.appendChild(innerleftChild);
                     child.appendChild(innertrightChild);
 
+                    let footer = document.createElement('div');
+                    footer.className = 'w3-footer';
+                    let date = document.createElement('p');
+                    footer.id = 'dateDisplay';
+                    footer.innerHTML = key._dateTime;
+                    footer.appendChild(date);
+
                     parent.appendChild(child);
+                    child.appendChild(footer);
+                    grandParent.appendChild(parent);
+
                     let d = document.getElementById('print');
                     d.insertAdjacentElement('beforebegin', grandParent);
 
+                    window.scrollTo(0, document.body.scrollHeight);
                 });
-
+            }
+            catch(e) {
+                loadInComplete();
+            }
         }
     };
-}
-
-
-// infinite scrolling
-// let divH = 0;
-// divH = document.getElementById('testId').offsetHeight;
-// if(divH > 0) { console.log( divH); }
-// console.log(window.innerHeight);
-// console.log(window.pageYOffset);
-
-
-function json() {
-    event.preventDefault();
-    let obj, dbParam, xmlhttp, myObj, x, txt = "";
-    obj = { "table":"customers", "limit":2 };
-    dbParam = JSON.stringify(obj);
-    xmlhttp = new XMLHttpRequest();
-     xmlhttp.onreadystatechange = function() {
-         if (this.readyState == 4 && this.status == 200) {
-             let data = JSON.parse(this.responseText);
-             console.log(data);
-             // for (x in data) {
-             //     txt += data[x].a + "<br>";
-             // }
-             document.getElementById("demo").innerHTML = data;
-             // document.getElementById("demo").innerHTML = this.responseText;
-         }
-    //         let myObj = JSON.parse(this.responseText);
-    //         console.log(myObj);
-    //         for (x in myObj) {
-    //             txt += myObj[x].name + "<br>";
-    //         }
-    //         document.getElementById("demo").innerHTML = txt;
-    //     }
-     };
-    xmlhttp.open("POST", "my_parse_file.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send("x=" + dbParam);
 }
 
 
@@ -332,9 +340,9 @@ function addCart(id){
 }
 
 
-function sendComment(formID){
+function sendComment(formID, id){
     // prevent reload or refresh of the page
-    event.preventDefault();
+    //event.preventDefault();
 
     // get the method and the action of the form
     let formMethod = document.getElementById(formID).getAttribute('method').toUpperCase();
@@ -342,10 +350,13 @@ function sendComment(formID){
 
     // get values of the field
     let message = document.getElementById(formID).elements.namedItem('message').value;
-    console.log(formID);
+    let obj, dbParam = '';
+        obj = { "bookId":id, "message": message };
+    dbParam = JSON.stringify(obj);
+    //console.log(obj);
     // check input fields
     if (message === "" || message === null) {
-        displayMsg("Your review is empty!", 'warning');         // display error message if true
+        displayMsg("Your review is empty!", 'warning', 'output-box');         // display error message if true
     } else {
         // initialise httpRequest
         let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
@@ -356,13 +367,14 @@ function sendComment(formID){
         // Set content type header information for sending url encoded variables in the request
         httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         // Access the onreadystatechange event for the XMLHttpRequest object
-        let vars = "message="+message;
-        httpRequest.send(vars);
+       // httpRequest.send("message=" + message);
+        httpRequest.send("message=" + dbParam);
+
 
         httpRequest.onreadystatechange = function () {
             if (httpRequest.readyState === 4 && httpRequest.DONE) {
                 document.getElementById(formID).elements.namedItem('message').value = '';
-                displayMsg('Thank you for your time', 'success');      // display result
+                displayMsg(this.responseText, 'success', 'output-box');      // display result
             }
         };
     }

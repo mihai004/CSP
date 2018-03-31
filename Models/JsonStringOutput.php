@@ -10,6 +10,6 @@ class JsonStringOutput implements OutputInterface{
     }
 
     public function jsonRemoveUnicodeSequences($array){
-      echo str_replace('\\u0000*\\u0000', "", json_encode($array));
+        echo str_replace('\\u0000*\\u0000', "", json_encode($array));
     }
 }

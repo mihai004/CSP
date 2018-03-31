@@ -1,40 +1,71 @@
-<?php require ('template/header.phtml')?>
-
+<?php //require ('template/header.phtml')?>
 <!DOCTYPE html>
 <html>
+<head>
+    <script>
+        function yHandler(){
+            // Watch video for line by line explanation of the code
+            // http://www.youtube.com/watch?v=eziREnZPml4
+            let wrap = document.getElementById('wrap');
+            let contentHeight = wrap.offsetHeight;  // page content height
+            let yOffset = window.pageYOffset;
+            let y = yOffset + window.innerHeight;
+            if(y >= contentHeight){
+                // Ajax call to get more dynamic data goes here
+                wrap.innerHTML += '<div class="newData"></div>';
+            }
+            let status = document.getElementById('status');
+            status.innerHTML = contentHeight + " | " + y;
+        }
+        window.onscroll = yHandler;
+    </script>
+    <style>
+        div#status{position:fixed; font-size:24px;}
+        div#wrap{width:800px; margin:0px auto;}
+        div.newData{height:1000px; background:#09F; margin:10px 0px;}
+    </style>
+</head>
 <body>
-
-<h2>Use the HTTP method POST to send data to the PHP file.</h2>
-
-
-<button id="jsonBtn" onclick="json()" class="btn btn-success">Click</button>
-<p id="demo"></p>
-
-<!--<script>-->
-<!--    // let obj, dbParam, xmlhttp, myObj, x, txt = "";-->
-<!--    // obj = { "table":"customers", "limit":20 };-->
-<!--    // dbParam = JSON.stringify(obj);-->
-<!--    // xmlhttp = new XMLHttpRequest();-->
-<!--    // xmlhttp.onreadystatechange = function() {-->
-<!--    //     if (this.readyState == 4 && this.status == 200) {-->
-<!--    //         myObj = this.responseText;-->
-<!--    //         console.log(myObj);-->
-<!--    //         // for (x in myObj) {-->
-<!--    //         //     txt += myObj[x].name + "<br>";-->
-<!--    //         // }-->
-<!--    //         document.getElementById("demo").innerHTML = JSON.parse(myObj).table;-->
-<!--    //     }-->
-<!--    // };-->
-<!--    // xmlhttp.open("POST", "my_parse_file.php", true);-->
-<!--    // xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");-->
-<!--    // xmlhttp.send("x=" + dbParam);-->
-<!---->
-<!--</script>-->
-
-<p>Try changing the "table" property from "customers" to "products".</p>
-
+<div id="status">0 | 0</div>
+<div id="wrap"><img src="/images/26060011_2019560488291164_6284284852849897805_o.png"></div>
 </body>
 </html>
-
-
-
+<!---->
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<body>-->
+<!---->
+<!--<h2>Use the HTTP method POST to send data to the PHP file.</h2>-->
+<!---->
+<!---->
+<!--<button id="jsonBtn" onclick="json()" class="btn btn-success">Click</button>-->
+<!--<p id="demo"></p>-->
+<!---->
+<!--<!--<script>-->-->
+<!--<!--    // let obj, dbParam, xmlhttp, myObj, x, txt = "";-->-->
+<!--<!--    // obj = { "table":"customers", "limit":20 };-->-->
+<!--<!--    // dbParam = JSON.stringify(obj);-->-->
+<!--<!--    // xmlhttp = new XMLHttpRequest();-->-->
+<!--<!--    // xmlhttp.onreadystatechange = function() {-->-->
+<!--<!--    //     if (this.readyState == 4 && this.status == 200) {-->-->
+<!--<!--    //         myObj = this.responseText;-->-->
+<!--<!--    //         console.log(myObj);-->-->
+<!--<!--    //         // for (x in myObj) {-->-->
+<!--<!--    //         //     txt += myObj[x].name + "<br>";-->-->
+<!--<!--    //         // }-->-->
+<!--<!--    //         document.getElementById("demo").innerHTML = JSON.parse(myObj).table;-->-->
+<!--<!--    //     }-->-->
+<!--<!--    // };-->-->
+<!--<!--    // xmlhttp.open("POST", "my_parse_file.php", true);-->-->
+<!--<!--    // xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");-->-->
+<!--<!--    // xmlhttp.send("x=" + dbParam);-->-->
+<!--<!---->-->
+<!--<!--</script>-->-->
+<!---->
+<!--<p>Try changing the "table" property from "customers" to "products".</p>-->
+<!---->
+<!--</body>-->
+<!--</html>-->
+<!---->
+<!---->
+<!---->

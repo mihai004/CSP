@@ -40,16 +40,32 @@
 ////echo json_encode($v);
 ///
 ///
-require ('Models/ReviewDataSet.php');
-if(empty($_POST)){
-require ('Views/my_parse_file.phtml');
-} else {
+//require ('Models/ReviewDataSet.php');
+//if(empty($_POST)){
+//require ('Views/my_parse_file.phtml');
+//} else {
+//
+//$obj = json_decode($_POST["x"], false);
+//
+//$reviewDataSet = new ReviewDataSet();
+//
+//$data = $reviewDataSet->getJsonFormat(3);
+//session_start();
+//require ('Models/ReviewDataSet.php');
+//echo $_POST['message'];
+//$reviewDataSet = new ReviewDataSet();
+//if(isset($_POST['message'])){
+//    if(!(isset($_SESSION['userEmail']))) {
+//        echo 'You need to log in first';
+//    }else {
+//        // comment is addressed
+//        //$reviewDataSet->insertComment($_POST);
+//    }
+//} else {
+//    require_once ('Views/product.phtml');
+//}
 
-$obj = json_decode($_POST["x"], false);
 
-$reviewDataSet = new ReviewDataSet();
-
-$data = $reviewDataSet->getJsonFormat(3);
 
 //$comments = $data;
 //str_replace('\\u0000*\\u0000', "", json_encode($comments, JSON_FORCE_OBJECT));
@@ -153,4 +169,4 @@ $data = $reviewDataSet->getJsonFormat(3);
 //    $myJSON = json_encode($cars);
 //
 //    echo $myJSON;
-}
+//}

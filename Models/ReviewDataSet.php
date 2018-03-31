@@ -1,7 +1,6 @@
 <?php
 require_once ('Database.php');
 require_once('ReviewData.php');
-
 // JSON
 require ('OutputInterface.php');
 require ('SerializedArrayOutput.php');
@@ -23,20 +22,20 @@ class ReviewDataSet
     }
 
     /**
-     * @param $post
+     * @param $bookId
+     * @param $message
      */
-    public function insertComment($post) {
+    public function insertComment($bookId, $message) {
 
-        $comment = $this->test_input($post['message']);
-        if($comment === '' || $comment = null){
+        $comment = $this->test_input($message);
+        if($comment === '' || $comment === null){
             echo 'You need to type a message, before submitting it';
         }
         else
         {
             $email = $_SESSION['userEmail'];
-            $book = $_SESSION['book'];
-            $com  = $post['message'];
-            $idBook = $book->getIdBook();
+            $com  = $message;
+            $idBook = $bookId;
             $date = strval(date("d-m-Y"));
             $sqlQuery = "INSERT INTO Reviews (idBook, emailUser, dateTime, comments) VALUES (?, ?, ?, ?)";
             $statement = $this->_dbHandle->prepare($sqlQuery);
@@ -88,6 +87,19 @@ class ReviewDataSet
 //        //var_dump($jsonArray[2]);
 //        //return $dataSet;
 //    }
+
+    public function getReviews($id, $start, $limit){
+        $sqlQuery = "SELECT * FROM Reviews WHERE idBook = ? LIMIT $start, $limit";
+        $statement = $this->_dbHandle->prepare($sqlQuery);
+        $statement->bindParam(1, $id, PDO::PARAM_INT);
+        $statement->execute();
+        $dataSet = [];
+        while($row = $statement->fetch()) {
+            $dataSet[] = new ReviewData($row);
+        }
+        return $dataSet;
+    }
+
 
     /**
      * The is invoked when a book object is clicked and it returns an array of ReviewsDataSet objects
