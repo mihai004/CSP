@@ -1,5 +1,5 @@
 //
- $(document).ready(function() {
+ //$(document).ready(function() {
 //
 //     $(".custom-select").each(function () {
 //         var classes = $(this).attr("class"),
@@ -118,13 +118,13 @@
 //         });
 //         location.reload();
 //     });
-
-     $('.clearCart').click(function () {
-         $.post('cartFunctions.php', {
-             'clearCart': "true",
-         }, function (data) {
-         });
-     });
+//
+//      $('.clearCart').click(function () {
+//          $.post('cartFunctions.php', {
+//              'clearCart': "true",
+//          }, function (data) {
+//          });
+//      });
 //
 //     // $("button#register").click(function () {
 //     //     $.ajax({
@@ -156,35 +156,35 @@
 //     // });
 //
 //
-     $(function search() {
-
-         $('a[href="#searching"]').on('click', function (event) {
-
-             event.preventDefault();
-             $('#searching').addClass('open');
-             document.forms['searchForm'].elements['q'].focus();
-         });
-
-         if (event.keyCode === 13) {
-             event.preventDefault();
-         }
-
-         $('#searching, #searching button.close').on('click keyup', function (event) {
-             var input = document.getElementById("mySearch").value;
-             //  if(input.length !== 0) {
-             //       if(event.keyCode === 13){
-             //        //var input = document.getElementById("mySearch").value;
-             //           alert("No input detected" + input);
-             //       }
-             if (event.target === this || event.target.className === 'close' || event.keyCode === 27) {
-                 $(this).removeClass('open');
-             }
-             // } else {
-             //          alert("else");
-             // }
-         });
-     });
- });
+//      $(function search() {
+//
+//          $('a[href="#searching"]').on('click', function (event) {
+//
+//              event.preventDefault();
+//              $('#searching').addClass('open');
+//              document.forms['searchForm'].elements['q'].focus();
+//          });
+//
+//          if (event.keyCode === 13) {
+//              event.preventDefault();
+//          }
+//
+//          $('#searching, #searching button.close').on('click keyup', function (event) {
+//              var input = document.getElementById("mySearch").value;
+//              //  if(input.length !== 0) {
+//              //       if(event.keyCode === 13){
+//              //        //var input = document.getElementById("mySearch").value;
+//              //           alert("No input detected" + input);
+//              //       }
+//              if (event.target === this || event.target.className === 'close' || event.keyCode === 27) {
+//                  $(this).removeClass('open');
+//              }
+//              // } else {
+//              //          alert("else");
+//              // }
+//          });
+//      });
+//  });
 //
 //
 //
@@ -249,45 +249,45 @@
 //
 // //});
 // // //
-function showResult(str) {
-    var myObj, txt ="";
-    var x = 0;
-    var obj = {"table":"customers", "limit":10};
-    if (str.length===0) {
-        document.getElementById("livesearch").innerHTML="";
-        document.getElementById("livesearch").style.border="0px";
-        document.getElementById("livesearch").innerHTML = "No input";
-        return;
-    }
-    if (window.XMLHttpRequest) {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp=new XMLHttpRequest();
-    } else {  // code for IE6, IE5
-        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange=function() {
-        if (this.readyState===4 && this.status===200) {
-             document.getElementById("livesearch").innerHTML = this.responseText;
-        }
-    };
-    xmlhttp.open("GET","product.php?q=" + str, true);
-    xmlhttp.send();
-}
-
-function getBook(book){
-    //alert(book);
-     $.ajax({
-         type: "POST",
-         url: "product.php",
-         data: book,
-        success: function(){
-             location.href = 'product.php?q=' + book;
-            // $('#searching').removeClass('open');
-            // alert("yes");
-            // $("#register").html(message);
-        },
-        error: function(){
-             alert("Error");
-        }
-    });
-}
+// function showResult(str) {
+//     var myObj, txt ="";
+//     var x = 0;
+//     var obj = {"table":"customers", "limit":10};
+//     if (str.length===0) {
+//         document.getElementById("livesearch").innerHTML="";
+//         document.getElementById("livesearch").style.border="0px";
+//         document.getElementById("livesearch").innerHTML = "No input";
+//         return;
+//     }
+//     if (window.XMLHttpRequest) {
+//         // code for IE7+, Firefox, Chrome, Opera, Safari
+//         xmlhttp=new XMLHttpRequest();
+//     } else {  // code for IE6, IE5
+//         xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+//     }
+//     xmlhttp.onreadystatechange=function() {
+//         if (this.readyState===4 && this.status===200) {
+//              document.getElementById("livesearch").innerHTML = this.responseText;
+//         }
+//     };
+//     xmlhttp.open("GET","product.php?q=" + str, true);
+//     xmlhttp.send();
+// }
+//
+// function getBook(book){
+//     //alert(book);
+//      $.ajax({
+//          type: "POST",
+//          url: "product.php",
+//          data: book,
+//         success: function(){
+//              location.href = 'product.php?q=' + book;
+//             // $('#searching').removeClass('open');
+//             // alert("yes");
+//             // $("#register").html(message);
+//         },
+//         error: function(){
+//              alert("Error");
+//         }
+//     });
+// };

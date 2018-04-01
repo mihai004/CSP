@@ -1,3 +1,102 @@
+function showResult(searchingFor) {
+
+    if (searchingFor.length===0) {
+        document.getElementById("livesearch").innerHTML="";
+        document.getElementById("livesearch").style.border="0px";
+        document.getElementById("livesearch").innerHTML = "No input";
+        return;
+    }
+    let myValues = "";
+    let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+
+    httpRequest.open("GET", "backend-search.php?searchFor="+searchingFor, true);
+
+
+
+    httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    httpRequest.send();
+
+    httpRequest.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            try {
+
+                myValues = JSON.parse(this.responseText);
+                console.log(myValues);
+                let results = document.getElementById('livesearch');
+
+                while (results.hasChildNodes()){
+                    results.removeChild(results.lastChild);
+                }
+
+                myValues.forEach(function (key) {
+
+                    let parent = document.createElement('a');
+                    parent.href = '/product.php?id=' + key._idBook;
+                    parent.id = "custom-option";
+                    parent.className = 'row';
+
+                    let image = document.createElement('img');
+                    image.className = "col-sm-2 col-md-3";
+                    image.id = 'smallImg';
+                    image.src = '/images/' + key._photoName;
+                    parent.appendChild(image);
+
+                    let bookName = document.createElement('p');
+                    bookName.className = "col-sm-5 col-md-3";
+                    bookName.innerHTML = key._bookName;
+                    parent.appendChild(bookName);
+
+                    let bookAuthor = document.createElement('p');
+                    bookAuthor.innerHTML = " by " + key._author;
+                    bookAuthor.className = "col-sm-5 col-md-3";
+                    parent.appendChild(bookAuthor);
+
+                    results.appendChild(parent);
+
+                });
+            }
+            catch(e) {
+               // loadInComplete();
+            }
+        }
+    };
+
+
+    // if (window.XMLHttpRequest) {
+    //     // code for IE7+, Firefox, Chrome, Opera, Safari
+    //     xmlhttp=new XMLHttpRequest();
+    // } else {  // code for IE6, IE5
+    //     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    // }
+    // xmlhttp.onreadystatechange=function() {
+    //     // if (this.readyState===4 && this.status===200) {
+    //     //      document.getElementById("livesearch").innerHTML = this.responseText;
+    //     // }
+    // };
+    // xmlhttp.open("GET","backend-search.php?searchFor=" + searchingFor, true);
+    // xmlhttp.send();
+}
+
+function searchForm() {
+
+    let openBtn = document.getElementById('searchBtn');
+    let closeBtn = document.getElementById('closeBtn');
+    let openSearch = document.getElementById('searching');
+    openBtn.addEventListener('click', function () {
+        event.preventDefault();
+        openSearch.classList.add('open');
+        document.forms['searchForm'].elements['searchFor'].focus();
+    });
+
+    closeBtn.addEventListener('click', function () {
+            openSearch.classList.remove('open');
+    });
+
+}
+
+
+
 
 function displayMsg(msg, type, textBox) {
 
@@ -168,7 +267,7 @@ function removeFromCart(idBasket, idBook){
     httpRequest.onreadystatechange = function () {
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === 200) {
-                displayMsg('Item Removed', 'success');
+                displayMsg('Item Removed', 'success', 'output-box');
                 document.getElementById('bookSets'+idBook).remove();        // remove from list
             } else {
                 alert('error');
@@ -211,7 +310,7 @@ function removeFromCartMinus(idBasket, idBook){
         httpRequest.onreadystatechange = function () {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === 200) {
-                    displayMsg('Item removed', 'warning');
+                    displayMsg('Item removed', 'warning', 'output-box');
                     $('#totalPriceForItem'+idBook).html(calculatePrice(idBook, --quantity));
                     $('#itemQuantity'+idBook).html(this.responseText);
                 } else {
@@ -239,11 +338,11 @@ function addCartPlus(id){
     httpRequest.onreadystatechange = function () {
     if (httpRequest.readyState === XMLHttpRequest.DONE) {
         if (httpRequest.status === 200) {
-            displayMsg('Item added', 'success');
+            displayMsg('Item added', 'success', 'output-box');
             $('#totalPriceForItem'+id).html(calculatePrice(id, ++quantity));
             $('#itemQuantity'+id).html(this.response);
         } else {
-            displayMsg('Item could not be added', 'warning');
+            displayMsg('Item could not be added', 'warning', 'output-box');
             alert('error');
         }
         }
@@ -335,7 +434,7 @@ function addCart(id){
     httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
     // send data
     httpRequest.send('addForProductID=' + id);
-    displayMsg('Item added', 'success');
+    displayMsg('Item added', 'success', 'output-box');
 
 }
 
@@ -426,7 +525,7 @@ function register_form(formID) {
             } else if (httpRequest.readyState === 4){
                 if (httpRequest.status === 200 && httpRequest.DONE) {
                     $("#register-modal").modal('hide');
-                    displayMsg(this.responseText);
+                    displayMsg(this.responseText, 'success', 'output-box');
                 } else{
                     selectForm.insertAdjacentHTML('beforeend', message.failure);
                 }
@@ -449,10 +548,10 @@ function logIn_form(formID){
 
     // check input fields
     if (firstField === "" || firstField === null) {
-        displayMsg("Email must be filled out");         // display error message if true
+        displayMsg("Email must be filled out", 'warning', 'output-box');         // display error message if true
     }
     else if (secondField === "" || secondField === null) {
-        displayMsg("Password must be filled out");      // display error message if true
+        displayMsg("Password must be filled out", 'warning', 'output-box');      // display error message if true
     } else {
         // initialise httpRequest
         let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
@@ -471,7 +570,7 @@ function logIn_form(formID){
             if (httpRequest.readyState === 4 && httpRequest.DONE) {
                 document.getElementById(formID).elements.namedItem('emailLogIn').value = '';
                 document.getElementById(formID).elements.namedItem('passwordLogIn').value = '';
-                displayMsg(this.responseText);      // display result
+                displayMsg(this.responseText, 'success', 'output-box');      // display result
             }
         };
     }

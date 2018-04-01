@@ -13,7 +13,7 @@
     <!-- Bootstrap theme -->
     <link href="/css/bootstrap-theme.css" rel="stylesheet">
     <link href="/css/my-style.css" rel="stylesheet">
-    <link rel="icon" href="images/logo.png">
+    <link rel="icon" href="/images/logo.png">
 <!--    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">-->
 <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
 <!--    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>-->
@@ -34,7 +34,7 @@
 <!--<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">-->
 <!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>-->
 <!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
-    <script type="text/javascript" src="../../js/js.js"></script>
+<!--    <script type="text/javascript" src="../../js/js.js"></script>-->
     <script type="text/javascript" src="../../js/AjaxKitClass.js"></script>
 
 
@@ -59,19 +59,12 @@
         </div>
         <div id="myNavbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li><a href="../../shopList.php">Shop</a></li>
-                <li onclick="search()"><a href="#searching">Search</a></li>
-<!--                <li><a href="../../logOut.php"></a></li>-->
+                <li><a href="/shopList.php">Shop</a></li>
+                <li onclick="searchForm()">
+                    <button class="btn btn-success" id="searchBtn">Search</button>
+                </li>
             </ul>
 
-<!--            <form action="../../shopList.php" method="post" class="navbar-form navbar-left" role="search">-->
-<!--                    <input name="search" type="text" class="form-control" placeholder="Search...">-->
-<!--                <input name="look" type="submit" class="btn btn-primary" value="Search"  />-->
-<!---->
-<!--<!--                <div class='printchatbox' id='printchatbox'></div>-->
-<!--<!---->
-<!--<!--                <input type='text' name='fname' class='chatinput' id='chatinput'>-->
-<!--            </form>-->
         <div id="refresh">
             <ul class="nav navbar-nav navbar-right">
                 <?php
@@ -96,9 +89,10 @@
                 ?>
             </ul>
             <div id="searching">
-                <button type="button" class="close"><span class="glyphicon glyphicon-home"></button>
+                <button type="button" class="close" id="closeBtn"><span class="glyphicon glyphicon-home"></button>
                 <form id="searchForm" class="searchPageForm">
-                    <input autocomplete="off" id="mySearch" name="q" onkeyup="showResult(this.value)" type="search" size="20" placeholder="start typing..."/>
+                    <input autocomplete="off" id="mySearch" name="searchFor" onkeyup="showResult(this.value)"
+                           type="search" size="20" placeholder="start typing..."/>
                 </form>
                 <div class="custom-option" id="livesearch"">
             </div>

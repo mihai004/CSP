@@ -1,7 +1,12 @@
 <?php
 require_once ('Database.php');
 require('BasketData.php');
-session_start();
+//// JSON
+//require ('OutputInterface.php');
+//require ('SerializedArrayOutput.php');
+//require ('JsonStringOutput.php');
+//require ('ArrayOutput.php');
+
 
 class BasketDataSet
 {
@@ -256,4 +261,18 @@ class BasketDataSet
         $count = $statement->rowCount();
         return $count;
     }
+
+    // JSON WORK
+
+    protected $output;
+
+    public function setOutput(OutputInterface $outputType){
+        $this->output = $outputType;
+    }
+
+    public function loadOutput($arrayOfData){
+        return $this->output->load($arrayOfData);
+    }
+
+
 }

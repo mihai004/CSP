@@ -1,6 +1,9 @@
 <?php
 require_once ('Database.php');
 require_once ('BookData.php');
+// JSON
+
+
 class BooksDataSet
 {
     protected $_dbHandle, $_dbInstance;
@@ -261,5 +264,17 @@ class BooksDataSet
             $data = htmlspecialchars($data);
             return $data;
         }
+    }
+
+    // JSON WORK
+
+    protected $output;
+
+    public function setOutput(OutputInterface $outputType){
+        $this->output = $outputType;
+    }
+
+    public function loadOutput($arrayOfData){
+        return $this->output->load($arrayOfData);
     }
 }

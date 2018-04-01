@@ -3,6 +3,10 @@ require ('Models/UserDataSet.php');
 require ('Models/BookDataSet.php');
 require ('Models/BasketDataSet.php');
 require ('Models/ReviewDataSet.php');
+require ('Models/OutputInterface.php');
+require ('Models/SerializedArrayOutput.php');
+require ('Models/JsonStringOutput.php');
+require ('Models/ArrayOutput.php');
 
 //session_start();
 $view = new stdClass();
@@ -23,6 +27,7 @@ $reviewDataSet = new ReviewDataSet();
 
 
 //echo $_POST['message'];
+
 if(isset($_POST['message'])){
 
     if(!(isset($_SESSION['userEmail']))) {
@@ -58,7 +63,7 @@ else {
         $view->review = $reviewDataSet->getComments($_GET['id']);
 
     }
-    require ('Views/product.phtml');
+        require ('Views/product.phtml');
 }
 
 //if(!empty($_POST['load'])){

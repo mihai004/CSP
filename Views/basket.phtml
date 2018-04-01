@@ -58,7 +58,8 @@ if (empty($view->basket) and !(isset($_GET['thankYou']))) {
             <tr id="bookSets' . $basketData->getBookID() . '">
            <div id="bookSet' . $basketData->getBookID() . '" class="col-sm-12"
                 data-id="' . $basketData->getIdBasket() . '">  
-            <td class="hidden-xs"><p  style="text-align: center;">'.'<img height="60xp" width="50px" src="../images/' . $book->getPhotoName() . ' " alt="no pic" />' . '</p></td>   
+            <td class="hidden-xs"><p  style="text-align: center;">'.'<img id="smallImg"
+            src="/images/' . $book->getPhotoName() . ' " alt="no pic" />' . '</p></td>   
             <td  style="text-align:center;">' . $book->getBookName() . '</td>
             <td>' . $book->getNumberInStock() . ' </td>
             <td  class="hidden-xs" id="priceForItem' . $basketData->getBookID() . '">' . money_format("%n",$book->getPrice()) . '</td>
