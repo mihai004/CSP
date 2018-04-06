@@ -20,33 +20,64 @@
 
                 </div>
 
-                <div id="myNav" class="collapse navbar-collapse">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <button class="btn-lg btn-toolbar hidden-lg hidden-md" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    Sort by:
+                </button>
                     <form action="../shopList.php" method="post">
-                        <ul class="nav navbar-nav">
-                            <div class="text-center">
-                            <select name="filter_1" id="sources" class="custom-select sources" placeholder="Category">
+
+
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <ul class="list-group-item">
+                                <label for="category">Category: </label>
+
+                                <select onchange="filterInfo()" class="selectpicker col-sm-12 col-md-2 col-xs-12"
+                                        data-style="btn-warning" id="category">
                                 <option value="science">Science</option>
                                 <option value="novel">Novel</option>
                                 <option value="poetry">Poetry</option>
                                 <option value="philosophy">Philosophy</option>
-                            </select>
-                                <select name="filter_2" id="sources" class="custom-select sources" placeholder="Price">
+                                </select>
+
+                                <label for="nrInStock">NrInStock: </label>
+
+                                <select onchange="filterInfo()" class="selectpicker col-sm-12 col-md-2 col-xs-12"
+                                        data-style="btn-warning" id="nrInStock">
+                                    <option value="1">1</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="30">30</option>
+                                    <option value="100">100</option>
+                                </select>
+
+                                <label for="price">Price: </label>
+
+                                <select onchange="filterInfo()" class="selectpicker col-sm-12 col-md-2 col-xs-12"
+                                        data-style="btn-warning" id="price">
                                     <option value="asc">Asc</option>
                                     <option value="desc">Desc</option>
                                 </select>
+
                             </div>
+
                         </ul>
-                        <input id="sortBut" name="sort" class="test pull-right" type="submit" placeholder="Sort">
+<!--                        <input id="sortBut" name="sort" class="test pull-right" type="submit" placeholder="Sort">-->
                     </form>
-                </div>
+                </nav>
+<!--</div>-->
             </nav>
 
-            <div class="col-md-offset-1 col-xs-offset-1 col-lg-offset-1 col-sm-offset-1">
+            <div class="col-md-offset-1 col-xs-offset-0 col-lg-offset-1 col-sm-offset-1">
                         <?php foreach ($view->booksDataSet as $bookData) {
                             echo '
-                             <div class="bookSet" style="font-size: 18px;">
-                            
-                             <div style="text-align: center; height: 250px;" class="card">
+                           
+                             <div style="margin-top: 40px;" class="bookSet" style="font-size: 18px;">
+                         
+                             <div style="text-align: center; margin: auto; height: 250px;" class="card">
+                              <div id="output-box' . $bookData->getIdBook() . '"></div>  
                                     <p>' . '<img  src="/images/'. $bookData->getPhotoName()  . ' " alt="no pic" />' . '</p>
                                 
                              <div class="card-body" style="font-size: 18px;">
@@ -69,7 +100,7 @@
            class="btn btn-primary btn-success addToCart"><b>Add to</b>
            <span class="glyphicon glyphicon-shopping-cart"></span></button>' . ' </p>
            
-</p>                        
+</p>                     
   </div>
 </div> </div>                            
                              

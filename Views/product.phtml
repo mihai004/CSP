@@ -7,22 +7,15 @@
 <body>
 <div class="container" id="shop">
 
-<!--    <form action="--><?php //echo $_SERVER['PHP_SELF']; ?><!--" method="post">-->
-
     <div class="row">
         <div class="col-sm-12" style="margin-top: 100px;">
-<!--            --><?php
-//
-//            echo '<a href="/product.php?id='. $view->product->getIdBook() .'"> <div id="singleBook">
-//                        <p style="float: right; font-size: 25px; color: #4876FF;"><b><i> ' . $view->product->getBookName() . ' </i></b></p>
-//                        </div></a>';
-//            ?>
 
             <div class="col-xs-11 col-sm-6">
 
                 <?php
                 echo '
                       <div href="product.php?id='. $view->product->getIdBook() .'"> 
+                      <div id="output-box' .$view->product->getIdBook() .'"></div>
                        <div id="aloneBook">
                             <p style="font-size:15px;text-align: justify; margin-right: 20px; text-indent: 3em;"><img style="float:left;width:175px;height:250px;margin-right:15px;" 
                             src="/images/'. $view->product->getPhotoName()  . ' " 
@@ -63,7 +56,7 @@
             </div>
         </div>
         <p><button class="btn-lg btn-success glyphicon-plus" onclick="addCart('<?php echo $view->product->getIdBook(); ?>')"
-                   type="submit" name="addMoreItems">  Add to Basket</button></p>
+                   type="submit" name="addMoreItems"> Add to Basket </button></p>
     </div>
     <div id="output-box"></div>
 

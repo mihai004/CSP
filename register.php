@@ -10,11 +10,12 @@ if(isset($_SESSION['userID'])) {
 }
 
 //  register and logIn form
-if( isset($_POST['emailReg']) and !empty($_POST['emailReg']) ){
-    if(empty($_POST))
+if( isset($_POST['emailReg']) or !empty($_POST['emailReg']) ){
     if($userDataSet->registerUser($_POST)===true){
         echo 'Welcome' . $_POST['emailReg'];
+    } else {
+        echo 'not working';
     }
-} else{
+} elseif (!isset($_POST['emailReg']) or $_POST['emailReg'] !== 'Uncompleted field'){
     require ('Views/account.phtml');
 }

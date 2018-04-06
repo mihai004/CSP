@@ -1,3 +1,88 @@
+
+function filterInfo(id, value) {
+    let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+
+    let urlComponentOne=document.getElementById('category').value;
+    let urlComponentTwo=document.getElementById('nrInStock').value;
+    let urlComponentThree=document.getElementById('price').value;
+
+
+    let obj = { "category": urlComponentOne, "nrInStock": urlComponentTwo, "price": urlComponentThree};
+    let dbParam = JSON.stringify(obj);
+
+    httpRequest.open("GET", 'shopList.php?sort=' + dbParam, true);
+
+    httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    httpRequest.send();
+
+    let myValues = null;
+    httpRequest.onreadystatechange = function () {
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+                try {
+
+                    myValues = JSON.parse(this.responseText);
+                    myValues.forEach(function (key) {
+                        console.log(key._bookName);
+
+                    });
+                }
+                catch(e) {
+                    //loadInComplete();
+                }
+                 window.history.pushState("object or string", "Title", "/shopList.php/"
+                     + encodeURIComponent(JSON.stringify(obj)));
+            } else {
+                alert('error');
+            }
+        }
+    };
+
+
+}
+
+
+
+$(document).ready(function() {
+
+    $(".custom-select").each(function () {
+        let classes = $(this).attr("class"), id = $(this).attr("id"), name = $(this).attr("name");
+        let template = '<div class="' + classes + '">';
+        template += '<span class="custom-select-trigger">' + $(this).attr("placeholder") + '</span>';
+        template += '<div class="custom-options">';
+        $(this).find("option").each(function () {
+            template += '<span  class="custom-option ' + $(this).attr("class") + '" data-value="' + $(this).attr("value") + '">' + $(this).html() + '</span>';
+        });
+        template += '</div></div>';
+
+        $(this).wrap('<div class="custom-select-wrapper"></div>');
+        $(this).hide();
+        $(this).after(template);
+    });
+    $(".custom-option:first-of-type").hover(function () {
+        $(this).parents(".custom-options").addClass("option-hover");
+    }, function () {
+        $(this).parents(".custom-options").removeClass("option-hover");
+    });
+    $(".custom-select-trigger").on("click", function () {
+        $('html').one('click', function () {
+            $(".custom-select").removeClass("opened");
+        });
+        $(this).parents(".custom-select").toggleClass("opened");
+        event.stopPropagation();
+    });
+    $(".custom-option").on("click", function () {
+        $(this).parents(".custom-select-wrapper").find("select").val($(this).data("value"));
+        $(this).parents(".custom-options").find(".custom-option").removeClass("selection");
+        $(this).addClass("selection");
+        $(this).parents(".custom-select").removeClass("opened");
+        $(this).parents(".custom-select").find(".custom-select-trigger").text($(this).text());
+        filterInfo(this.textContent);
+    });
+
+});
+
 function showResult(searchingFor) {
 
     if (searchingFor.length===0) {
@@ -11,8 +96,6 @@ function showResult(searchingFor) {
 
     httpRequest.open("GET", "backend-search.php?searchFor="+searchingFor, true);
 
-
-
     httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
     httpRequest.send();
@@ -20,37 +103,34 @@ function showResult(searchingFor) {
     httpRequest.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             try {
-
-                myValues = JSON.parse(this.responseText);
-                console.log(myValues);
                 let results = document.getElementById('livesearch');
 
-                while (results.hasChildNodes()){
-                    results.removeChild(results.lastChild);
+                if(this.responseText == 'No results found'){
+                    console.log(this.responseText);
+                    results.innerHTML = 'No results found';
+                } else  {
+                    results.innerHTML = '';
                 }
+
+                myValues = JSON.parse(this.responseText);
 
                 myValues.forEach(function (key) {
 
-                    let parent = document.createElement('a');
+                    let parent = document.createElement('div');
                     parent.href = '/product.php?id=' + key._idBook;
-                    parent.id = "custom-option";
-                    parent.className = 'row';
+                    parent.className = "row list-group-item";
+                    parent.style.height = '85px';
 
                     let image = document.createElement('img');
-                    image.className = "col-sm-2 col-md-3";
+                    image.className = "col-sm-2 col-md-3 col-offset-lg-3";
                     image.id = 'smallImg';
                     image.src = '/images/' + key._photoName;
                     parent.appendChild(image);
 
-                    let bookName = document.createElement('p');
-                    bookName.className = "col-sm-5 col-md-3";
-                    bookName.innerHTML = key._bookName;
-                    parent.appendChild(bookName);
-
-                    let bookAuthor = document.createElement('p');
-                    bookAuthor.innerHTML = " by " + key._author;
-                    bookAuthor.className = "col-sm-5 col-md-3";
-                    parent.appendChild(bookAuthor);
+                    let bookDetails = document.createElement('p');
+                    bookDetails.className = "col-sm-10 col-md-8 col-lg-10";
+                    bookDetails.innerHTML = key._bookName + " by " + key._author;;
+                    parent.appendChild(bookDetails);
 
                     results.appendChild(parent);
 
@@ -59,6 +139,7 @@ function showResult(searchingFor) {
             catch(e) {
                // loadInComplete();
             }
+
         }
     };
 
@@ -97,37 +178,6 @@ function searchForm() {
 
 
 
-
-function displayMsg(msg, type, textBox) {
-
-    let boxTimeout = 0;
-    let displayBox = document.createElement("div");
-    if(type == 'warning'){
-        displayBox.className = "alert alert-warning";
-    }
-    else if(type == 'success'){
-        displayBox.className = "alert alert-success";
-    }
-    else if (type == 'info') {
-        displayBox.className = "alert alert-info";
-    } else if (type == 'danger') {
-        displayBox.className = "alert alert-danger";
-    }
-    displayBox = styleBox(displayBox);
-    displayBox.innerHTML = msg;
-
-    if (document.body.contains(displayBox)) {
-        clearTimeout(boxTimeout);
-    } else {
-        let myTextBox = document.getElementById(textBox);
-        myTextBox.parentNode.insertBefore(displayBox, myTextBox.previousSibling);
-    }
-
-    setTimeout(function() {
-        displayBox.parentNode.removeChild(displayBox);
-        boxTimeout = -1;
-    }, 2000);
-}
 
 function move() {
     let elem = document.getElementById("myBar");
@@ -299,8 +349,8 @@ function removeFromCartMinus(idBasket, idBook){
     let nrOfBooks = document.getElementById('nrOfBooks').value;
 
     if(nrOfBooks <= 1 && quantity <= 1){
-        document.getElementById('clearCart').style.display = 'none';
-        document.getElementById('checkOut').style.display = 'none';
+      //  document.getElementById('clearCart').style.display = 'none';
+      //  document.getElementById('checkOut').style.display = 'none';
     }
     if(quantity <= 1){
         removeFromCart(idBasket, idBook);
@@ -434,8 +484,17 @@ function addCart(id){
     httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
     // send data
     httpRequest.send('addForProductID=' + id);
-    displayMsg('Item added', 'success', 'output-box');
-
+    let d = 'output-box' + id;
+    httpRequest.onreadystatechange = function () {
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+                console.log(d);
+                displayMsg('Item added', 'success', d);
+            } else {
+                displayMsg('Item could not be added. LogIn first!', 'warning', 'output-box');
+            }
+        }
+    };
 }
 
 
@@ -480,57 +539,147 @@ function sendComment(formID, id){
 
 }
 
+function dropHandler(event){
+    console.log('File(s) dropped');
+
+    event.preventDefault();
+
+    if(event.dataTransfer.items){
+        for(let i = 0; i < event.dataTransfer.items.length; i++){
+            if(event.dataTransfer.items[i].kind === 'file')
+            {
+                let file = event.dataTransfer.items[i].getAsFile();
+                uploadFile(file);
+                console.log('... file[' + i + '].name = ' + file.name);
+            }
+        }
+    } else {
+        for(let i = 0; i < event.dataTransfer.items.length; i++){
+                console.log('... file[' + i + '].name = ' + event.dataTransfer.files[i].name);
+        }
+    }
+
+    removeDragData(event);
+}
+
+function dragOverHandler(event) {
+    console.log(('File(s) in drop zone'));
+
+    event.preventDefault();
+}
+
+function removeDragData(event) {
+    console.log('Removing drag data');
+
+    if(event.dataTransfer.files){
+        event.dataTransfer.items.clear();
+    } else {
+        event.dataTransfer.clearData();
+    }
+}
+
+function uploadFile(file) {
+    event.preventDefault();
+    let fd = new FormData();
+   // let file = document.getElementById('fileToUpload').files[0];
+    fd.append("fileToUpload", file);
+    let xhr = new XMLHttpRequest();
+    xhr.upload.addEventListener("progress", uploadProgress, false);
+    xhr.addEventListener("load", uploadComplete, false);
+    xhr.addEventListener("error", uploadFailed, false);
+    xhr.addEventListener("abort", uploadAborted, false);
+    // xhr.open('POST', 'test.php', true);
+    xhr.open("POST", "upload.php", true);
+    //xhr.setRequestHeader("X-File-Name", file.name);
+    //xhr.setRequestHeader("Content-Type", "application/octet-stream");
+    xhr.send(fd);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                xhr.responseText;
+            } else {
+                alert('error');
+            }
+        }
+    };
+}
+
+function uploadProgress(evt){
+    if(evt.lengthComputable){
+        let percentComplete = Math.round(evt.loaded * 100/ evt.total);
+        document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+    } else {
+        document.getElementById('progressNumber').innerHTML = "unable to compute";
+    }
+}
+
+function uploadComplete() {
+    alert("works");
+}
+function uploadFailed() {
+    alert("failed");
+}
+function uploadAborted() {
+    alert("aborted");
+}
+
+
+
 
 
 function register_form(formID) {
     event.preventDefault();
 
-    let message = Object;
-    message.loading = 'Complete the form..';
-    message.success = 'Thank you for registering with us';
-    message.failure = 'Whoops! There was a problem signing you up!';
-
     let selectForm = document.getElementById(formID);
-   // let statusMessage = document.createElement('div');
-   // statusMessage.className = 'status';
 
     let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     let formMethod = document.getElementById(formID).getAttribute('method').toUpperCase();
     let formAction = document.getElementById(formID).getAttribute('action').toLowerCase();
-
+    let btn = document.getElementById('registerBtn');
     let formInputs = document.getElementById(formID).querySelectorAll("input");
+    let nr = 0;
 
-    selectForm.addEventListener('click', function () {
+    btn.addEventListener('click', function () {
 
         let formData = new FormData();                  // creates a formData object
-
-        for (let i = 0; i < formInputs.length-1; i++) { // the button is ignored
-            console.log(formInputs[i].value);
-            formData.append(formInputs[i].name, formInputs[i].value); // Add all inputs inside formData().
-        }
-
-        //selectForm.appendChild(statusMessage);
-        // open the httpRequest
-        httpRequest.open(formMethod, formAction, true);
-        // Set content type header information for sending url encoded variables in the request
-        httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        // Security measurement against XSS attack
-        httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
-        // send data
-        httpRequest.send(formData);
-
-        httpRequest.onreadystatechange = function () {
-            if(httpRequest.readyState < 4){
-                   selectForm.reset();                 // input fields are reset
-            } else if (httpRequest.readyState === 4){
-                if (httpRequest.status === 200 && httpRequest.DONE) {
-                    $("#register-modal").modal('hide');
-                    displayMsg(this.responseText, 'success', 'output-box');
-                } else{
-                    selectForm.insertAdjacentHTML('beforeend', message.failure);
-                }
+        for (let i = 0; i < formInputs.length - 1; i++) { // the button is ignored
+            if (formInputs[i].value.length < 1 || formInputs[i].value == 'Uncompleted field') {
+                formInputs[i].value = 'Uncompleted field';
+                formInputs[i].style.color = 'red';
+            } else {
+                nr++;
             }
         }
+        if (nr == formInputs.length-1) {
+            for (let i = 0; i < formInputs.length - 1; i++) {
+
+                formData.append(formInputs[i].name, formInputs[i].value); // Add all inputs inside formData().
+                // open the httpRequest
+            }
+            httpRequest.open(formMethod, formAction, true);
+            // Set content type header information for sending url encoded variables in the request
+            httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            // Security measurement against XSS attack
+            httpRequest.setRequestHeader('X-XSS-Protection', '1;mode=block');
+            // send data
+            httpRequest.send(formData);
+
+            httpRequest.onreadystatechange = function () {
+                if (httpRequest.readyState < 4) {
+                    selectForm.reset();                 // input fields are reset
+                } else if (httpRequest.readyState === 4) {
+                    if (httpRequest.status === 200 && httpRequest.DONE) {
+                        $("#register-modal").modal('hide');
+                        displayMsg(this.responseText, 'success', 'output-box');
+                    } else {
+                        selectForm.insertAdjacentHTML('beforeend', message.failure);
+                    }
+                }
+            }
+
+        }
+
+
     });
 }
 
@@ -541,7 +690,7 @@ function logIn_form(formID){
     // get the method and the action of the form
     let formMethod = document.getElementById(formID).getAttribute('method').toUpperCase();
     let formAction = document.getElementById(formID).getAttribute('action').toLowerCase();
-    console.log(formAction);
+
     // get values of the field
     let firstField = document.getElementById(formID).elements.namedItem('emailLogIn').value;
     let secondField = document.getElementById(formID).elements.namedItem('passwordLogIn').value;
@@ -582,6 +731,40 @@ function styleBox(displayBox){
     displayBox.style.fontSize = '20px';
     return displayBox;
 }
+
+
+
+function displayMsg(msg, type, textBox) {
+
+    let boxTimeout = 0;
+    let displayBox = document.createElement("div");
+    if(type == 'warning'){
+        displayBox.className = "alert alert-warning";
+    }
+    else if(type == 'success'){
+        displayBox.className = "alert alert-success";
+    }
+    else if (type == 'info') {
+        displayBox.className = "alert alert-info";
+    } else if (type == 'danger') {
+        displayBox.className = "alert alert-danger";
+    }
+    displayBox = styleBox(displayBox);
+    displayBox.innerHTML = msg;
+
+    if (document.body.contains(displayBox)) {
+        clearTimeout(boxTimeout);
+    } else {
+        let myTextBox = document.getElementById(textBox);
+        myTextBox.parentNode.insertBefore(displayBox, myTextBox.previousSibling);
+    }
+
+    setTimeout(function() {
+        displayBox.parentNode.removeChild(displayBox);
+        boxTimeout = -1;
+    }, 2000);
+}
+
 
 
 //

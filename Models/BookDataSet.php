@@ -55,6 +55,21 @@ class BooksDataSet
     }
 
 
+    public function searchBy($category, $nrInStock, $price){
+        $this->test_input($price);
+        $sqlQuery = "SELECT * FROM Books WHERE category = ? AND numberInStock >= ? ORDER BY price $price";
+        $statement = $this->_dbHandle->prepare($sqlQuery);
+        $statement->bindParam(1, $category, PDO::PARAM_STR);
+        $statement->bindParam(2, $nrInStock, PDO::PARAM_STR);
+        $statement->execute();
+        $dataSet = [];
+        while($row = $statement->fetch()) {
+            $dataSet[] = new BookData($row);
+        }
+        return $dataSet;
+    }
+
+
     /**
      * The method is called when a user wants to choose the way the products are displayed on
      * the shop list page.

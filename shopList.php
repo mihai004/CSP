@@ -2,7 +2,12 @@
 require('Models/UserDataSet.php');
 require('Models/BookDataSet.php');
 require('Models/BasketDataSet.php');
+require ('Models/OutputInterface.php');
+require ('Models/SerializedArrayOutput.php');
+require ('Models/JsonStringOutput.php');
+require ('Models/ArrayOutput.php');
 
+session_start();
 
 $view = new stdClass();
 $view->pageTitle = 'Books';
@@ -10,6 +15,10 @@ $view->pageTitle = 'Books';
 $booksDataSet = new BooksDataSet();
 $basketDataSet = new BasketDataSet();
 $userDataSet = new UserDataSet();
+
+
+
+
 
 $total = $booksDataSet->countItems();
 $limit = 0;
@@ -45,6 +54,7 @@ if (empty($view->booksDataSet)) {
 //    $view->booksDataSet = $booksDataSet->searchByAttribute($_POST['search']);
 //
 //}
+
 
 if(isset($_POST['filter_1']) || isset($_POST['filter_2'])) {
     $total = $booksDataSet->countFilters($_POST['filter_1'], $_POST['filter_2']);
@@ -84,6 +94,35 @@ if(isset($_SESSION['userID'])) {
 //    require_once('Views/shopList.phtml');
 //}
 
+//if(isset($_GET['category'])){
+//    echo $_GET['category'];
+//    //var_dump($booksDataSet->searchBy($_GET['category']));
+//    $arr = $booksDataSet->searchBy($_GET['category']);
+//    $bookDataSet->setOutput(new JsonStringOutput());
+//    if(empty($arr)){
+//        echo 'No results found';
+//    } else {
+//        echo $reviewsJson = $bookDataSet->loadOutput($arr);
+//    }
+//
+//} else {
+//    require('Views/shopList.phtml');
+//}
 
-require('Views/shopList.phtml');
 
+//echo json_decode($_GET['dbParam']);
+if(isset($_GET['sort'])){
+
+    $obj = json_decode($_GET['sort']);
+
+    $arr = $booksDataSet->searchBy($obj->category, $obj->nrInStock, $obj->price);
+    $booksDataSet->setOutput(new JsonStringOutput());
+    if(empty($arr)){
+        echo 'No results found';
+    } else {
+        echo $reviewsJson = $booksDataSet->loadOutput($arr);
+    }
+
+} else {
+    require('Views/shopList.phtml');
+}

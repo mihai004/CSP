@@ -249,6 +249,7 @@ class UserDataSet
             {
 
                 if($user->getConfirmed()) {
+//                    session_start();
                     $_SESSION['userID'] = $user->getIdUser();
                     $_SESSION['userEmail'] = $user->getEMail();
                     return true;

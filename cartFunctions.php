@@ -1,11 +1,12 @@
 <?php require ('Models/BasketDataSet.php');
 
-//session_start();
+session_start();
 
 $view = new stdClass();
 $view->pageTitle = 'Cart';
 
 $basket = new BasketDataSet();
+
 
 // the user is logged in, thereby one can add items to the basket
 if (isset($_SESSION['userID']) and (isset($_POST['addForProductID']))) {

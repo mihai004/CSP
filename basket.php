@@ -8,6 +8,8 @@ require('Models/BasketDataSet.php');
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+session_start();
+
 $view = new stdClass();
 $view->pageTitle = 'Books';
 
@@ -15,7 +17,7 @@ $view->pageTitle = 'Books';
 $userDataSet = new UserDataSet();
 $basketDataSet = new BasketDataSet();
 $booksDataSet = new BooksDataSet();
-
+//
 if(!(isset($_SESSION['userID']))) {
 
    header('Location: index.php');
