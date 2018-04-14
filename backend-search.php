@@ -5,39 +5,47 @@ require ('Models/JsonStringOutput.php');
 require ('Models/ArrayOutput.php');
 
 $bookDataSet = new BooksDataSet();
-$books = $bookDataSet->fetchBooks();
 
-$searchFor = $_GET['searchFor'];
+$searchFor = $_GET['searchFor'] . '%';
+$books = $bookDataSet->searchingFor($searchFor);
 
-
-$hint="";
-if($searchFor !== ''){
-    $searchFor = strtolower($searchFor);
-    $len = strlen($searchFor);
-    $arr=null;
-    $i=0;
-    foreach ($books as $name) {
-        if(stristr($searchFor, substr($name->getBookName(), 0, $len))){
-            if($hint === ""){
-                $arr[$i++] = $name;
-            } else {
-                $arr[$i++] = $name;
-            }
-        }
-        if(stristr($searchFor, substr($name->getAuthor(), 0, $len))){
-            if($hint === ""){
-                $arr[$i++] = $name;
-            } else {
-                $arr[$i++] = $name;
-            }
-        }
-    }
+if(empty($books)){
+    echo 'No results found. Try again!';
+} else {
     $bookDataSet->setOutput(new JsonStringOutput());
-    if(empty($arr)){
-        echo 'No results found';
-    } else {
-        echo $reviewsJson = $bookDataSet->loadOutput($arr);
-    }
+    echo $reviewsJson = $bookDataSet->loadOutput($books);
+}
+
+//$books = $bookDataSet->fetchBooks();
+//
+//$hint="";
+//if($searchFor !== ''){
+//    $searchFor = strtolower($searchFor);
+//    $len = strlen($searchFor);
+//    $arr=null;
+//    $i=0;
+//    foreach ($books as $name) {
+//        if(stristr($searchFor, substr($name->getBookName(), 0, $len))){
+//            if($hint === ""){
+//                $arr[$i++] = $name;
+//            } else {
+//                $arr[$i++] = $name;
+//            }
+//        }
+//        if(stristr($searchFor, substr($name->getAuthor(), 0, $len))){
+//            if($hint === ""){
+//                $arr[$i++] = $name;
+//            } else {
+//                $arr[$i++] = $name;
+//            }
+//        }
+//    }
+//    $bookDataSet->setOutput(new JsonStringOutput());
+//    if(empty($arr)){
+//        echo 'No results found';
+//    } else {
+//        echo $reviewsJson = $bookDataSet->loadOutput($arr);
+//    }
 
 //
 //    if(empty($arr)) {
@@ -49,4 +57,4 @@ if($searchFor !== ''){
 //            }
 //      //  echo '</ul>';
 //    }
-}
+//}

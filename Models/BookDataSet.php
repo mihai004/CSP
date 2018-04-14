@@ -133,15 +133,6 @@ class BooksDataSet
         return $dataSet;
     }
 
-    /**
-     * @return PDO
-     */
-    public function generateJSON($object){
-        for($i=0; $i<sizeof($object); $i++){
-            var_dump(json_encode(serialize($object)));
-        }
-        return $object;
-    }
 
     /**
      * The method returns all the books from the database according to specific parameters passed for
@@ -279,7 +270,22 @@ class BooksDataSet
             $data = htmlspecialchars($data);
             return $data;
         }
+        return null;
     }
+
+    public function searchingFor($keyword){
+       // $sqlQuery = "SELECT * FROM Books WHERE MATCH(bookName) AGAINST ('*' IN NATURAL LANGUAGE MODE)";
+        $sqlQuery = "SELECT * FROM Books WHERE bookName LIKE :keyword OR author LIKE :keyword";
+        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(':keyword',$keyword);
+        $statement->execute(); // execute the PDO statement
+        $dataSet = [];
+        while ($row = $statement->fetch()) {
+            $dataSet[] = new BookData($row);
+        }
+        return $dataSet;
+    }
+
 
     // JSON WORK
 
