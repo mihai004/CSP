@@ -1,4 +1,5 @@
-<?php require ('Models/BookDataSet.php');
+<?php
+require ('Models/BookDataSet.php');
 require ('Models/OutputInterface.php');
 require ('Models/SerializedArrayOutput.php');
 require ('Models/JsonStringOutput.php');

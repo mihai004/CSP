@@ -1,47 +1,138 @@
 //
  function filterInfo() {
-    let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    let httpRequest = new AjaxConnection();
 
     let urlComponentOne=document.getElementById('category').value;
     let urlComponentTwo=document.getElementById('nrInStock').value;
     let urlComponentThree=document.getElementById('price').value;
 
-
     let obj = { "category": urlComponentOne, "nrInStock": urlComponentTwo, "price": urlComponentThree};
     let dbParam = JSON.stringify(obj);
 
-    httpRequest.open("GET", 'shopList.php?sort=' + dbParam, true);
+    httpRequest.openConnection("GET", 'shopList.php?sort=' + dbParam, true);
+    httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
+    httpRequest.sendData();
+    //console.log(httpRequest.getData());
 
-    httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-    httpRequest.send();
 
-    let myValues = null;
-    httpRequest.onreadystatechange = function () {
-        if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            if (httpRequest.status === 200) {
-                // try {
+    getResponse(httpRequest);
+    //  {
+    //
+    //      console.log(this.responseText);
+    // }
 
-                    myValues = JSON.parse(this.responseText);
-                    myValues.forEach(function (key) {
-                        console.log(key._bookName);
-
-                    });
-                // }
-                // catch(e) {
-                //     console.log('error');
-                    //loadInComplete();
-                // }
-                 window.history.pushState("object or string", "Title", "/shopList.php/"
-                     + encodeURIComponent(JSON.stringify(obj)));
-            } else {
-                alert('error');
-            }
-        }
-    };
-
+    // let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    //
+    // let urlComponentOne=document.getElementById('category').value;
+    // let urlComponentTwo=document.getElementById('nrInStock').value;
+    // let urlComponentThree=document.getElementById('price').value;
+    //
+    //
+    // let obj = { "category": urlComponentOne, "nrInStock": urlComponentTwo, "price": urlComponentThree};
+    // let dbParam = JSON.stringify(obj);
+    //
+    // httpRequest.open("GET", 'shopList.php?sort=' + dbParam, true);
+    //
+    // httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    //
+    // httpRequest.send();
+    //
+    // let myValues = null;
+    // httpRequest.onreadystatechange = function () {
+    //     if (httpRequest.readyState === XMLHttpRequest.DONE) {
+    //         if (httpRequest.status === 200) {
+    //             // try {
+    //
+    //                 myValues = JSON.parse(this.responseText);
+    //                 myValues.forEach(function (key) {
+    //                     console.log(key._bookName);
+    //
+    //                 });
+    //             // }
+    //             // catch(e) {
+    //             //     console.log('error');
+    //                 //loadInComplete();
+    //             // }
+    //              window.history.pushState("object or string", "Title", "/shopList.php/"
+    //                  + encodeURIComponent(JSON.stringify(obj)));
+    //         } else {
+    //             alert('error');
+    //         }
+    //     }
+    // };
 
 }
+
+function checkInput(searchingFor){
+    if (searchingFor.length == 0) {
+        document.getElementById("livesearch").innerHTML="";
+        document.getElementById("livesearch").style.border="2px";
+        document.getElementById("livesearch").innerHTML = "No input";
+        let form = document.forms['searchForm'].elements['searchFor'];
+        form.onkeydown = function(evt) {
+            if (evt.keyCode == 8) {
+                document.getElementById('searching').classList.remove('open');
+            }
+        };
+        return false;
+    }
+    return true;
+}
+
+
+function getResponse(displayArea, httpRequest) {
+    let data = '';
+   // let results = document.getElementById('livesearch');
+    httpRequest.getxmlHttp().onreadystatechange = function () {
+        if(this.readyState === 4 && this.status === 200) {
+        //     results.innerHTML = '';
+        //     if(this.responseText == 'No results found. Try again!'){
+        //         results.innerText = 'No results';
+        //     } else {
+        //     let image = document.createElement('img');
+        //     image.src = '/images/loader.gif';
+        //     image.id = 'loader';
+        //     image.style.background = 'none';
+        //     image.style.marginLeft = '20%';
+        //     image.style.height = '25px';
+        //     image.style.width = '25px';
+        //     let l = document.getElementById('searching');
+        //     l.appendChild(image);
+
+                try {
+                    // let image = document.createElement('img');
+                    // image.src = '/images/loader.gif';
+                    // image.style.background = 'none';
+                    // image.style.marginLeft = '20%';
+                    // image.style.height = '15px';
+                    // image.style.width = '15px';
+                   // let l = document.getElementById('searching');
+                    document.getElementById('loader').style.display = 'inline';
+                    data = JSON.parse(this.responseText);
+                    let object = new BookData();
+                        for(let i = 0; i <= data.length-1; i++) {     // faster => check at: https://jsperf.com/fast-array-foreach
+                            object.setStyle(displayArea, data[i]);
+                    }
+
+
+
+                    //l.removeChild(image);
+                   // console.log(displayArea);
+                    httpRequest.showLoadedData();
+
+               } catch(e) {
+                    document.getElementById('loader').style.display = 'none';
+                    httpRequest.loadInComplete(displayArea);
+                    //httpRequest.loadInComplete();
+                    //console.log(httpRequest.loadInComplete());
+                    //displayMsg('No results', 'warning', displayArea);
+                }
+        }
+    }
+}
+
+
 
 
 
@@ -79,7 +170,7 @@ $(document).ready(function() {
         $(this).addClass("selection");
         $(this).parents(".custom-select").removeClass("opened");
         $(this).parents(".custom-select").find(".custom-select-trigger").text($(this).text());
-        filterInfo(this.textContent);
+      //  filterInfo(this.textContent);
     });
 
 });
@@ -91,23 +182,149 @@ $(document).ready(function() {
 //     http.sendData();
 // }
 
+function loadInComplete(){
+    displayMsg('No more reviews for this book. Feel free to share yours!', 'warning', 'progress-box');
+}
+
+function onProgress() {
+    move();
+}
+
+
+function checkInput(searchingFor){
+    if (searchingFor.length == 0) {
+        document.getElementById("livesearch").innerHTML="";
+        document.getElementById("livesearch").style.border="2px";
+        document.getElementById("livesearch").innerHTML = "No input";
+        // let form = document.forms['searchForm'].elements['searchFor'];
+        // form.onkeydown = function(evt) {
+        //     if (evt.keyCode == 8) {
+        //         document.getElementById('searching').classList.remove('open');
+        //     }
+        // };
+        return false;
+    }
+    // let l = document.getElementById('searching');
+    // let loader = document.getElementById('loader');
+    // l.removeChild(loader);
+    document.getElementById("livesearch").innerHTML = '';
+    // if (searchingFor == 'No results found. Try again!'){
+    //     console.log('here');
+    //     document.getElementById("livesearch").innerHTML = "No results found. Try again!";
+    //     return false;
+    // }
+    return true;
+}
+
+
+
 function showResult(searchingFor) {
 
+    //let image = document.createElement('img');
+    let image = document.getElementById('loader');
+    image.src = '/images/loader.gif';
+    image.id = 'loader';
+    image.style.background = 'none';
+    image.style.marginLeft = '48%';
+    image.style.height = '45px';
+    image.style.width = '45px';
+    //let l = document.getElementById('loader');
+    //l.innerHTML = image;
+
+
+    let results = document.getElementById('livesearch');
+
     let http = new AjaxConnection();
-    http.openConnection("GET", "backend-search.php?searchFor="+searchingFor, true);
+    http.openConnection("GET", "backend-search.php?searchFor=" + searchingFor, true);
     http.setHeaders("Content-type", "application/x-www-form-urlencoded");
     http.sendData();
+    //http.on() = getResponse()
+      //  let x = http.ready();
+       // console.log(x);
 
-    if (searchingFor.length===0) {
-        document.getElementById("livesearch").innerHTML="";
-        document.getElementById("livesearch").style.border="0px";
-        document.getElementById("livesearch").innerHTML = "No input";
-        return;
+
+    //
+    if (checkInput(searchingFor) == true) {
+        getResponse(results, http);
+    } else {
+        //console.log('no input');
+       //console.log('not working!');
+        //http.showError(loadInComplete());
     }
 
-    http.onreadystatechange();
 
-    let myValues = "";
+    //getResponse(http);
+
+    // http.getxmlHttp().onreadystatechange = function () {
+    //     if(this.readyState === 4 && this.status === 200) {
+    //         console.log(this.responseText);
+    //         //     let myValues = JSON.parse(http.responseText);
+    //     }
+    // };
+
+   // http.onreadystatechange();
+
+    // http.onreadystatechange = function () {
+    //     if(http.readyState === 4 && http.status === 200){
+    //     let myValues = JSON.parse(http.responseText);
+    //     console.log(myValues);
+    //     //let results = document.getElementById('livesearch');
+    //
+    //     // myValues.forEach(function (key) {
+    //     //
+    //     //     let parent = document.createElement('div');
+    //     //     parent.addEventListener('click', function () {
+    //     //         location.href = 'product.php?id=' + key._idBook;
+    //     //     });
+    //     //     parent.className = "row list-group-item";
+    //     //     parent.style.height = '85px';
+    //     //
+    //     //     let image = document.createElement('img');
+    //     //     image.className = "col-sm-2 col-md-3 col-offset-lg-3";
+    //     //     image.id = 'smallImg';
+    //     //     image.src = '/images/' + key._photoName;
+    //     //     parent.appendChild(image);
+    //     //
+    //     //     let bookDetails = document.createElement('p');
+    //     //     // bookDetails.className = "col-sm-10 col-md-8 col-lg-10";
+    //     //     // bookDetails.href = 'product.php?id=' + key._idBook;
+    //     //     bookDetails.innerHTML = key._bookName + " by " + key._author;
+    //     //
+    //     //     parent.appendChild(bookDetails);
+    //     //
+    //     //     results.appendChild(parent);
+    //     //
+    //     // });
+    //     }
+    // }
+
+    // http.onreadystatechange = function () {
+    //     console.log('hh');
+    //     if(this.readyState === 4 && this.status === 200){
+    //         // alert(this.responseText);
+    //          console.log(this.responseText);
+    //         //this.responseText;
+    //         //handleResponse(this.responseText);
+    //     }
+    // };
+    //http.onreadystatechange();
+
+    // console.log(t);
+    //http.response();
+    //console.log(JSON.parse(this.responseText));
+    // console.log(http.responseText);
+    // if (checkInput(searchingFor) == true) {
+    //     let responseText = http.onreadystatechange();
+    //
+    // } else {
+    //
+    //    // console.log('not working!');
+    //     //http.showError(loadInComplete());
+    // }
+}
+    //http.onreadystatechange();
+
+    //let myValues = "";
 
     // let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     //
@@ -159,21 +376,28 @@ function showResult(searchingFor) {
     //         }
     //     }
     // };
-}
+//}
 
 function searchForm() {
 
     let openBtn = document.getElementById('searchBtn');
     let closeBtn = document.getElementById('closeBtn');
     let openSearch = document.getElementById('searching');
+    let form = document.forms['searchForm'].elements['searchFor'];
     openBtn.addEventListener('click', function () {
         event.preventDefault();
         openSearch.classList.add('open');
-        document.forms['searchForm'].elements['searchFor'].focus();
+        form.focus();
     });
 
-    closeBtn.addEventListener('click', function () {
+    form.onkeydown = function(evt) {
+        if (evt.keyCode == 27) {
             openSearch.classList.remove('open');
+        }
+    };
+
+    closeBtn.addEventListener('click', function () {
+        openSearch.classList.remove('open');
     });
 
 }
@@ -751,13 +975,15 @@ function displayMsg(msg, type, textBox) {
     } else if (type == 'danger') {
         displayBox.className = "alert alert-danger";
     }
+
     displayBox = styleBox(displayBox);
     displayBox.innerHTML = msg;
 
     if (document.body.contains(displayBox)) {
         clearTimeout(boxTimeout);
     } else {
-        let myTextBox = document.getElementById(textBox);
+        //let myTextBox = document.getElementById(textBox);
+        let myTextBox = textBox;
         myTextBox.parentNode.insertBefore(displayBox, myTextBox.previousSibling);
     }
 

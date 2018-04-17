@@ -1,12 +1,14 @@
 class AjaxConnection {
 
-    constructor(){
-        this._xmlHttp = this.getXmlHttp();
-        this._url = null;
-        this._updateStatus = null;
+     constructor() {
+          this._xmlHttp = this.createXmlHttp(); // composition instead of inheritance
+     }                                          // with composition you know what you get
+                                                // no 'extra baggage'
+    getxmlHttp() {
+        return this._xmlHttp;
     }
 
-    getXmlHttp(){
+    createXmlHttp() {
         let xmlHttp;
         if (window.XMLHttpRequest) {
             // code for modern browsers
@@ -18,77 +20,104 @@ class AjaxConnection {
         return xmlHttp;
     }
 
-    openConnection(method, url, updateStatus){
+    openConnection(method, url, updateStatus) {
         this._xmlHttp.open(method, url, updateStatus);
     }
 
-    setHeaders(contentType, value){
+    setHeaders(contentType, value) {
         this._xmlHttp.setRequestHeader(contentType, value);
     }
 
-    sendData(){
+    sendData() {
         this._xmlHttp.send();
     }
 
-    onreadystatechange() {
-        this._xmlHttp.onreadystatechange = function () {
-            if (this.readyState === 4 && this.status === 200) {
-                let myValues;
-                let results = document.getElementById('livesearch');
+    // getData(){
+    //     if(this._xmlHttp.readyState === 4){
+    //         return this._xmlHttp.responseText;
+    //     }
+    //     return null;
+    // }
 
-                if (this.responseText === 'No results found. Try again!') {
-                    results.innerHTML = 'No results found. Try again!';
-                }
-                else {
-                    results.innerHTML = '';
 
-                    myValues = JSON.parse(this.responseText);
+    // getResponse(){
+    //      let data;
+    //      this._xmlHttp.onreadystatechange = function () {
+    //          if(this.readyState === 4 && this.status === 200) {
+    //              data = JSON.parse(this.responseText);
+    //              console.log(data);
+    //          }
+    //      };
+    //      console.log(data);
+    //      return data;
+    // }
 
-                    myValues.forEach(function (key) {
-                        let parent = document.createElement('div');
-                        parent.addEventListener('click', function () {
-                            location.href = 'product.php?id=' + key._idBook;
-                        });
-                        parent.className = "row list-group-item";
-                        parent.style.height = '85px';
 
-                        let image = document.createElement('img');
-                        image.className = "col-sm-2 col-md-3 col-offset-lg-3";
-                        image.id = 'smallImg';
-                        image.src = '/images/' + key._photoName;
-                        parent.appendChild(image);
+    // on(){
+    //      this._xmlHttp.onreadystatechange = function () {
+    //
+    //      };
+    // }
 
-                        let bookDetails = document.createElement('p');
-                        // bookDetails.className = "col-sm-10 col-md-8 col-lg-10";
-                        // bookDetails.href = 'product.php?id=' + key._idBook;
-                        bookDetails.innerHTML = key._bookName + " by " + key._author;
 
-                        parent.appendChild(bookDetails);
+    // onreadystatechange(){
+    //    // function handleResponse(response) {
+    //        // alert(response);
+    //         // return response;
+    //    // }
+    //    this._xmlHttp.onreadystatechange = function (){
+    //         if(this.readyState === 4 && this.status === 200){
+    //            // console.log(this.responseText);
+    //              alert(this.responseText);
+    //             //handleResponse(this.responseText);
+    //         }
+    //    };
+    // }
 
-                        results.appendChild(parent);
-                    });
 
-                }
-            }
-        }
+
+
+    showProgress(onProgress){
+        this._xmlHttp.addEventListener("progress", this.inProgress(), false);
     }
 
-
-    get xmlHttp() {
-        return this._xmlHttp;
+    inProgress(){
+        console.log('in progress');
     }
 
+    on(){
+        return this._xmlHttp.onreadystatechange;
+        // this._xmlHttp.addEventListener('onreadystatechange', this._xmlHttp.readyState >3 , true);
 
-    get url() {
-        return this._url;
+            //this.ready(this._xmlHttp.responseText);
+
+        //}
+        //console.log(this._xmlHttp.responseText);
+       // this.ready();
+        // this._xmlHttp.addEventListener('readystatechange', this.ready(), false);
     }
 
-    get updateStatus() {
-        return this._updateStatus;
+    r(){
+         return this._xmlHttp;
+    }
+
+    ready(){
+        alert(this.r().readyState);
+   }
+
+    showLoadedData(){
+        this._xmlHttp.addEventListener("load", this.loaded(), false);
+    }
+
+    loaded(){
+        console.log('loaded');
+    }
+
+    loadInComplete(displayArea){
+        this._xmlHttp.addEventListener("error", this.showError(displayArea), false);
+    }
+
+    showError(displayArea){
+        displayArea.innerText = 'No results found. Try Again';
     }
 }
-// openx(method){
-//     this.xmlHttp.open(method, this.url, true);
-//     this.xmlHttp.onreadystatechange(this.updateStatus);
-//     this.xmlHttp.send(null);
-// }
