@@ -70,11 +70,12 @@
 <!--</div>-->
             </nav>
 
-            <div class="col-md-offset-1 col-xs-offset-0 col-lg-offset-1 col-sm-offset-1">
+            <div id="displayBook"></div>
+            <div id="removeBook" class="col-md-offset-1 col-xs-offset-0 col-lg-offset-1 col-sm-offset-1">
                         <?php foreach ($view->booksDataSet as $bookData) {
                             echo '
                            
-                             <div style="margin-top: 40px;" class="bookSet" style="font-size: 18px;">
+                             <div style="margin-top: 40px;"  class="bookSet" style="font-size: 18px;">
                          
                              <div style="text-align: center; margin: auto; height: 250px;" class="card">
                               <div id="output-box' . $bookData->getIdBook() . '"></div>  
@@ -107,10 +108,11 @@
                                     ';
                         } ?>
                 </div>
-                <div class="col-xs-12 text-center" style="margin-bottom: 100px;">
+            <div id="displayPagination"></div>
+                <div id="removePagination" class="col-xs-12 text-center" style="margin-bottom: 100px;">
                 <?php
 
-                echo '<nav  aria-label="Page navigation">';
+                echo '<nav aria-label="Page navigation">';
                 echo '<ul class="pagination">';
                 $page =0;
                 if($page > 1){
@@ -144,7 +146,7 @@
                 echo '</nav>';
 
                 ?>
-                    <div>
+                    <div id="itemPerPage">
                     <label onchange="window.location.href='../shopList.php'" class="dropdown-toggle text-center" data-toggle="dropdown" href="#">Items/page</label>
                     <select name="filter_3" onchange="window.location.href=this.value">
                         <option value="<?php echo '../shopList.php';?>"></option>

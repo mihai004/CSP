@@ -264,7 +264,7 @@ html {
 
 #searching input[type="search"] {
     position: absolute;
-    top: 30%;
+    top: 15%;
     width: 100%;
     color: rgb(255, 255, 255);
     background: rgba(0, 0, 0, 0);
@@ -272,8 +272,7 @@ html {
     font-weight: 300;
     text-align: center;
     border: 0px;
-    margin: 0px auto;
-    margin-top: -51px;
+
     padding-left: 30px;
     padding-right: 30px;
     outline: none;
@@ -831,7 +830,7 @@ textarea {
 #livesearch {
     background: silver;
     text-align: center;
-    top: 35%;
+    top: 25%;
 }
 
 .list-group-item:hover, .list-group-item p:hover {

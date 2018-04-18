@@ -273,8 +273,12 @@ class BooksDataSet
         return null;
     }
 
+    /**
+     * Searches dynamically for results, based on the parameter passed, in the dataBase.
+     * @param $keyword
+     * @return array
+     */
     public function searchingFor($keyword){
-       // $sqlQuery = "SELECT * FROM Books WHERE MATCH(bookName) AGAINST ('*' IN NATURAL LANGUAGE MODE)";
         $sqlQuery = "SELECT * FROM Books WHERE bookName LIKE :keyword OR author LIKE :keyword";
         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
         $statement->bindParam(':keyword',$keyword);

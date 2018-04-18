@@ -49,6 +49,7 @@
     <script type="text/javascript" src="../../js/AjaxKitClass.js"></script>
     <script type="text/javascript" src="../../js/AjaxConnection.js"></script>
     <script type="text/javascript" src="../../js/BookData.js"></script>
+    <script type="text/javascript" src="../../js/BookDisplay.js"></script>
 
     <title>MyBooks</title>
 </head>
@@ -103,10 +104,10 @@
             <div id="searching">
                 <button type="button" class="close" id="closeBtn"><span class="glyphicon glyphicon-home"></button>
                 <form id="searchForm" class="searchPageForm">
-                    <input autocomplete="off" id="mySearch" name="searchFor" onkeyup="showResult(this.value)"
+                    <input autocomplete="off" id="mySearch" name="searchFor" onkeyup="showResults(this.value)"
                            type="search" size="20" placeholder="start typing..."/><img id="loader"> </img>
                 </form>
-                <div class="custom-option" id="livesearch"">
+                <div class="custom-option" id="livesearch">
             </div>
          </div>
          </div>

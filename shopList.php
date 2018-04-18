@@ -109,16 +109,13 @@ if(isset($_SESSION['userID'])) {
 //echo json_decode($_GET['dbParam']);
 if(isset($_GET['sort'])){
     $obj = json_decode($_GET['sort']);
-
     $arr = $booksDataSet->searchBy($obj->category, $obj->nrInStock, $obj->price);
     $booksDataSet->setOutput(new JsonStringOutput());
     if(empty($arr)){
-        //json_encode('No results found');
         echo 'No results found';
     } else {
         echo $reviewsJson = $booksDataSet->loadOutput($arr);
     }
-
 } else {
     require('Views/shopList.phtml');
 }

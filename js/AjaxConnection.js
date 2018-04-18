@@ -32,52 +32,7 @@ class AjaxConnection {
         this._xmlHttp.send();
     }
 
-    // getData(){
-    //     if(this._xmlHttp.readyState === 4){
-    //         return this._xmlHttp.responseText;
-    //     }
-    //     return null;
-    // }
-
-
-    // getResponse(){
-    //      let data;
-    //      this._xmlHttp.onreadystatechange = function () {
-    //          if(this.readyState === 4 && this.status === 200) {
-    //              data = JSON.parse(this.responseText);
-    //              console.log(data);
-    //          }
-    //      };
-    //      console.log(data);
-    //      return data;
-    // }
-
-
-    // on(){
-    //      this._xmlHttp.onreadystatechange = function () {
-    //
-    //      };
-    // }
-
-
-    // onreadystatechange(){
-    //    // function handleResponse(response) {
-    //        // alert(response);
-    //         // return response;
-    //    // }
-    //    this._xmlHttp.onreadystatechange = function (){
-    //         if(this.readyState === 4 && this.status === 200){
-    //            // console.log(this.responseText);
-    //              alert(this.responseText);
-    //             //handleResponse(this.responseText);
-    //         }
-    //    };
-    // }
-
-
-
-
-    showProgress(onProgress){
+    showProgress(){
         this._xmlHttp.addEventListener("progress", this.inProgress(), false);
     }
 
@@ -85,25 +40,6 @@ class AjaxConnection {
         console.log('in progress');
     }
 
-    on(){
-        return this._xmlHttp.onreadystatechange;
-        // this._xmlHttp.addEventListener('onreadystatechange', this._xmlHttp.readyState >3 , true);
-
-            //this.ready(this._xmlHttp.responseText);
-
-        //}
-        //console.log(this._xmlHttp.responseText);
-       // this.ready();
-        // this._xmlHttp.addEventListener('readystatechange', this.ready(), false);
-    }
-
-    r(){
-         return this._xmlHttp;
-    }
-
-    ready(){
-        alert(this.r().readyState);
-   }
 
     showLoadedData(){
         this._xmlHttp.addEventListener("load", this.loaded(), false);
