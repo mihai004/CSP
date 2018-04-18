@@ -1,6 +1,6 @@
 
 /*
-    Search engine methods
+    Search engine functions based on input
  */
 
 function searchForm() {
@@ -27,6 +27,41 @@ function searchForm() {
     });
 }
 
+function showResults(searchingFor) {
+    // create an XMLHttpRequest object
+    let httpRequest = new AjaxConnection();
+    // open the httpRequest
+    httpRequest.openConnection("GET", "backend-search.php?searchFor="+searchingFor, true);
+    // Set content type header information for sending url encoded variables in the request
+    httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
+    // The first parameter enables XSS filtering.
+    // The second parameter than sanitizing the page,
+    // the browser will prevent rendering of the page if an XSS attack is detected.
+    httpRequest.setHeaders('X-XSS-Protection','1;mode=block');
+    // send HttpRequest
+    httpRequest.sendData();
+
+    let displayArea = document.getElementById('livesearch');
+    displayLoaderImg();
+
+    if (checkInput(searchingFor) === true) {
+        document.getElementById('loaderImg').style.display = 'inline';
+        let data = '';
+        httpRequest.getxmlHttp().onreadystatechange = function () {
+            if(this.readyState === 4 && this.status === 200) {
+                try {
+                    data = JSON.parse(this.responseText);
+                    displaySearchResults(displayArea, data);
+                } catch(e) {
+                    httpRequest.loadInComplete(this.responseText, displayArea);
+                    displayArea.innerHTML = '';
+                }
+            }
+        }
+    } else {
+        document.getElementById('loaderImg').style.display = 'none';
+    }
+}
 
 function checkInput(searchingFor){
     if (searchingFor.length === 0) {
@@ -37,7 +72,7 @@ function checkInput(searchingFor){
         let form = document.forms['searchForm'].elements['searchFor'];
         form.onkeydown = function(evt) {
             if (evt.keyCode === 8) {
-                    document.getElementById('searching').classList.remove('open');
+                document.getElementById('searching').classList.remove('open');
             }
         };
         return false;
@@ -46,33 +81,78 @@ function checkInput(searchingFor){
 }
 
 function displayLoaderImg(){
-    let image = document.getElementById('loader');
-    image.src = '/images/loader.gif';
-    image.id = 'loader';
-    image.style.background = 'none';
-    image.style.marginLeft = '48%';
-    image.style.height = '45px';
-    image.style.width = '45px';
+    let image = document.getElementById('loaderImg');
+    image.id = 'loaderImg';
 }
 
-function showResults(searchingFor) {
-    let http = new AjaxConnection();
-    let results = document.getElementById('livesearch');
+function displaySearchResults(displayArea, data){
+    displayArea.innerHTML = '';
+    let object = new BookDisplayTemplate();
+    data.forEach( function (obj) {
+        object.setStyleSearchedBooks(displayArea, obj);
+    });
+}
 
-    http.openConnection("GET", "backend-search.php?searchFor=" + searchingFor, true);
-    http.setHeaders("Content-type", "application/x-www-form-urlencoded");
-    http.sendData();
+/*
+    Filter information based on 3 values functions
+  */
 
-    displayLoaderImg();
+function filterInfo() {
+    // get the filter values
+    let urlComponentOne = document.getElementById('category').value;
+    let urlComponentTwo = document.getElementById('nrInStock').value;
+    let urlComponentThree =document.getElementById('price').value;
 
-    if (checkInput(searchingFor) === true) {
-        document.getElementById('loader').style.display = 'inline';
-        getResponse(results, http);
-    } else {
-        document.getElementById('loader').style.display = 'none';
+    // create an XMLHttpRequest object
+    let httpRequest = new AjaxConnection();
+    // get filter options
+    let obj = { "category": urlComponentOne, "nrInStock": urlComponentTwo, "price": urlComponentThree};
+    let dbParam = JSON.stringify(obj);
+    // open the httpRequest
+    httpRequest.openConnection("GET", "shopList.php?sort=" + dbParam, true);
+    // Set content type header information for sending url encoded variables in the request
+    httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
+    // The first parameter enables XSS filtering.
+    // The second parameter than sanitizing the page,
+    // the browser will prevent rendering of the page if an XSS attack is detected.
+    httpRequest.setHeaders('X-XSS-Protection','1;mode=block');
+    // send HttpRequest
+    httpRequest.sendData();
+
+    // remove old data from the web page based on ids
+    removeById('removeBook');
+    removeById('removePagination');
+    removeById('itemPerPage');
+
+    // get the displayArea
+    let displayArea = document.getElementById('displayBook');
+
+    // declare and initialize a variable that will hold the result of HttpRequest
+    let data = '';
+
+    // get information for HttpRequest
+    httpRequest.getxmlHttp().onreadystatechange = function () {
+        if(this.readyState === 4 && this.status === 200) {
+            try {
+                data = JSON.parse(this.responseText);
+                displaySortResults(displayArea, data);
+                httpRequest.loadComplete('Data Loaded', displayArea);
+            } catch(e) {
+                httpRequest.loadInComplete(this.responseText, displayArea);
+                displayArea.innerHTML = '';
+            }
+        }
     }
 }
 
+function displaySortResults(displayArea, data) {
+    displayArea.innerHTML = '';
+    let object = new BookDisplayTemplate();
+    data.forEach( function (obj) {
+        object.setStyleSortedBooks(displayArea, obj);
+    });
+    object.setPagination(data);
+}
 
 function removeById(id){
     let removeAllBooks = document.getElementById(id);
@@ -81,410 +161,162 @@ function removeById(id){
     }
 }
 
-function filterInfo() {
-    let urlComponentOne=document.getElementById('category').value;
-    let urlComponentTwo=document.getElementById('nrInStock').value;
-    let urlComponentThree=document.getElementById('price').value;
+/*
+    Functions for basket such as add, add more than one item, remove one item, remove all items
+  */
 
-    let httpRequest = new AjaxConnection();
-
-    let obj = { "category": urlComponentOne, "nrInStock": urlComponentTwo, "price": urlComponentThree};
-    let dbParam = JSON.stringify(obj);
-
-    // let state = {
-    //     "canBeAnything": true
-    // };
-    // history.pushState(state, "FilteredInformation", "shopList.php?sort=" + encodeURIComponent(
-    //     JSON.stringify(obj)
-    // ));
-
-    httpRequest.openConnection("GET", "shopList.php?sort=" + dbParam, true);
-    httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
-    httpRequest.sendData();
-
-
-    removeById('removeBook');
-    removeById('removePagination');
-    removeById('itemPerPage');
-
-    let displayArea = document.getElementById('displayBook');
-
-    getResponse(displayArea, httpRequest);
-
-}
-
-
-/**
- * The method returns the controller's response for any httpRequest made.
- * @param displayArea
- * @param httpRequest
- */
-function getResponse(displayArea, httpRequest) {
-    let data = '';
-    httpRequest.getxmlHttp().onreadystatechange = function () {
-        if(this.readyState === 4 && this.status === 200) {
-             try {
-                    data = JSON.parse(this.responseText);
-
-                    displayArea.innerHTML = '';
-
-                    if(displayArea.id === 'displayBook') {
-                        displayPerPage(displayArea, data);
-                    } else if (displayArea.id === 'livesearch') {
-                        displaySearchResults(displayArea, data);
-                    }
-                    httpRequest.showLoadedData();
-
-             } catch(e) {
-                    httpRequest.loadInComplete(displayArea);
-             }
-        }
-    }
-}
-
-
-function displaySearchResults(displayArea, data){
-    let object = new BookData();
-    data.forEach( function (obj) {
-        object.setStyle(displayArea, obj);
-    });
-}
-
-
-function displayPerPage(displayArea, data) {
-    let object = new BookDisplay();
-    data.forEach( function (obj) {
-        object.setStyle(displayArea, obj);
-    });
-    object.setPagination(data)
-}
-
-
-function loadInComplete(){
-    displayMsg('No more reviews for this book. Feel free to share yours!', 'warning', 'progress-box');
-}
-
-function onProgress() {
-    move();
-}
-
-function move() {
-    let elem = document.getElementById("myBar");
-    let width = 0;
-    let id = setInterval(frame, 0);
-    function frame() {
-        if (width >= 100) {
-            clearInterval(id);
-        } else {
-            width++;
-            elem.style.width = width + '%';
-            elem.innerHTML = width * 1  + '%';
-        }
-    }
-}
-
-
-
-
-function loadReviews(id) {
-
-    let obj, dbParam, start=0, end, xmlhttp, myValues = "";
-    end = +5;
-    start += +document.getElementById('loadBtn').value + +0;
-    obj = { "bookId":id, "start":start, "end":end };
-    dbParam = JSON.stringify(obj);
-    xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "product.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.addEventListener("progress", onProgress, false);
-    xmlhttp.addEventListener("load", loadComplete, false);
-    xmlhttp.addEventListener("error", loadInComplete, false);
-
-    function loadInComplete(){
-        displayMsg('No more reviews for this book. Feel free to share yours!', 'warning', 'progress-box');
-    }
-
-    function onProgress() {
-        move();
-    }
-
-    function loadComplete() {
-        let newBtn = document.getElementById('loadBtn');
-        newBtn.textContent = 'Show More';
-        document.getElementById('loadBtn').value = + document.getElementById('loadBtn').value + +5;
-    }
-
-
-    xmlhttp.send('load='+dbParam);
-
-    xmlhttp.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-            try {
-                myValues = JSON.parse(this.responseText);
-
-                myValues.forEach(function (key) {
-                    let grandParent = document.createElement('div');
-                    grandParent.className = "w3-card-4 review-box";
-
-                    let parent = document.createElement('div');
-                    parent.className = "w3-container w3-light-grey";
-
-                    let child = document.createElement('div');
-                    child.className = "row";
-
-                    let innerleftChild = document.createElement('div');
-                    innerleftChild.className = 'col-xs-12 col-sm-3';
-                    innerleftChild.style.paddingTop = '50px';
-
-                    let image = document.createElement('img');
-                    image.src = '/images/default_avatar.png';
-                    image.className = 'img-circle';
-                    innerleftChild.appendChild(image);
-
-                    let name = document.createElement('p');
-                    name.innerHTML = key._emailUser;
-                    name.id = 'userComment';
-                    innerleftChild.appendChild(name);
-
-                    let innertrightChild = document.createElement('div');
-                    innertrightChild.className = 'col-sm-12 col-sm-4';
-
-                    let comment = document.createElement('p');
-                    comment.innerHTML = key._comments;
-                    comment.id = 'comment';
-                    innertrightChild.appendChild(comment);
-
-                    child.appendChild(innerleftChild);
-                    child.appendChild(innertrightChild);
-
-                    let footer = document.createElement('div');
-                    footer.className = 'w3-footer';
-                    let date = document.createElement('p');
-                    footer.id = 'dateDisplay';
-                    footer.innerHTML = key._dateTime;
-                    footer.appendChild(date);
-
-                    parent.appendChild(child);
-                    child.appendChild(footer);
-                    grandParent.appendChild(parent);
-
-                    let d = document.getElementById('print');
-                    d.insertAdjacentElement('beforebegin', grandParent);
-
-                    window.scrollTo(0, document.body.scrollHeight);
-                });
-            }
-            catch(e) {
-                loadInComplete();
-            }
-        }
-    };
-}
-
-
-function checkOut() {
-
-}
-
-
-function removeFromCart(idBasket, idBook){
-    event.preventDefault();
-    console.log('bookSet'+idBook);
-    console.log(document.getElementById('bookSet'+idBook));
-    document.getElementById('bookSet'+idBook).innerHTML = '';
-
-    let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-    // open the httpRequest
-    httpRequest.open('POST', '/cartFunctions.php', true);
-    // Set content type header information for sending url encoded variables in the request
-    httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    // Security measurement against XSS attack
-    httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
-    // send data
-    httpRequest.send('removeFromCart=' + idBasket);
-
-    httpRequest.onreadystatechange = function () {
-        if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            if (httpRequest.status === 200) {
-                displayMsg('Item Removed', 'success', 'output-box');
-                document.getElementById('bookSets'+idBook).remove();        // remove from list
-            } else {
-                alert('error');
-            }
-        }
-    };
-}
-
-function calculatePrice(id, quantity){
-    let price = document.getElementById('priceForItem'+id).innerHTML;
+function calculatePrice(idBook, quantity){
+    let price = document.getElementById('priceForItem' + idBook).innerHTML;
     let result = (parseFloat(price.replace(/[£,]+/g,"")) * parseInt(quantity));
     return ('£'+result.toFixed(2));
 
 }
 
+function updateBasketData(idBook, oldQuantity, newQuantity){
+    $('#totalPriceForItem' + idBook).html(calculatePrice(idBook, --oldQuantity));
+    $('#itemQuantity' + idBook).html(newQuantity);
+}
 
-function removeFromCartMinus(idBasket, idBook){
-    event.preventDefault();
-
-    let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+function removeFromCart(idBasket, idBook){
+    // create an XMLHttpRequest object
+    let httpRequest = new AjaxConnection();
     // open the httpRequest
-    httpRequest.open('POST', '/cartFunctions.php', true);
+    httpRequest.openConnection("POST", "cartFunctions.php", true);
     // Set content type header information for sending url encoded variables in the request
-    httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    // Security measurement against XSS attack
-    httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
-    // send data
-    let quantity = document.getElementById('itemQuantity'+idBook).innerHTML;
-    let nrOfBooks = document.getElementById('nrOfBooks').value;
+    httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
+    // The first parameter enables XSS filtering.
+    // The second parameter than sanitizing the page,
+    // the browser will prevent rendering of the page if an XSS attack is detected.
+    httpRequest.setHeaders('X-XSS-Protection','1;mode=block');
+    // send HttpRequest
+    httpRequest.sendDataWithParam('removeFromCart=' + idBasket);
 
-    if(nrOfBooks <= 1 && quantity <= 1){
-      //  document.getElementById('clearCart').style.display = 'none';
-      //  document.getElementById('checkOut').style.display = 'none';
+    // get the displayArea
+    let displayArea = document.getElementById('displayBook');
+
+    // get information for HttpRequest
+    httpRequest.getxmlHttp().onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            try {
+                httpRequest.loadComplete('Item removed', displayArea);
+                document.getElementById('bookSet'+idBook).innerHTML = '';
+                document.getElementById('bookSets'+idBook).remove();        // remove from cart
+            } catch (e) {
+                httpRequest.loadInComplete('Item not removed', displayArea);
+            }
+        }
     }
-    if(quantity <= 1){
+}
+
+function removeFromCartMinus(idBasket, idBook) {
+    // create an XMLHttpRequest object
+    let httpRequest = new AjaxConnection();
+    // open the httpRequest
+    httpRequest.openConnection("POST", "cartFunctions.php", true);
+    // Set content type header information for sending url encoded variables in the request
+    httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
+    // The first parameter enables XSS filtering.
+    // The second parameter than sanitizing the page,
+    // the browser will prevent rendering of the page if an XSS attack is detected.
+    httpRequest.setHeaders('X-XSS-Protection', '1;mode=block');
+
+    // get the old values of the items
+    let quantity = document.getElementById('itemQuantity' + idBook).innerHTML;
+    let nrOfBooks = document.getElementById('nrOfBooks').value;
+    // get the displayArea
+    let displayArea = document.getElementById('displayBook');
+
+    // check quantity
+    if (nrOfBooks <= 1 && quantity <= 1) {
+        document.getElementById('clearCart').style.display = 'none';
+        document.getElementById('checkOut').style.display = 'none';
+    }
+    // remove item if none left
+    if (quantity <= 1) {
         removeFromCart(idBasket, idBook);
         document.getElementById('nrOfBooks').value = --nrOfBooks;
     } else {
-        httpRequest.send('removeForProductID=' + idBook);
-        httpRequest.onreadystatechange = function () {
-            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    displayMsg('Item removed', 'warning', 'output-box');
-                    $('#totalPriceForItem'+idBook).html(calculatePrice(idBook, --quantity));
-                    $('#itemQuantity'+idBook).html(this.responseText);
-                } else {
-                    alert('error');
-                }
+        // send HttpRequest
+        httpRequest.sendDataWithParam('removeForProductID=' + idBook);
+        // get the response for HttpRequest
+        httpRequest.getxmlHttp().onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+            try {
+                updateBasketData(idBook, quantity, this.responseText);
+                httpRequest.loadComplete('Item removed', displayArea);
+            } catch (e) {
+                httpRequest.loadInComplete('Item not removed', displayArea);
             }
-        };
+            }
+        }
+    }
+}
+
+function addCart(idBook){
+
+    // create an XMLHttpRequest object
+    let httpRequest = new AjaxConnection();
+    // open the httpRequest
+    httpRequest.openConnection("POST", "cartFunctions.php", true);
+    // Set content type header information for sending url encoded variables in the request
+    httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
+    // The first parameter enables XSS filtering.
+    // The second parameter than sanitizing the page,
+    // the browser will prevent rendering of the page if an XSS attack is detected.
+    httpRequest.setHeaders('X-XSS-Protection','1;mode=block');
+    // Send HttpRequest data
+    httpRequest.sendDataWithParam('addForProductID=' + idBook);
+    // area where the message will be displayed according to each book ID
+    let displayArea = document.getElementById("displayBookMessage" + idBook);
+    // get the response for HttpRequest
+    httpRequest.getxmlHttp().onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            try {
+                httpRequest.loadComplete('Item Added', displayArea);
+            } catch (e) {
+                httpRequest.loadInComplete('Item not removed', displayArea);
+            }
+        }
+    }
+}
+
+function addCartPlus(idBook){
+    // create an XMLHttpRequest object
+    let httpRequest = new AjaxConnection();
+    // open the httpRequest
+    httpRequest.openConnection("POST", "cartFunctions.php", true);
+    // Set content type header information for sending url encoded variables in the request
+    httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
+    // The first parameter enables XSS filtering.
+    // The second parameter than sanitizing the page,
+    // the browser will prevent rendering of the page if an XSS attack is detected.
+    httpRequest.setHeaders('X-XSS-Protection','1;mode=block');
+    // Send HttpRequest data
+    httpRequest.sendDataWithParam('addForProductID=' + idBook);
+
+    // get the actual quantity of the item
+    let quantity = document.getElementById('itemQuantity' + idBook).innerHTML;
+    // area where the message will be displayed according to each book ID
+    let displayArea = document.getElementById('output-box');
+
+    // get the response for HttpRequest
+    httpRequest.getxmlHttp().onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            try {
+                httpRequest.loadComplete('Item added', displayArea);
+                updateBasketData(idBook, quantity, this.responseText);
+            } catch (e) {
+                httpRequest.loadInComplete('Item not added', displayArea);
+            }
+        }
     }
 }
 
 
-function addCartPlus(id){
-    event.preventDefault();
-
-    let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-    // open the httpRequest
-    httpRequest.open('POST', '/cartFunctions.php', true);
-    // Set content type header information for sending url encoded variables in the request
-    httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    // Security measurement against XSS attack
-    httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
-    // send data
-    httpRequest.send('addForProductID=' + id);
-    let quantity = document.getElementById('itemQuantity' + id).innerHTML;
-    httpRequest.onreadystatechange = function () {
-    if (httpRequest.readyState === XMLHttpRequest.DONE) {
-        if (httpRequest.status === 200) {
-            displayMsg('Item added', 'success', 'output-box');
-            $('#totalPriceForItem'+id).html(calculatePrice(id, ++quantity));
-            $('#itemQuantity'+id).html(this.response);
-        } else {
-            displayMsg('Item could not be added', 'warning', 'output-box');
-            alert('error');
-        }
-        }
-    };
-}
-
-function loadDoc() {
-    let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("demo").innerHTML = this.responseText;
-        }
-    };
-    xhttp.open("POST", "my_parse_file.php", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("fname=Henry&lname=Ford");
-}
 
 
+// work on next
 
-function c() {
-
-    let xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
-    xmlhttp.open("POST", "my_parse_file.php");
-    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xmlhttp.send(JSON.stringify({name:"John Rambo", time:"2pm"}));
-
-    // let url = "my_parse_file.php";
-    //
-    // let data = {};
-    // data.firstname = "John";
-    // data.lastname  = "Snow";
-    // let json = JSON.stringify(data);
-    //
-    // let xhr = new XMLHttpRequest();
-    // xhr.open("POST", url, true);
-    // xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
-    // xhr.onload = function () {
-    //     let users = JSON.parse(xhr.responseText);
-    //     if (xhr.readyState == 4 && xhr.status == "201") {
-    //         console.table(users);
-    //     } else {
-    //         console.error(users);
-    //     }
-    // };
-    // xhr.send(json);
-
-
-    // let xhr = new XMLHttpRequest();
-    // let url = "/my_parse_file.php";
-    // xhr.open("POST", url, true);
-    // //xhr.setRequestHeader("Content-type", "application/json");
-    // // let jsonData = {
-    // //     address: 'address',
-    // //     address1: 'address1',
-    // //     address2: 'address2'
-    // // };
-    // // let out = JSON.stringify({'myPostData' : JSON.stringify(jsonData) });
-    // let out ="test";
-    // xhr.send(out);
-    // xhr.onreadystatechange = function () {
-    //     if (xhr.readyState === 4 && xhr.status === 200) {
-    //        // let json = JSON.parse(xhr.responseText);
-    //        // console.log(json.email + ", " + json.password);
-    //     }
-    // };
-}
-
-
-
-function clickButton() {
-    let s = document.createElement("script");
-    s.src = "my_parse_file.php";
-    document.body.appendChild(s);
-}
-
-function myFunc(myObj) {
-    document.getElementById("demo").innerHTML = myObj.name;
-}
-
-function addCart(id){
-    event.preventDefault();
-    let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-    // open the httpRequest
-    httpRequest.open('POST', '/cartFunctions.php', true);
-    // Set content type header information for sending url encoded variables in the request
-    httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    // Security measurement against XSS attack
-    httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
-    // send data
-    httpRequest.send('addForProductID=' + id);
-    let d = 'output-box' + id;
-    httpRequest.onreadystatechange = function () {
-        if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            if (httpRequest.status === 200) {
-                console.log(d);
-                displayMsg('Item added', 'success', d);
-            } else {
-                displayMsg('Item could not be added. LogIn first!', 'warning', 'output-box');
-            }
-        }
-    };
-}
 
 
 function sendComment(formID, id){
@@ -714,53 +546,129 @@ function logIn_form(formID){
     }
 }
 
-/**
- * The method styles the display box used in the displayMsg method.
- * @param displayBox
- * @returns {*}
- */
-function styleBox(displayBox){
-    displayBox.style.position = 'relative';
-    displayBox.style.textAlign = 'center';
-    displayBox.style.fontSize = '20px';
-    return displayBox;
+
+
+function onProgress() {
+    move();
+}
+
+function move() {
+    let elem = document.getElementById("myBar");
+    let width = 0;
+    let id = setInterval(frame, 0);
+    function frame() {
+        if (width >= 100) {
+            clearInterval(id);
+        } else {
+            width++;
+            elem.style.width = width + '%';
+            elem.innerHTML = width * 1  + '%';
+        }
+    }
 }
 
 
-/**
- * Display messages accordingly to the parameters passed.
- * @param msg
- * @param type
- * @param textBox
- */
-function displayMsg(msg, type, textBox) {
 
-    let boxTimeout = 0;
-    let displayBox = document.createElement("div");
-    if(type === 'warning'){
-        displayBox.className = "alert alert-warning";
-    }
-    else if(type === 'success'){
-        displayBox.className = "alert alert-success";
-    }
-    else if (type === 'info') {
-        displayBox.className = "alert alert-info";
-    } else if (type === 'danger') {
-        displayBox.className = "alert alert-danger";
+
+function loadReviews(id) {
+
+    let obj, dbParam, start=0, end, xmlhttp, myValues = "";
+    end = +5;
+    start += +document.getElementById('loadBtn').value + +0;
+    obj = { "bookId":id, "start":start, "end":end };
+    dbParam = JSON.stringify(obj);
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "product.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.addEventListener("progress", onProgress, false);
+    xmlhttp.addEventListener("load", loadComplete, false);
+    xmlhttp.addEventListener("error", loadInComplete, false);
+
+    function loadInComplete(){
+        displayMsg('No more reviews for this book. Feel free to share yours!', 'warning', 'progress-box');
     }
 
-    styleBox(displayBox);
-    displayBox.innerHTML = msg;
-
-    if (document.body.contains(displayBox)) {
-        clearTimeout(boxTimeout);
-    } else {
-        let myTextBox = document.getElementById(textBox);
-        myTextBox.parentNode.insertBefore(displayBox, myTextBox.previousSibling);
+    function onProgress() {
+        move();
     }
 
-    setTimeout(function() {
-        displayBox.parentNode.removeChild(displayBox);
-        boxTimeout = -1;
-    }, 2000);
+    function loadComplete() {
+        let newBtn = document.getElementById('loadBtn');
+        newBtn.textContent = 'Show More';
+        document.getElementById('loadBtn').value = + document.getElementById('loadBtn').value + +5;
+    }
+
+
+    xmlhttp.send('load='+dbParam);
+    let data = '';
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            try {
+                data = JSON.parse(this.responseText);
+                let displayArea = document.getElementById('print');
+                setStyleReviews(displayArea, data);
+                // myValues.forEach(function (key) {
+                //     let grandParent = document.createElement('div');
+                //     grandParent.className = "w3-card-4 review-box";
+                //
+                //     let parent = document.createElement('div');
+                //     parent.className = "w3-container w3-light-grey";
+                //
+                //     let child = document.createElement('div');
+                //     child.className = "row";
+                //
+                //     let innerleftChild = document.createElement('div');
+                //     innerleftChild.className = 'col-xs-12 col-sm-3';
+                //     innerleftChild.style.paddingTop = '50px';
+                //
+                //     let image = document.createElement('img');
+                //     image.src = '/images/default_avatar.png';
+                //     image.className = 'img-circle';
+                //     innerleftChild.appendChild(image);
+                //
+                //     let name = document.createElement('p');
+                //     name.innerHTML = key._emailUser;
+                //     name.id = 'userComment';
+                //     innerleftChild.appendChild(name);
+                //
+                //     let innertrightChild = document.createElement('div');
+                //     innertrightChild.className = 'col-sm-12 col-sm-4';
+                //
+                //     let comment = document.createElement('p');
+                //     comment.innerHTML = key._comments;
+                //     comment.id = 'comment';
+                //     innertrightChild.appendChild(comment);
+                //
+                //     child.appendChild(innerleftChild);
+                //     child.appendChild(innertrightChild);
+                //
+                //     let footer = document.createElement('div');
+                //     footer.className = 'w3-footer';
+                //     let date = document.createElement('p');
+                //     footer.id = 'dateDisplay';
+                //     footer.innerHTML = key._dateTime;
+                //     footer.appendChild(date);
+                //
+                //     parent.appendChild(child);
+                //     child.appendChild(footer);
+                //     grandParent.appendChild(parent);
+                //
+                //     let d = document.getElementById('print');
+                //     d.insertAdjacentElement('beforebegin', grandParent);
+
+                    window.scrollTo(0, document.body.scrollHeight);
+                //});
+            }
+            catch(e) {
+                loadInComplete();
+            }
+        }
+    };
+}
+
+function setStyleReviews(displayArea, data){
+    let object = new ReviewDisplayTemplate();
+    data.forEach( function (obj) {
+        object.setStyleReview(displayArea, obj);
+    });
 }

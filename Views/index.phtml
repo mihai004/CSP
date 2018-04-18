@@ -10,19 +10,19 @@
     <div class="carousel-inner" role="listbox">
         <div class="item active">
             <img src="images/carousel2.jpg" alt="Image">
-                <div class="container">
-                    <div class="carousel-caption">
-                        <?php
-                        if(!(isset($_SESSION['userID']))){
-                            echo ' 
+            <div class="container">
+                <div class="carousel-caption">
+                    <?php
+                    if(!(isset($_SESSION['userID']))){
+                        echo ' 
                         <h3>Become a member</h3>
                         <p>
                         <a class="btn btn-lg btn-primary" href="../register.php" role="button">Sign Up today</a>
                         </p>';
-                        }
-                        ?>
-                    </div>
+                    }
+                    ?>
                 </div>
+            </div>
         </div>
 
         <div class="item">
@@ -59,19 +59,19 @@
 </div>
 
 
-<div class="container marketing">
+<div class="container-fluid">
 
-    <div class="row">
-        <div id="marketing" align="center" class="col-lg-6 col-sm-6">
+    <div class="row" id="marketing">
+        <div  align="center" class="col-lg-6 col-md-6 col-sm-6">
             <img class="img-circle" src="images/exploreLibrary3.jpg" alt="Generic placeholder image" width="140" height="140">
             <h2>Reading Shapes You</h2>
             <p>Explore the world of books with just a single click.
                 MyBook online Library has a vast collection of texts for every person and for every field you might be
                 eager to explore. Enjoy!</p>
-            <p><a class="btn btn-info" href="../shopList.php" role="button">View details &raquo;</a></p>
+            <p><a class="btn btn-info" href="../shopList.php" role="button">Details &raquo;</a></p>
         </div>
 
-        <div id="marketing" align="center" class="col-lg-6">
+        <div align="center" class="col-lg-6 col-sm-6">
             <img class="img-circle" src="images/gift2.jpg" alt="Generic placeholder image" width="140" height="140">
             <h2>There is no better gift</h2>
             <p>
@@ -79,8 +79,10 @@
                 the solution. Check our variety of books that you one to give as a present and for there MyBook online
                 Library delivers the book or books without any additional cost.
             </p>
-            <p><a class="btn btn-info" href="../shopList.php" role="button">View details &raquo;</a></p>
+            <p><a class="btn btn-info" href="../shopList.php" role="button">Details &raquo;</a></p>
         </div>
     </div>
+<!--</div>-->
 
+</div>
 <?php require('template/footer.phtml') ?>

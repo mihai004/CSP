@@ -11,7 +11,7 @@ $searchFor = $_GET['searchFor'] . '%';
 $books = $bookDataSet->searchingFor($searchFor);
 
 if(empty($books)){
-    echo 'No results found. Try again!';
+    echo 'No results found!';
 } else {
     $bookDataSet->setOutput(new JsonStringOutput());
     echo $reviewsJson = $bookDataSet->loadOutput($books);

@@ -142,8 +142,8 @@ class BasketDataSet
 
 
     /**
-     * The method adds products to the chart one by one.
      * @param $post
+     * @return bool
      */
     public function addToCart($post)
     {
@@ -152,6 +152,7 @@ class BasketDataSet
         $value = 1;
         if ($this->checkDuplicates($userID, $productID) === true) {
             $this->updateQuantity($userID, $productID, 1);
+            return true;
         } else {
             $sqlQuery = "INSERT INTO Basket (idUser, idBook, quantity) VALUES(?, ?, ?)";
             $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
@@ -159,13 +160,17 @@ class BasketDataSet
             $statement->bindParam(2,$productID);
             $statement->bindParam(3, $value);
             if ($statement->execute()) {
-                echo '<div id="response" style="font-size: 20px; margin-bottom: 15px;"  class="bg-success text-center text-success">
-                        Successfully added
-                       </div>';
-            } else {
-                echo "failed";
+//                echo '<div id="response" style="font-size: 20px; margin-bottom: 15px;"  class="bg-success text-center text-success">
+//                        Successfully added
+//                       </div>';
+                return true;
             }
+//            else {
+//                return false;
+//               // echo 'failed';
+//            }
         }
+        return false;
     }
 
     /**

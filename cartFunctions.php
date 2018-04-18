@@ -7,11 +7,18 @@ $view->pageTitle = 'Cart';
 
 $basket = new BasketDataSet();
 
+if(!isset($_SESSION['userID'])){
+    echo 'No user found! Make sure you are logged in!';
+}
 
 // the user is logged in, thereby one can add items to the basket
 if (isset($_SESSION['userID']) and (isset($_POST['addForProductID']))) {
 
-        $basket->addToCart($_POST);
+        if($basket->addToCart($_POST) === true){
+            //echo 'You item was successfully added to your basket';
+        } else {
+            //echo 'Your item could not be added to your basket';
+        }
 }
 
 // the user is logged in, thereby one can remove items from the basket

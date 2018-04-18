@@ -1,7 +1,29 @@
-class BookDisplay {
+class BookDisplayTemplate {
     constructor(){}
 
-    setStyle(results, data) {
+    setStyleSearchedBooks(results, data){
+        let parent = document.createElement('div');
+        parent.addEventListener('click', function () {
+            location.href = 'product.php?id=' + data._idBook;
+        });
+        parent.className = "row list-group-item";
+        parent.style.height = '85px';
+
+        let image = document.createElement('img');
+        image.className = "col-sm-2 col-md-3 col-offset-lg-3";
+        image.id = 'smallImg';
+        image.src = '/images/' + data._photoName;
+        parent.appendChild(image);
+
+        let bookDetails = document.createElement('p');
+        bookDetails.innerHTML = data._bookName + " by " + data._author;
+
+        parent.appendChild(bookDetails);
+        results.appendChild(parent);
+    }
+
+
+    setStyleSortedBooks(results, data) {
         let bookWrapper = document.createElement('div');
         bookWrapper .id = 'removeBook';
         bookWrapper .className = 'col-md-offset-1 col-xs-offset-0 col-lg-offset-1 col-sm-offset-1';
