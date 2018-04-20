@@ -1,8 +1,7 @@
-<?php //require_once ('Views/template/header.phtml');
-
-require ('Views/test.phtml');
-
-// working upload
+<?php
+//
+//session_start();
+//// working upload
 //if ($_POST) {
 //    define('UPLOAD_DIR', 'uploads/');
 //    $img = $_POST['image'];

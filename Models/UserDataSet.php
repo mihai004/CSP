@@ -239,47 +239,31 @@ class UserDataSet
 
 
     public function logIn($post){
-        $email = $this->test_input($post['emailLogIn']);
+        $obj = json_decode($post['logInCredentials']);
+        $email = $this->test_input($obj->email);
         $user = $this->searchUser($email); // get the person obj
         if($user) // if the user exists
         {
-            $password = $this->test_input($_POST["passwordLogIn"]);
+            $password = $this->test_input($obj->password);
             $salt = "alabalaportocala";
             if(password_verify($password . $salt, $user->getPassword()))
             {
-
                 if($user->getConfirmed()) {
-//                    session_start();
                     $_SESSION['userID'] = $user->getIdUser();
                     $_SESSION['userEmail'] = $user->getEMail();
                     return true;
                 }
                 else {
-
-                    echo '<p style="font-size: 20px; margin-bottom: 15px;"  class="bg-info text-center text-info">
-                    Please confirm your e-mail in order to log in.
-            </br></p>';
-
+                    echo json_encode('Please Confirm your email');
                 }
-
             }
             else {
-
-                echo '<p style="font-size: 20px; margin-bottom: 15px;"  class="bg-danger text-center text-danger">
-                    Password do not match. Please, try again!
-            </br></p>';
-
+                    echo json_encode('Password do not match. Please, try again!');
             }
         }
         else {
-
-            echo '<p style="font-size: 20px; margin-bottom: 15px;"  class="bg-danger text-center text-danger">
-                    E-mail not found. Please try again!
-            </br></p>';
-
+                    echo json_encode('E-mail not found. Please try again!');
         }
-
     return false;
     }
-
 }

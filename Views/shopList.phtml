@@ -93,7 +93,7 @@
   <p>
             <a style="color: royalblue;" href="product.php?id='. $bookData->getIdBook() .'"><b>View Book</b></a> 
    <p>' . '<button data-id="' . $bookData->getIdBook() . '" 
-           onclick="addCart(' . $bookData->getIdBook() . ')" 
+           onclick="addOneBookToCart(' . $bookData->getIdBook() . ')" 
            class="btn btn-primary btn-success addToCart"><b>Add to</b>
            <span class="glyphicon glyphicon-shopping-cart"></span></button>' . ' </p>
            

@@ -24,7 +24,7 @@ html {
 }
 
 #removePagination {
-    height: 180px;
+    /*height: 180px;*/
 }
 
 /*#fade {*/
@@ -131,7 +131,7 @@ html {
     border-radius: 50px;
     padding-top: 10px;
     /*margin-bottom: -40px;*/
-    position: absolute;
+    position: static;
     bottom: 0;
     width: 100%;
     /*height: 300px;*/
@@ -238,7 +238,7 @@ html {
     background-color: #F6F6F6;
     text-align: center;
     position: relative;
-    padding-bottom: 250px;
+    min-height: 500px;
 }
 
 .btn.btn-link {
@@ -877,6 +877,7 @@ textarea {
     padding: 5px;
 }
 
+
 /*#smallImg:hover{*/
     /*padding:1px;*/
     /*border:1px solid #021a40;*/
@@ -917,14 +918,22 @@ textarea {
 }
 
 #smallImg {
-    height: 60px;
+    height: 80px;
     width: 80px;
 }
 
+#uploadText {
+    text-decoration-style: dotted;
+    color: whitesmoke;
+}
+
 #drop_zone {
-    border: 5px solid grey;
-    width: 200px;
-    height: 100px;
+    text-align: center;
+    background-color: #f0ad4e;
+    border: 5px solid #f0ad4e;
+    width: 150px;
+    margin: auto;
+    height: 60px;
 }
 
 #searchBtn {
@@ -983,4 +992,8 @@ label {
 
 .navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
     font-size: 22px;
+}
+
+label.control-label {
+    display: initial;
 }

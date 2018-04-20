@@ -45,6 +45,42 @@ class AjaxConnection {
     }
 
 
+
+    uploadProgress(evt){
+        this._xmlHttp.addEventListener("progress", this.uploadProgressStatus(evt), false);
+    }
+
+    uploadProgressStatus(evt){
+        if(evt.lengthComputable){
+            let percentComplete = Math.round(evt.loaded * 100/ evt.total);
+            document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+        } else {
+            document.getElementById('progressNumber').innerHTML = "unable to compute";
+        }
+    }
+
+    uploadProgressLoad(){
+        this._xmlHttp.addEventListener("load", this.uploadComplete(), false);
+    }
+    uploadError(){
+        this._xmlHttp.addEventListener("error", this.uploadFailed(), false);
+    }
+
+    uploadAbort(){
+        this._xmlHttp.addEventListener("abort", this.uploadAborted(), false);
+    }
+
+    uploadComplete() {
+        alert("works");
+    }
+    uploadFailed() {
+        alert("failed");
+    }
+    uploadAborted() {
+        alert("aborted");
+    }
+
+
     loadComplete(msg, displayArea){
         //displayMsg('Item added', 'success', displayArea);
         this._xmlHttp.addEventListener("load", this.loaded(msg, displayArea), false);
@@ -60,9 +96,9 @@ class AjaxConnection {
 
     showError(msg, displayArea){
         this.displayMsg(msg, 'warning', displayArea);
-        //displayArea.innerText = '';
-        //displayArea.innerHTML= 'No results found. Try Again';
     }
+
+
 
     /**
      * Display messages accordingly to the parameters passed.
@@ -93,14 +129,14 @@ class AjaxConnection {
             clearTimeout(boxTimeout);
         } else {
 
-            let myTextBox = textBox;
+            let myTextBox = document.getElementById(textBox);
             myTextBox.parentNode.insertBefore(displayBox, myTextBox.previousSibling);
         }
 
         setTimeout(function() {
             displayBox.parentNode.removeChild(displayBox);
             boxTimeout = -1;
-        }, 2000);
+        }, 2500);
     }
 
     /**

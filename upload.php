@@ -1,5 +1,10 @@
-<?php require ('Views/template/header.phtml');
+<?php //require ('Views/template/header.phtml');
+//
+//
 
+session_start();
+echo $_FILES["fileToUpload"]["name"];
+//
 if(empty($_FILES)){
 require ('Views/test.phtml');
 } else {

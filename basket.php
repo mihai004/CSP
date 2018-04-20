@@ -40,10 +40,14 @@ if(isset($_SESSION['userID'])){
     $view->basket = $basketDataSet->fetchBasketPerPage($_SESSION['userID'], $start, $limit);
     $view->noOfBooks = $basketDataSet->selectUniqueBooks();
 
-    //$view->basket = $basketDataSet->fetchAllBasket($_SESSION['userID']);
-
 }
 
+// the user is logged in, thereby one can clear the items from the basket
+if (isset($_SESSION['userID']) and (isset($_POST['clearCart']))) {
+
+    $basketDataSet->clearCart();
+
+}
 if(isset($_POST['checkOut'])){
 
     $basket = $basketDataSet->fetchAllBasket($_SESSION['userID']);

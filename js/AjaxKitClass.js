@@ -139,6 +139,7 @@ function filterInfo() {
                 httpRequest.loadComplete('Data Loaded', displayArea);
             } catch(e) {
                 httpRequest.loadInComplete(this.responseText, displayArea);
+                displayArea.style.minHeight = '200px';
                 displayArea.innerHTML = '';
             }
         }
@@ -192,18 +193,20 @@ function removeFromCart(idBasket, idBook){
     httpRequest.sendDataWithParam('removeFromCart=' + idBasket);
 
     // get the displayArea
-    let displayArea = document.getElementById('displayBook');
+    let displayArea = document.getElementById('displayBookMessage');
 
     // get information for HttpRequest
     httpRequest.getxmlHttp().onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            try {
-                httpRequest.loadComplete('Item removed', displayArea);
+           // try {
+               // alert(this.responseText);
+               // httpRequest.loadComplete('Item removed', displayArea);
                 document.getElementById('bookSet'+idBook).innerHTML = '';
                 document.getElementById('bookSets'+idBook).remove();        // remove from cart
-            } catch (e) {
-                httpRequest.loadInComplete('Item not removed', displayArea);
-            }
+                httpRequest.loadComplete('Item removed', displayArea);
+          //  } catch (e) {
+              //  httpRequest.loadInComplete('Item not removed', displayArea);
+            //}
         }
     }
 }
@@ -224,7 +227,7 @@ function removeFromCartMinus(idBasket, idBook) {
     let quantity = document.getElementById('itemQuantity' + idBook).innerHTML;
     let nrOfBooks = document.getElementById('nrOfBooks').value;
     // get the displayArea
-    let displayArea = document.getElementById('displayBook');
+    let displayArea = document.getElementById('displayBookMessage');
 
     // check quantity
     if (nrOfBooks <= 1 && quantity <= 1) {
@@ -252,8 +255,7 @@ function removeFromCartMinus(idBasket, idBook) {
     }
 }
 
-function addCart(idBook){
-
+function addOneBookToCart(idBook) {
     // create an XMLHttpRequest object
     let httpRequest = new AjaxConnection();
     // open the httpRequest
@@ -266,8 +268,61 @@ function addCart(idBook){
     httpRequest.setHeaders('X-XSS-Protection','1;mode=block');
     // Send HttpRequest data
     httpRequest.sendDataWithParam('addForProductID=' + idBook);
+
     // area where the message will be displayed according to each book ID
-    let displayArea = document.getElementById("displayBookMessage" + idBook);
+    let displayArea = document.getElementById('displayBookMessage' + idBook);
+
+    // get the response for HttpRequest
+    httpRequest.getxmlHttp().onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            try {
+                httpRequest.loadComplete(this.responseText, displayArea);
+            } catch (e) {
+                httpRequest.loadInComplete('Item not added', displayArea);
+            }
+        }
+    }
+}
+
+function checkQuantity(min, max) {
+    let quantity = document.getElementById('quantityPerItem');
+    let message = document.getElementById('quantityCheckMessage');
+    if(quantity.value === ''){
+        message.innerHTML = '';
+        quantity.style.border = '';
+    } else if((isNaN(quantity.value))) {
+        message.innerHTML = 'Only numbers please!';
+    } else if(parseInt(quantity.value) >= min && parseInt(quantity.value) <= max ){
+        message.innerHTML = '';
+        quantity.style.border = 'thick solid green';
+    }
+    else {
+        quantity.style.border = 'thick solid red';
+        quantity.value = '';
+        message.innerHTML = "The min is " + min + " max is " + max;
+    }
+}
+
+function addMoreCart(idBook){
+
+    // create an XMLHttpRequest object
+    let httpRequest = new AjaxConnection();
+    // open the httpRequest
+    httpRequest.openConnection("POST", "cartFunctions.php", true);
+    // Set content type header information for sending url encoded variables in the request
+    httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
+    // The first parameter enables XSS filtering.
+    // The second parameter than sanitizing the page,
+    // the browser will prevent rendering of the page if an XSS attack is detected.
+    httpRequest.setHeaders('X-XSS-Protection','1;mode=block');
+    // prepare data to be sent
+    let quantity = document.getElementById('quantityPerItem').value;
+    let obj = { "idBook": idBook, "quantity": quantity};
+    let dbParam = JSON.stringify(obj);
+    // Send HttpRequest data
+    httpRequest.sendDataWithParam('addMoreProductID=' + dbParam);
+    // area where the message will be displayed according to each book ID
+    let displayArea = document.getElementById("displayBookMessage");
     // get the response for HttpRequest
     httpRequest.getxmlHttp().onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
@@ -297,22 +352,189 @@ function addCartPlus(idBook){
     // get the actual quantity of the item
     let quantity = document.getElementById('itemQuantity' + idBook).innerHTML;
     // area where the message will be displayed according to each book ID
-    let displayArea = document.getElementById('output-box');
+    let displayArea = document.getElementById('displayBookMessage');
 
     // get the response for HttpRequest
     httpRequest.getxmlHttp().onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
+                    try {
+                        httpRequest.loadComplete('Item added', displayArea);
+                        updateBasketData(idBook, quantity, this.responseText);
+                    } catch (e) {
+                        httpRequest.loadInComplete('Item not added', displayArea);
+                }
+            }
+        }
+}
+
+function checkOut() {
+    // create an XMLHttpRequest object
+    let httpRequest = new AjaxConnection();
+    // open the httpRequest
+    httpRequest.openConnection("POST", "basket.php", true);
+    // Set content type header information for sending url encoded variables in the request
+    httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
+    // The first parameter enables XSS filtering.
+    // The second parameter than sanitizing the page,
+    // the browser will prevent rendering of the page if an XSS attack is detected.
+    httpRequest.setHeaders('X-XSS-Protection','1;mode=block');
+    // send HttpRequest
+    httpRequest.sendDataWithParam("checkOut");
+
+    // area to display messages
+    let displayArea = document.getElementById('displayCartOperations');
+    // get the response for HttpRequest
+    httpRequest.getxmlHttp().onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
             try {
-                httpRequest.loadComplete('Item added', displayArea);
-                updateBasketData(idBook, quantity, this.responseText);
+                // In this case, for security purposes and payments the page is reloaded.
+                location.href = 'basket.php?thankYou';
             } catch (e) {
-                httpRequest.loadInComplete('Item not added', displayArea);
+                httpRequest.loadInComplete('Checkout Incomplete', displayArea);
             }
         }
     }
 }
 
+function removeAllItems(){
+    // create an XMLHttpRequest object
+    let httpRequest = new AjaxConnection();
+    // open the httpRequest
+    httpRequest.openConnection("POST", "basket.php", true);
+    // Set content type header information for sending url encoded variables in the request
+    httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
+    // The first parameter enables XSS filtering.
+    // The second parameter than sanitizing the page,
+    // the browser will prevent rendering of the page if an XSS attack is detected.
+    httpRequest.setHeaders('X-XSS-Protection','1;mode=block');
+    // send HttpRequest
+    httpRequest.sendDataWithParam("clearCart");
 
+    // area to display messages
+    let displayArea = document.getElementById('displayCartOperations');
+    // get the response for HttpRequest
+    httpRequest.getxmlHttp().onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            try {
+                displayCartEmpty(displayArea);
+                let removeCartDisplay = document.getElementById('myList');
+                removeCartDisplay.parentNode.removeChild(removeCartDisplay);
+            } catch (e) {
+                httpRequest.loadInComplete('Checkout Incomplete', displayArea);
+            }
+        }
+    }
+}
+
+function displayCartMsg(displayArea) {
+    displayArea.innerHTML = '<p  style="text-align: center; font-size: 20px;">      ' +
+        'Your basket is empty. Feel free to <a style="color: #2b669a" href="../shopList.php">\n                           <b>check</b></a> out our ' +
+        'latest offers!</p>';
+    displayArea.style.marginTop = '150px';
+}
+
+
+// user logIn, register, send comment and upload image
+
+function checkLogInFields(firstField, secondField) {
+    if (firstField === "" || firstField === null) {
+        displayMsg("Email must be filled out", 'warning', 'outputLogInStatus');         // display error message if true
+        return true;
+    }
+    else if (secondField === "" || secondField === null) {
+        displayMsg("Password must be filled out", 'warning', 'outputLogInStatus');      // display error message if true
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function logIn_form(){
+    // prevent reload or refresh of the page
+    event.preventDefault();
+
+    // get values of the field
+    let firstField = document.getElementById('emailLogIn').value;
+    let secondField = document.getElementById('passwordLogIn').value;
+
+    // check input fields first
+    if(checkLogInFields(firstField, secondField)!==true){
+        // create an XMLHttpRequest object
+        let httpRequest = new AjaxConnection();
+        // open the httpRequest
+        httpRequest.openConnection("POST", "logIn.php", true);
+        // Set content type header information for sending url encoded variables in the request
+        httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
+        // The first parameter enables XSS filtering.
+        // The second parameter than sanitizing the page,
+        // the browser will prevent rendering of the page if an XSS attack is detected.
+        httpRequest.setHeaders('X-XSS-Protection','1;mode=block');
+        // prepare data
+        let obj = { "email": firstField, "password": secondField};
+        let dbParam = JSON.stringify(obj);
+        httpRequest.sendDataWithParam("logInCredentials=" + dbParam);
+        // send HttpRequest
+        httpRequest.getxmlHttp().onreadystatechange = function () {
+            if (this.readyState === 4 && this.DONE) {
+                if(this.responseText !== 'Welcome'){
+                    httpRequest.loadInComplete(this.responseText, 'outputLogInStatus');
+                }
+            }
+        };
+        location.reload(); // for security reasons the page is reloaded if the logIn was successful
+    }
+}
+
+
+/**
+ * Display messages accordingly to the parameters passed.
+ * @param msg
+ * @param type
+ * @param textBox
+ */
+function displayMsg(msg, type, textBox) {
+
+    let boxTimeout = 0;
+    let displayBox = document.createElement("div");
+    if(type === 'warning'){
+        displayBox.className = "alert alert-warning";
+    }
+    else if(type === 'success'){
+        displayBox.className = "alert alert-success";
+    }
+    else if (type === 'info') {
+        displayBox.className = "alert alert-info";
+    } else if (type === 'danger') {
+        displayBox.className = "alert alert-danger";
+    }
+
+    this.styleBox(displayBox);
+    displayBox.innerHTML = msg;
+
+    if (document.body.contains(displayBox)) {
+        clearTimeout(boxTimeout);
+    } else {
+        let myTextBox = document.getElementById(textBox);
+        myTextBox.parentNode.insertBefore(displayBox, myTextBox.previousSibling);
+    }
+
+    setTimeout(function() {
+        displayBox.parentNode.removeChild(displayBox);
+        boxTimeout = -1;
+    }, 2000);
+}
+
+/**
+ * The method styles the display box used in the displayMsg method.
+ * @param displayBox
+ * @returns {*}
+ */
+function styleBox(displayBox){
+    displayBox.style.position = 'relative';
+    displayBox.style.textAlign = 'center';
+    displayBox.style.fontSize = '20px';
+    return displayBox;
+}
 
 
 // work on next
@@ -321,7 +543,7 @@ function addCartPlus(idBook){
 
 function sendComment(formID, id){
     // prevent reload or refresh of the page
-    //event.preventDefault();
+    event.preventDefault();
 
     // get the method and the action of the form
     let formMethod = document.getElementById(formID).getAttribute('method').toUpperCase();
@@ -329,9 +551,8 @@ function sendComment(formID, id){
 
     // get values of the field
     let message = document.getElementById(formID).elements.namedItem('message').value;
-    let obj, dbParam = '';
-        obj = { "bookId":id, "message": message };
-    dbParam = JSON.stringify(obj);
+    let obj = { "bookId":id, "message": message };
+    let dbParam = JSON.stringify(obj);
     //console.log(obj);
     // check input fields
     if (message === "" || message === null) {
@@ -349,7 +570,6 @@ function sendComment(formID, id){
        // httpRequest.send("message=" + message);
         httpRequest.send("message=" + dbParam);
 
-
         httpRequest.onreadystatechange = function () {
             if (httpRequest.readyState === 4 && httpRequest.DONE) {
                 document.getElementById(formID).elements.namedItem('message').value = '';
@@ -360,6 +580,10 @@ function sendComment(formID, id){
 
 }
 
+
+/*
+    File upload
+ */
 function dropHandler(event){
     console.log('File(s) dropped');
 
@@ -376,7 +600,7 @@ function dropHandler(event){
         }
     } else {
         for(let i = 0; i < event.dataTransfer.items.length; i++){
-                console.log('... file[' + i + '].name = ' + event.dataTransfer.files[i].name);
+            console.log('... file[' + i + '].name = ' + event.dataTransfer.files[i].name);
         }
     }
 
@@ -402,7 +626,7 @@ function removeDragData(event) {
 function uploadFile(file) {
     event.preventDefault();
     let fd = new FormData();
-   // let file = document.getElementById('fileToUpload').files[0];
+    // let file = document.getElementById('fileToUpload').files[0];
     fd.append("fileToUpload", file);
     let xhr = new XMLHttpRequest();
     xhr.upload.addEventListener("progress", uploadProgress, false);
@@ -444,18 +668,11 @@ function uploadAborted() {
     alert("aborted");
 }
 
-
-
-
-
 function register_form(formID) {
     event.preventDefault();
 
     let selectForm = document.getElementById(formID);
 
-    let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-    let formMethod = document.getElementById(formID).getAttribute('method').toUpperCase();
-    let formAction = document.getElementById(formID).getAttribute('action').toLowerCase();
     let btn = document.getElementById('registerBtn');
     let formInputs = document.getElementById(formID).querySelectorAll("input");
     let nr = 0;
@@ -464,87 +681,104 @@ function register_form(formID) {
 
         let formData = new FormData();                  // creates a formData object
         for (let i = 0; i < formInputs.length - 1; i++) { // the button is ignored
-            if (formInputs[i].value.length < 1 || formInputs[i].value == 'Uncompleted field') {
+            if (formInputs[i].value.length < 1 || formInputs[i].value === 'Uncompleted field') {
                 formInputs[i].value = 'Uncompleted field';
                 formInputs[i].style.color = 'red';
             } else {
                 nr++;
             }
         }
-        if (nr == formInputs.length-1) {
+        if (nr === formInputs.length-1) {
             for (let i = 0; i < formInputs.length - 1; i++) {
 
                 formData.append(formInputs[i].name, formInputs[i].value); // Add all inputs inside formData().
-                // open the httpRequest
+
             }
-            httpRequest.open(formMethod, formAction, true);
+            // create an XMLHttpRequest object
+            let httpRequest = new AjaxConnection();
+            // open the httpRequest
+            httpRequest.openConnection("POST", "register.php", true);
             // Set content type header information for sending url encoded variables in the request
-            httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            // Security measurement against XSS attack
-            httpRequest.setRequestHeader('X-XSS-Protection', '1;mode=block');
-            // send data
-            httpRequest.send(formData);
-
-            httpRequest.onreadystatechange = function () {
-                if (httpRequest.readyState < 4) {
-                    selectForm.reset();                 // input fields are reset
-                } else if (httpRequest.readyState === 4) {
-                    if (httpRequest.status === 200 && httpRequest.DONE) {
+            httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
+            // The first parameter enables XSS filtering.
+            // The second parameter than sanitizing the page,
+            // the browser will prevent rendering of the page if an XSS attack is detected.
+            httpRequest.setHeaders('X-XSS-Protection','1;mode=block');
+            // prepare data
+            let dbParam = JSON.stringify(formData);
+            httpRequest.sendDataWithParam("registerFormData=" + dbParam);
+            // send HttpRequest
+            httpRequest.getxmlHttp().onreadystatechange = function () {
+                    if (this.status === 200 && this.DONE) {
                         $("#register-modal").modal('hide');
-                        displayMsg(this.responseText, 'success', 'output-box');
+                       // displayMsg(this.responseText, 'success', 'output-box');
                     } else {
-                        selectForm.insertAdjacentHTML('beforeend', message.failure);
+                        //selectForm.insertAdjacentHTML('beforeend', message.failure);
                     }
-                }
             }
-
         }
-
-
-    });
+    })
 }
 
-function logIn_form(formID){
-    // prevent reload or refresh of the page
-    event.preventDefault();
 
-    // get the method and the action of the form
-    let formMethod = document.getElementById(formID).getAttribute('method').toUpperCase();
-    let formAction = document.getElementById(formID).getAttribute('action').toLowerCase();
 
-    // get values of the field
-    let firstField = document.getElementById(formID).elements.namedItem('emailLogIn').value;
-    let secondField = document.getElementById(formID).elements.namedItem('passwordLogIn').value;
 
-    // check input fields
-    if (firstField === "" || firstField === null) {
-        displayMsg("Email must be filled out", 'warning', 'output-box');         // display error message if true
-    }
-    else if (secondField === "" || secondField === null) {
-        displayMsg("Password must be filled out", 'warning', 'output-box');      // display error message if true
-    } else {
-        // initialise httpRequest
-        let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-        // open the httpRequest
-        httpRequest.open(formMethod, formAction, true);
-        // Security measurement against XSS attack
-        httpRequest.setRequestHeader('X-XSS-Protection','1;mode=block');
-        // Set content type header information for sending url encoded variables in the request
-        httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        // Access the onreadystatechange event for the XMLHttpRequest object
 
-        let vars = "emailLogIn="+firstField+"&passwordLogIn="+secondField;
-        httpRequest.send(vars);
 
-        httpRequest.onreadystatechange = function () {
-            if (httpRequest.readyState === 4 && httpRequest.DONE) {
-                document.getElementById(formID).elements.namedItem('emailLogIn').value = '';
-                document.getElementById(formID).elements.namedItem('passwordLogIn').value = '';
-                displayMsg(this.responseText, 'success', 'output-box');      // display result
-            }
-        };
-    }
-}
+// function register_form(formID) {
+//     event.preventDefault();
+//
+//     let selectForm = document.getElementById(formID);
+//
+//     let httpRequest = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+//     let formMethod = document.getElementById(formID).getAttribute('method').toUpperCase();
+//     let formAction = document.getElementById(formID).getAttribute('action').toLowerCase();
+//     let btn = document.getElementById('registerBtn');
+//     let formInputs = document.getElementById(formID).querySelectorAll("input");
+//     let nr = 0;
+//
+//     btn.addEventListener('click', function () {
+//
+//         let formData = new FormData();                  // creates a formData object
+//         for (let i = 0; i < formInputs.length - 1; i++) { // the button is ignored
+//             if (formInputs[i].value.length < 1 || formInputs[i].value == 'Uncompleted field') {
+//                 formInputs[i].value = 'Uncompleted field';
+//                 formInputs[i].style.color = 'red';
+//             } else {
+//                 nr++;
+//             }
+//         }
+//         if (nr == formInputs.length-1) {
+//             for (let i = 0; i < formInputs.length - 1; i++) {
+//
+//                 formData.append(formInputs[i].name, formInputs[i].value); // Add all inputs inside formData().
+//                 // open the httpRequest
+//             }
+//             httpRequest.open(formMethod, formAction, true);
+//             // Set content type header information for sending url encoded variables in the request
+//             httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+//             // Security measurement against XSS attack
+//             httpRequest.setRequestHeader('X-XSS-Protection', '1;mode=block');
+//             // send data
+//             httpRequest.send(formData);
+//
+//             httpRequest.onreadystatechange = function () {
+//                 if (httpRequest.readyState < 4) {
+//                     selectForm.reset();                 // input fields are reset
+//                 } else if (httpRequest.readyState === 4) {
+//                     if (httpRequest.status === 200 && httpRequest.DONE) {
+//                         $("#register-modal").modal('hide');
+//                         displayMsg(this.responseText, 'success', 'output-box');
+//                     } else {
+//                         selectForm.insertAdjacentHTML('beforeend', message.failure);
+//                     }
+//                 }
+//             }
+//
+//         }
+//
+//     });
+// }
 
 
 
@@ -577,94 +811,130 @@ function loadReviews(id) {
     start += +document.getElementById('loadBtn').value + +0;
     obj = { "bookId":id, "start":start, "end":end };
     dbParam = JSON.stringify(obj);
-    xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "product.php", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.addEventListener("progress", onProgress, false);
-    xmlhttp.addEventListener("load", loadComplete, false);
-    xmlhttp.addEventListener("error", loadInComplete, false);
 
-    function loadInComplete(){
-        displayMsg('No more reviews for this book. Feel free to share yours!', 'warning', 'progress-box');
-    }
+    // create an XMLHttpRequest object
+    let httpRequest = new AjaxConnection();
+    // open the httpRequest
+    httpRequest.openConnection("POST", "product.php", true);
 
-    function onProgress() {
-        move();
-    }
+    // Set content type header information for sending url encoded variables in the request
+    httpRequest.setHeaders("Content-type", "application/x-www-form-urlencoded");
+    // The first parameter enables XSS filtering.
+    // The second parameter than sanitizing the page,
+    // the browser will prevent rendering of the page if an XSS attack is detected.
+    httpRequest.setHeaders('X-XSS-Protection','1;mode=block');
+    // send HttpRequest
+    httpRequest.sendDataWithParam('load='+dbParam);
 
-    function loadComplete() {
-        let newBtn = document.getElementById('loadBtn');
-        newBtn.textContent = 'Show More';
-        document.getElementById('loadBtn').value = + document.getElementById('loadBtn').value + +5;
-    }
-
-
-    xmlhttp.send('load='+dbParam);
+    // display are for reviews
+    let displayArea = document.getElementById('print');
     let data = '';
-    xmlhttp.onreadystatechange = function () {
+    httpRequest.getxmlHttp().onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             try {
                 data = JSON.parse(this.responseText);
-                let displayArea = document.getElementById('print');
                 setStyleReviews(displayArea, data);
-                // myValues.forEach(function (key) {
-                //     let grandParent = document.createElement('div');
-                //     grandParent.className = "w3-card-4 review-box";
-                //
-                //     let parent = document.createElement('div');
-                //     parent.className = "w3-container w3-light-grey";
-                //
-                //     let child = document.createElement('div');
-                //     child.className = "row";
-                //
-                //     let innerleftChild = document.createElement('div');
-                //     innerleftChild.className = 'col-xs-12 col-sm-3';
-                //     innerleftChild.style.paddingTop = '50px';
-                //
-                //     let image = document.createElement('img');
-                //     image.src = '/images/default_avatar.png';
-                //     image.className = 'img-circle';
-                //     innerleftChild.appendChild(image);
-                //
-                //     let name = document.createElement('p');
-                //     name.innerHTML = key._emailUser;
-                //     name.id = 'userComment';
-                //     innerleftChild.appendChild(name);
-                //
-                //     let innertrightChild = document.createElement('div');
-                //     innertrightChild.className = 'col-sm-12 col-sm-4';
-                //
-                //     let comment = document.createElement('p');
-                //     comment.innerHTML = key._comments;
-                //     comment.id = 'comment';
-                //     innertrightChild.appendChild(comment);
-                //
-                //     child.appendChild(innerleftChild);
-                //     child.appendChild(innertrightChild);
-                //
-                //     let footer = document.createElement('div');
-                //     footer.className = 'w3-footer';
-                //     let date = document.createElement('p');
-                //     footer.id = 'dateDisplay';
-                //     footer.innerHTML = key._dateTime;
-                //     footer.appendChild(date);
-                //
-                //     parent.appendChild(child);
-                //     child.appendChild(footer);
-                //     grandParent.appendChild(parent);
-                //
-                //     let d = document.getElementById('print');
-                //     d.insertAdjacentElement('beforebegin', grandParent);
-
-                    window.scrollTo(0, document.body.scrollHeight);
-                //});
-            }
-            catch(e) {
-                loadInComplete();
+                httpRequest.loadComplete('Reviews loaded', displayArea);
+            } catch (e) {
+                httpRequest.loadComplete('No more Reviews', displayArea);
             }
         }
-    };
+    }
 }
+
+        // let obj, dbParam, start=0, end, xmlhttp, myValues = "";
+        // end = +5;
+        // start += +document.getElementById('loadBtn').value + +0;
+        // obj = { "bookId":id, "start":start, "end":end };
+        // dbParam = JSON.stringify(obj);
+        // xmlhttp = new XMLHttpRequest();
+        // xmlhttp.open("POST", "product.php", true);
+        // xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        // xmlhttp.addEventListener("progress", onProgress, false);
+        // xmlhttp.addEventListener("load", loadComplete, false);
+        // xmlhttp.addEventListener("error", loadInComplete, false);
+        //
+        // function loadInComplete(){
+        //     displayMsg('No more reviews for this book. Feel free to share yours!', 'warning', 'progress-box');
+        // }
+        //
+        // function onProgress() {
+        //     move();
+        // }
+        //
+        // function loadComplete() {
+        //     let newBtn = document.getElementById('loadBtn');
+        //     newBtn.textContent = 'Show More';
+        //     document.getElementById('loadBtn').value = + document.getElementById('loadBtn').value + +5;
+        // }
+        //
+        //
+        // xmlhttp.send('load='+dbParam);
+        // let data = '';
+        // xmlhttp.onreadystatechange = function () {
+        //     if (this.readyState === 4 && this.status === 200) {
+        //         try {
+        //             data = JSON.parse(this.responseText);
+        //             let displayArea = document.getElementById('print');
+        //             setStyleReviews(displayArea, data);
+        //             // myValues.forEach(function (key) {
+        //             //     let grandParent = document.createElement('div');
+        //             //     grandParent.className = "w3-card-4 review-box";
+        //             //
+        //             //     let parent = document.createElement('div');
+        //             //     parent.className = "w3-container w3-light-grey";
+        //             //
+        //             //     let child = document.createElement('div');
+        //             //     child.className = "row";
+        //             //
+        //             //     let innerleftChild = document.createElement('div');
+        //             //     innerleftChild.className = 'col-xs-12 col-sm-3';
+        //             //     innerleftChild.style.paddingTop = '50px';
+        //             //
+        //             //     let image = document.createElement('img');
+        //             //     image.src = '/images/default_avatar.png';
+        //             //     image.className = 'img-circle';
+        //             //     innerleftChild.appendChild(image);
+        //             //
+        //             //     let name = document.createElement('p');
+        //             //     name.innerHTML = key._emailUser;
+        //             //     name.id = 'userComment';
+        //             //     innerleftChild.appendChild(name);
+        //             //
+        //             //     let innertrightChild = document.createElement('div');
+        //             //     innertrightChild.className = 'col-sm-12 col-sm-4';
+        //             //
+        //             //     let comment = document.createElement('p');
+        //             //     comment.innerHTML = key._comments;
+        //             //     comment.id = 'comment';
+        //             //     innertrightChild.appendChild(comment);
+        //             //
+        //             //     child.appendChild(innerleftChild);
+        //             //     child.appendChild(innertrightChild);
+        //             //
+        //             //     let footer = document.createElement('div');
+        //             //     footer.className = 'w3-footer';
+        //             //     let date = document.createElement('p');
+        //             //     footer.id = 'dateDisplay';
+        //             //     footer.innerHTML = key._dateTime;
+        //             //     footer.appendChild(date);
+        //             //
+        //             //     parent.appendChild(child);
+        //             //     child.appendChild(footer);
+        //             //     grandParent.appendChild(parent);
+        //             //
+        //             //     let d = document.getElementById('print');
+        //             //     d.insertAdjacentElement('beforebegin', grandParent);
+        //
+        //                 window.scrollTo(0, document.body.scrollHeight);
+        //             //});
+        //         }
+        //         catch(e) {
+        //             loadInComplete();
+        //         }
+        //     }
+        // };
+    //}
 
 function setStyleReviews(displayArea, data){
     let object = new ReviewDisplayTemplate();

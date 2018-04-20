@@ -8,7 +8,7 @@ require ('Models/SerializedArrayOutput.php');
 require ('Models/JsonStringOutput.php');
 require ('Models/ArrayOutput.php');
 
-//session_start();
+session_start();
 $view = new stdClass();
 
 $userDataSet = new UserDataSet();

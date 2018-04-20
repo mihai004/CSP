@@ -90,8 +90,16 @@
                         <ul class="dropdown-menu">
                             <li><a href="../../basket.php">My Basket</a></li>
                             <li><a href="../../logOut.php">LogOut</a></li>
+               
+                            <li><div id="collapseExample">
+                                     <div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+                                           <b><i><p id="uploadText">Upload Profile Picture Drag Zone</p></i></b>
+                                      </div>
+                                 </div>
+                             <div id="progressNumber"></div></li>
                         </ul>
-                        ';
+                     
+                       ';
 
                 }
                 else {

@@ -5,6 +5,7 @@
 
     <div class="container" id="shop">
         <div class="row">
+            <div id="displayCartOperations"></div>
             <div id="myList" class="col-md-10 col-md-offset-1">
 <?php
 if (empty($view->basket) and !(isset($_GET['thankYou']))) {
@@ -12,17 +13,22 @@ if (empty($view->basket) and !(isset($_GET['thankYou']))) {
                          Your basket is empty. Feel free to <a style="color: #2b669a" href="../shopList.php">
                            <b>check</b></a> out our latest offers!                                                  
                       </p>';
-} else {
+} else if(isset($_GET['thankYou'])){
+    echo '<h3 class="text-center text-success">Thank you for shopping with us!</h3>';
+}
+else {
     echo '<h1 class="panel-heading">Your Orders</h1>
         <form method="post" onclick="">
                 <div class="panel panel-default panel-table">
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col col-xs-6">
-                                <button type="button" class="btn btn-block btn-danger btn-clear">Clear Basket</button>
+                                <button type="button" class="btn btn-block btn-danger btn-clear" 
+                                onclick="removeAllItems()">Clear Basket</button>
                         </div>
                         <div class="col col-xs-6 text-right">
-                            <button type="button" class="btn btn-block btn-primary btn-checkout">Checkout</button>
+                            <button type="button" class="btn btn-block btn-primary btn-checkout"
+                             onclick="checkOut();">Checkout</button>
                         </div>
                     </div>
                 </div>
@@ -41,7 +47,7 @@ if (empty($view->basket) and !(isset($_GET['thankYou']))) {
                         </tr>
                         </thead>
                         <tbody>
-                        <div id="output-box"></div>
+                        <div id="displayBookMessage"></div>
                         ';
     $totalPrice = 0; // variable for price
     $finalPrice = 0;
@@ -119,10 +125,6 @@ if (empty($view->basket) and !(isset($_GET['thankYou']))) {
     ;
 
     echo '</ul></div></div></form>';
-    if (isset($_GET['thankYou'])) {
-
-        echo '<h3 class="text-center text-success">Thank you for shopping with us!</h3>';
-    }
 }
 echo '</div></div></div>';
 require ('template/footer.phtml');

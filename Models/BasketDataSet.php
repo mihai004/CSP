@@ -140,6 +140,27 @@ class BasketDataSet
 
     }
 
+    public function addToCartMore($post){
+        $dbParam = json_decode($post['addMoreProductID']);
+        $userID = $_SESSION['userID'];
+        $productID = $dbParam->idBook;//$post['addMoreProductID'];
+        $quantity = $dbParam->quantity;
+        if ($this->checkDuplicates($userID, $productID) === true) {
+                $this->updateQuantity($userID, $productID, $quantity);
+                return true;
+        } else {
+        $sqlQuery = "INSERT INTO Basket (idUser, idBook, quantity) VALUES(?, ?, ?)";
+        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(1,$userID);
+        $statement->bindParam(2,$productID);
+        $statement->bindParam(3, $quantity);
+            if ($statement->execute()) {
+            return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * @param $post

@@ -11,6 +11,7 @@ require('template/header.phtml');
                 </div>
 
                 <h2 align="center" style="color:black;"><b>Or <i>Sign In </i> right away... </b></h2>
+                <div id="outputLogInStatus"></div>
                 <hr class="colorgraph">
                 <form id="logInForm" method="post" action="/logIn.php">
                     <div class="input-group">
@@ -31,11 +32,10 @@ require('template/header.phtml');
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div align="center" class="col-xs-12 col-sm-12 col-md-12" >
                                 <input id="logIn" name="myBtn" type="submit" value="LogIn"
-                                       class="btn btn-lg btn-success btn-block" onclick="logIn_form(this.form.id);">
+                                       class="btn btn-lg btn-success btn-block" onclick="logIn_form();">
                             </div>
                         </div>
                 </form>
-                <div id="output-box"></div>
                 </br>
                 <form role="form" method="post" action="../resetPassword.php">
                     <div class="col-xs-6 col-sm-6 col-md-6">
@@ -83,57 +83,57 @@ require('template/header.phtml');
                                             <input name="emailReg" type="email" id="email" class="form-control" placeholder="Email Address" required>
                                             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="inputMobileNumber" class="control-label">Mobile Number:</label>
-                                            <input name="mobileNumber" type="text" class="form-control" id="inputMobileNumber" placeholder="Mobile Number" required>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="inputNrHouse" class="control-label">Number of the house:</label>
-                                            <input name="houseNumber" type="text" class="form-control" id="inputNrHouse" placeholder="House Number" required>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="inputStreet" class="control-label">Street name:</label>
-                                            <input name="streetName" type="text" class="form-control" id="inputStreet" placeholder="Street name" required>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="inputCity" class="control-label">City:</label>
-                                            <input name="city" type="text" class="form-control" id="inputCity" placeholder="City Name" required>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="inputCountry" class="control-label">Country:</label>
-                                            <input name="country" type="text" class="form-control" id="inputCountry" placeholder="City Name" required>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="inputPostCode" class="control-label">Zip / Post Code:</label>
-                                            <input name="postCode" type="text" class="form-control" id="inputPostCode" placeholder="Post Code" required>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="inputPassword" class="control-label">Password</label>
-                                            <div class="form-inline row">
-                                                <div class="form-group col-sm-6 col-mm-6">
-                                                    <input name="password" type="password" class="form-control" id="inputPassword" placeholder="Password" required>
-                                                    <div class="help-block">Minimum of 6 characters</div>
-                                                </div>
-                                                <div class="form-group col-sm-6">
-                                                    <input name="passwordConfirm"  type="password" class="form-control" id="inputPasswordConfirm" placeholder="Confirm Password" required>
-                                                    <div class="help-block with-errors"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
-                                                <p>
-                                                    Drag one or more files...
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div id="progressNumber"></div>
+<!--                                        <div class="form-group">-->
+<!--                                            <label for="inputMobileNumber" class="control-label">Mobile Number:</label>-->
+<!--                                            <input name="mobileNumber" type="text" class="form-control" id="inputMobileNumber" placeholder="Mobile Number" required>-->
+<!--                                        </div>-->
+<!---->
+<!--                                        <div class="form-group">-->
+<!--                                            <label for="inputNrHouse" class="control-label">Number of the house:</label>-->
+<!--                                            <input name="houseNumber" type="text" class="form-control" id="inputNrHouse" placeholder="House Number" required>-->
+<!--                                        </div>-->
+<!---->
+<!--                                        <div class="form-group">-->
+<!--                                            <label for="inputStreet" class="control-label">Street name:</label>-->
+<!--                                            <input name="streetName" type="text" class="form-control" id="inputStreet" placeholder="Street name" required>-->
+<!--                                        </div>-->
+<!---->
+<!--                                        <div class="form-group">-->
+<!--                                            <label for="inputCity" class="control-label">City:</label>-->
+<!--                                            <input name="city" type="text" class="form-control" id="inputCity" placeholder="City Name" required>-->
+<!--                                        </div>-->
+<!---->
+<!--                                        <div class="form-group">-->
+<!--                                            <label for="inputCountry" class="control-label">Country:</label>-->
+<!--                                            <input name="country" type="text" class="form-control" id="inputCountry" placeholder="City Name" required>-->
+<!--                                        </div>-->
+<!---->
+<!--                                        <div class="form-group">-->
+<!--                                            <label for="inputPostCode" class="control-label">Zip / Post Code:</label>-->
+<!--                                            <input name="postCode" type="text" class="form-control" id="inputPostCode" placeholder="Post Code" required>-->
+<!--                                        </div>-->
+<!---->
+<!--                                        <div class="form-group">-->
+<!--                                            <label for="inputPassword" class="control-label">Password</label>-->
+<!--                                            <div class="form-inline row">-->
+<!--                                                <div class="form-group col-sm-6 col-mm-6">-->
+<!--                                                    <input name="password" type="password" class="form-control" id="inputPassword" placeholder="Password" required>-->
+<!--                                                    <div class="help-block">Minimum of 6 characters</div>-->
+<!--                                                </div>-->
+<!--                                                <div class="form-group col-sm-6">-->
+<!--                                                    <input name="passwordConfirm"  type="password" class="form-control" id="inputPasswordConfirm" placeholder="Confirm Password" required>-->
+<!--                                                    <div class="help-block with-errors"></div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="form-group">-->
+<!--                                            <div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">-->
+<!--                                                <p>-->
+<!--                                                    Drag one or more files...-->
+<!--                                                </p>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div id="progressNumber"></div>-->
                                     </div>
                                     <div class="modal-footer">
                                         <input id="registerBtn" onclick="register_form(this.form.id)" type="submit" value="Register"
