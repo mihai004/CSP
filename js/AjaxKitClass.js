@@ -16,11 +16,11 @@ function searchForm() {
         form.focus();
     });
 
-    form.onkeydown = function(evt) {
-        if (evt.keyCode === 27) {
-            openSearch.classList.remove('open');
-        }
-    };
+    // form.onkeydown = function(evt) {
+    //     if (evt.keyCode === 27) {
+    //         openSearch.classList.remove('open');
+    //     }
+    // };
 
     closeBtn.addEventListener('click', function () {
         openSearch.classList.remove('open');
@@ -53,7 +53,7 @@ function showResults(searchingFor) {
                     data = JSON.parse(this.responseText);
                     displaySearchResults(displayArea, data);
                 } catch(e) {
-                    httpRequest.loadInComplete(this.responseText, displayArea);
+                    httpRequest.loadInComplete(this.responseText, 'livesearch');
                     displayArea.innerHTML = '';
                 }
             }
@@ -136,9 +136,9 @@ function filterInfo() {
             try {
                 data = JSON.parse(this.responseText);
                 displaySortResults(displayArea, data);
-                httpRequest.loadComplete('Data Loaded', displayArea);
+                httpRequest.loadComplete('Data Loaded', 'displayBook');
             } catch(e) {
-                httpRequest.loadInComplete(this.responseText, displayArea);
+                httpRequest.loadInComplete(this.responseText, 'displayBook');
                 displayArea.style.minHeight = '200px';
                 displayArea.innerHTML = '';
             }
@@ -192,9 +192,6 @@ function removeFromCart(idBasket, idBook){
     // send HttpRequest
     httpRequest.sendDataWithParam('removeFromCart=' + idBasket);
 
-    // get the displayArea
-    let displayArea = document.getElementById('displayBookMessage');
-
     // get information for HttpRequest
     httpRequest.getxmlHttp().onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
@@ -203,7 +200,7 @@ function removeFromCart(idBasket, idBook){
                // httpRequest.loadComplete('Item removed', displayArea);
                 document.getElementById('bookSet'+idBook).innerHTML = '';
                 document.getElementById('bookSets'+idBook).remove();        // remove from cart
-                httpRequest.loadComplete('Item removed', displayArea);
+                httpRequest.loadComplete('Item removed', 'displayBookMessage');
           //  } catch (e) {
               //  httpRequest.loadInComplete('Item not removed', displayArea);
             //}
@@ -226,8 +223,6 @@ function removeFromCartMinus(idBasket, idBook) {
     // get the old values of the items
     let quantity = document.getElementById('itemQuantity' + idBook).innerHTML;
     let nrOfBooks = document.getElementById('nrOfBooks').value;
-    // get the displayArea
-    let displayArea = document.getElementById('displayBookMessage');
 
     // check quantity
     if (nrOfBooks <= 1 && quantity <= 1) {
@@ -246,9 +241,9 @@ function removeFromCartMinus(idBasket, idBook) {
             if (this.readyState === 4 && this.status === 200) {
             try {
                 updateBasketData(idBook, quantity, this.responseText);
-                httpRequest.loadComplete('Item removed', displayArea);
+                httpRequest.loadComplete('Item removed', 'displayBookMessage');
             } catch (e) {
-                httpRequest.loadInComplete('Item not removed', displayArea);
+                httpRequest.loadInComplete('Item not removed', 'displayBookMessage');
             }
             }
         }
@@ -270,16 +265,17 @@ function addOneBookToCart(idBook) {
     httpRequest.sendDataWithParam('addForProductID=' + idBook);
 
     // area where the message will be displayed according to each book ID
-    let displayArea = document.getElementById('displayBookMessage' + idBook);
+    // let displayArea = document.getElementById('displayBookMessage' + idBook);
 
     // get the response for HttpRequest
     httpRequest.getxmlHttp().onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            try {
-                httpRequest.loadComplete(this.responseText, displayArea);
-            } catch (e) {
-                httpRequest.loadInComplete('Item not added', displayArea);
-            }
+                if(this.responseText !== '"logIn first!"'){
+                    httpRequest.loadComplete('Item added', 'displayBookMessage' + idBook);
+                }
+                else {
+                    httpRequest.loadInComplete(this.responseText, 'displayBookMessage' + idBook);
+                }
         }
     }
 }
@@ -321,15 +317,14 @@ function addMoreCart(idBook){
     let dbParam = JSON.stringify(obj);
     // Send HttpRequest data
     httpRequest.sendDataWithParam('addMoreProductID=' + dbParam);
-    // area where the message will be displayed according to each book ID
-    let displayArea = document.getElementById("displayBookMessage");
     // get the response for HttpRequest
     httpRequest.getxmlHttp().onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            try {
-                httpRequest.loadComplete('Item Added', displayArea);
-            } catch (e) {
-                httpRequest.loadInComplete('Item not removed', displayArea);
+            if(this.responseText !== '"logIn first!"'){
+                httpRequest.loadComplete('Item added', 'displayBookMessage');
+            }
+            else {
+                httpRequest.loadInComplete(this.responseText, 'displayBookMessage');
             }
         }
     }
@@ -351,17 +346,15 @@ function addCartPlus(idBook){
 
     // get the actual quantity of the item
     let quantity = document.getElementById('itemQuantity' + idBook).innerHTML;
-    // area where the message will be displayed according to each book ID
-    let displayArea = document.getElementById('displayBookMessage');
 
     // get the response for HttpRequest
     httpRequest.getxmlHttp().onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
                     try {
-                        httpRequest.loadComplete('Item added', displayArea);
+                        httpRequest.loadComplete('Item added', 'displayBookMessage');
                         updateBasketData(idBook, quantity, this.responseText);
                     } catch (e) {
-                        httpRequest.loadInComplete('Item not added', displayArea);
+                        httpRequest.loadInComplete('Item not added', 'displayBookMessage');
                 }
             }
         }
@@ -410,29 +403,28 @@ function removeAllItems(){
     // send HttpRequest
     httpRequest.sendDataWithParam("clearCart");
 
-    // area to display messages
-    let displayArea = document.getElementById('displayCartOperations');
     // get the response for HttpRequest
     httpRequest.getxmlHttp().onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             try {
-                displayCartEmpty(displayArea);
+                displayCartMsgEmpty();
                 let removeCartDisplay = document.getElementById('myList');
                 removeCartDisplay.parentNode.removeChild(removeCartDisplay);
             } catch (e) {
-                httpRequest.loadInComplete('Checkout Incomplete', displayArea);
+                httpRequest.loadInComplete('Items not removed! Error', 'displayCartOperations');
             }
         }
     }
 }
 
-function displayCartMsg(displayArea) {
+function displayCartMsgEmpty() {
+    // area to display messages
+    let displayArea = document.getElementById('displayCartOperations');
     displayArea.innerHTML = '<p  style="text-align: center; font-size: 20px;">      ' +
         'Your basket is empty. Feel free to <a style="color: #2b669a" href="../shopList.php">\n                           <b>check</b></a> out our ' +
         'latest offers!</p>';
     displayArea.style.marginTop = '150px';
 }
-
 
 // user logIn, register, send comment and upload image
 
@@ -483,57 +475,6 @@ function logIn_form(){
         };
         location.reload(); // for security reasons the page is reloaded if the logIn was successful
     }
-}
-
-
-/**
- * Display messages accordingly to the parameters passed.
- * @param msg
- * @param type
- * @param textBox
- */
-function displayMsg(msg, type, textBox) {
-
-    let boxTimeout = 0;
-    let displayBox = document.createElement("div");
-    if(type === 'warning'){
-        displayBox.className = "alert alert-warning";
-    }
-    else if(type === 'success'){
-        displayBox.className = "alert alert-success";
-    }
-    else if (type === 'info') {
-        displayBox.className = "alert alert-info";
-    } else if (type === 'danger') {
-        displayBox.className = "alert alert-danger";
-    }
-
-    this.styleBox(displayBox);
-    displayBox.innerHTML = msg;
-
-    if (document.body.contains(displayBox)) {
-        clearTimeout(boxTimeout);
-    } else {
-        let myTextBox = document.getElementById(textBox);
-        myTextBox.parentNode.insertBefore(displayBox, myTextBox.previousSibling);
-    }
-
-    setTimeout(function() {
-        displayBox.parentNode.removeChild(displayBox);
-        boxTimeout = -1;
-    }, 2000);
-}
-
-/**
- * The method styles the display box used in the displayMsg method.
- * @param displayBox
- * @returns {*}
- */
-function styleBox(displayBox){
-    displayBox.style.position = 'relative';
-    displayBox.style.textAlign = 'center';
-    displayBox.style.fontSize = '20px';
-    return displayBox;
 }
 
 
@@ -609,7 +550,6 @@ function dropHandler(event){
 
 function dragOverHandler(event) {
     console.log(('File(s) in drop zone'));
-
     event.preventDefault();
 }
 
@@ -624,29 +564,29 @@ function removeDragData(event) {
 }
 
 function uploadFile(file) {
-    event.preventDefault();
+
+    // create a FormData object
     let fd = new FormData();
-    // let file = document.getElementById('fileToUpload').files[0];
+    // append the file to the form
     fd.append("fileToUpload", file);
-    let xhr = new XMLHttpRequest();
-    xhr.upload.addEventListener("progress", uploadProgress, false);
-    xhr.addEventListener("load", uploadComplete, false);
-    xhr.addEventListener("error", uploadFailed, false);
-    xhr.addEventListener("abort", uploadAborted, false);
-    // xhr.open('POST', 'test.php', true);
-    xhr.open("POST", "upload.php", true);
-    //xhr.setRequestHeader("X-File-Name", file.name);
-    //xhr.setRequestHeader("Content-Type", "application/octet-stream");
-    xhr.send(fd);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                xhr.responseText;
+    // create an XMLHttpRequest object
+    let httpRequest = new AjaxConnection();
+    // open the httpRequest
+    httpRequest.openConnection("POST", "upload.php", true);
+    // The first parameter enables XSS filtering.
+    // The second parameter than sanitizing the page,
+    // the browser will prevent rendering of the page if an XSS attack is detected.
+    httpRequest.setHeaders('X-XSS-Protection','1;mode=block');
+    // Send data
+    httpRequest.sendDataWithParam(fd);
+    // send HttpRequest
+    httpRequest.getxmlHttp().onreadystatechange = function () {
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                this.responseText;
             } else {
-                alert('error');
-            }
+                this.responseText;
         }
-    };
+    }
 }
 
 function uploadProgress(evt){
@@ -659,7 +599,7 @@ function uploadProgress(evt){
 }
 
 function uploadComplete() {
-    alert("works");
+    console.log('works');
 }
 function uploadFailed() {
     alert("failed");
@@ -711,9 +651,11 @@ function register_form(formID) {
             httpRequest.getxmlHttp().onreadystatechange = function () {
                     if (this.status === 200 && this.DONE) {
                         $("#register-modal").modal('hide');
-                       // displayMsg(this.responseText, 'success', 'output-box');
+                       // httpRequest.loadComplete(this.responseText, 'success', 'output-box');
+                        displayMsg(this.responseText, 'success', 'output-box');
                     } else {
-                        //selectForm.insertAdjacentHTML('beforeend', message.failure);
+                       // httpRequest.loadInComplete('')
+                        selectForm.insertAdjacentHTML('beforeend', 'failure');
                     }
             }
         }
@@ -802,13 +744,15 @@ function move() {
 }
 
 
-
-
+/**
+ * The function loads reviews based on the book a user is visualises.
+ * @param id
+ */
 function loadReviews(id) {
 
-    let obj, dbParam, start=0, end, xmlhttp, myValues = "";
-    end = +5;
-    start += +document.getElementById('loadBtn').value + +0;
+    let obj, dbParam, start=0, end;
+    end = +5;                                                   // bring each time the next 5 reviews
+    start += +document.getElementById('loadBtn').value + +0;    // from the database. If no
     obj = { "bookId":id, "start":start, "end":end };
     dbParam = JSON.stringify(obj);
 
@@ -827,118 +771,84 @@ function loadReviews(id) {
     httpRequest.sendDataWithParam('load='+dbParam);
 
     // display are for reviews
-    let displayArea = document.getElementById('print');
+    let displayArea = document.getElementById('displayReviewMsg');
     let data = '';
     httpRequest.getxmlHttp().onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             try {
                 data = JSON.parse(this.responseText);
                 setStyleReviews(displayArea, data);
-                httpRequest.loadComplete('Reviews loaded', displayArea);
-            } catch (e) {
-                httpRequest.loadComplete('No more Reviews', displayArea);
-            }
+                httpRequest.loadComplete('Reviews loaded', 'print');
+                let newBtn = document.getElementById('loadBtn');
+                newBtn.textContent = 'Show More';
+                document.getElementById('loadBtn').value = + document.getElementById('loadBtn').value + +5;
+                window.scrollTo(0, document.body.scrollHeight); // scroll down to see the new
+            } catch (e) {                                       // loaded Reviews.
+                httpRequest.loadComplete('No more Reviews. Share yours!', 'print'); // if there are no more reviews,
+            }                                                                      // a message will be displayed.
         }
     }
 }
 
-        // let obj, dbParam, start=0, end, xmlhttp, myValues = "";
-        // end = +5;
-        // start += +document.getElementById('loadBtn').value + +0;
-        // obj = { "bookId":id, "start":start, "end":end };
-        // dbParam = JSON.stringify(obj);
-        // xmlhttp = new XMLHttpRequest();
-        // xmlhttp.open("POST", "product.php", true);
-        // xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        // xmlhttp.addEventListener("progress", onProgress, false);
-        // xmlhttp.addEventListener("load", loadComplete, false);
-        // xmlhttp.addEventListener("error", loadInComplete, false);
-        //
-        // function loadInComplete(){
-        //     displayMsg('No more reviews for this book. Feel free to share yours!', 'warning', 'progress-box');
-        // }
-        //
-        // function onProgress() {
-        //     move();
-        // }
-        //
-        // function loadComplete() {
-        //     let newBtn = document.getElementById('loadBtn');
-        //     newBtn.textContent = 'Show More';
-        //     document.getElementById('loadBtn').value = + document.getElementById('loadBtn').value + +5;
-        // }
-        //
-        //
-        // xmlhttp.send('load='+dbParam);
-        // let data = '';
-        // xmlhttp.onreadystatechange = function () {
-        //     if (this.readyState === 4 && this.status === 200) {
-        //         try {
-        //             data = JSON.parse(this.responseText);
-        //             let displayArea = document.getElementById('print');
-        //             setStyleReviews(displayArea, data);
-        //             // myValues.forEach(function (key) {
-        //             //     let grandParent = document.createElement('div');
-        //             //     grandParent.className = "w3-card-4 review-box";
-        //             //
-        //             //     let parent = document.createElement('div');
-        //             //     parent.className = "w3-container w3-light-grey";
-        //             //
-        //             //     let child = document.createElement('div');
-        //             //     child.className = "row";
-        //             //
-        //             //     let innerleftChild = document.createElement('div');
-        //             //     innerleftChild.className = 'col-xs-12 col-sm-3';
-        //             //     innerleftChild.style.paddingTop = '50px';
-        //             //
-        //             //     let image = document.createElement('img');
-        //             //     image.src = '/images/default_avatar.png';
-        //             //     image.className = 'img-circle';
-        //             //     innerleftChild.appendChild(image);
-        //             //
-        //             //     let name = document.createElement('p');
-        //             //     name.innerHTML = key._emailUser;
-        //             //     name.id = 'userComment';
-        //             //     innerleftChild.appendChild(name);
-        //             //
-        //             //     let innertrightChild = document.createElement('div');
-        //             //     innertrightChild.className = 'col-sm-12 col-sm-4';
-        //             //
-        //             //     let comment = document.createElement('p');
-        //             //     comment.innerHTML = key._comments;
-        //             //     comment.id = 'comment';
-        //             //     innertrightChild.appendChild(comment);
-        //             //
-        //             //     child.appendChild(innerleftChild);
-        //             //     child.appendChild(innertrightChild);
-        //             //
-        //             //     let footer = document.createElement('div');
-        //             //     footer.className = 'w3-footer';
-        //             //     let date = document.createElement('p');
-        //             //     footer.id = 'dateDisplay';
-        //             //     footer.innerHTML = key._dateTime;
-        //             //     footer.appendChild(date);
-        //             //
-        //             //     parent.appendChild(child);
-        //             //     child.appendChild(footer);
-        //             //     grandParent.appendChild(parent);
-        //             //
-        //             //     let d = document.getElementById('print');
-        //             //     d.insertAdjacentElement('beforebegin', grandParent);
-        //
-        //                 window.scrollTo(0, document.body.scrollHeight);
-        //             //});
-        //         }
-        //         catch(e) {
-        //             loadInComplete();
-        //         }
-        //     }
-        // };
-    //}
-
+/**
+ * The method styles the reviews that are going to be printed on the page when an event will occur.
+ * @param displayArea
+ * @param data
+ */
 function setStyleReviews(displayArea, data){
     let object = new ReviewDisplayTemplate();
     data.forEach( function (obj) {
         object.setStyleReview(displayArea, obj);
     });
+}
+
+
+/**
+ * Display messages accordingly to the parameters passed.
+ * @param msg
+ * @param type
+ * @param textBox
+ */
+function displayMsg(msg, type, textBox) {
+
+    let boxTimeout = 0;
+    let displayBox = document.createElement("div");
+    if(type === 'warning'){
+        displayBox.className = "alert alert-warning";
+    }
+    else if(type === 'success'){
+        displayBox.className = "alert alert-success";
+    }
+    else if (type === 'info') {
+        displayBox.className = "alert alert-info";
+    } else if (type === 'danger') {
+        displayBox.className = "alert alert-danger";
+    }
+
+    this.styleBox(displayBox);
+    displayBox.innerHTML = msg;
+
+    if (document.body.contains(displayBox)) {
+        clearTimeout(boxTimeout);
+    } else {
+        let myTextBox = document.getElementById(textBox);
+        myTextBox.parentNode.insertBefore(displayBox, myTextBox.previousSibling);
+    }
+
+    setTimeout(function() {
+        displayBox.parentNode.removeChild(displayBox);
+        boxTimeout = -1;
+    }, 2000);
+}
+
+/**
+ * The method styles the display box used in the displayMsg method.
+ * @param displayBox
+ * @returns {*}
+ */
+function styleBox(displayBox){
+    displayBox.style.position = 'relative';
+    displayBox.style.textAlign = 'center';
+    displayBox.style.fontSize = '20px';
+    return displayBox;
 }

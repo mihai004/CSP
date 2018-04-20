@@ -1,12 +1,10 @@
 <?php
 require_once ('Database.php');
 require_once ('BookData.php');
-// JSON
-
 
 class BooksDataSet
 {
-    protected $_dbHandle, $_dbInstance;
+    protected $_dbHandle, $_dbInstance, $output;
 
     /**
      * BooksDataSet constructor.
@@ -15,25 +13,6 @@ class BooksDataSet
 
         $this->_dbInstance = Database::getInstance();
         $this->_dbHandle = $this->_dbInstance->getdbConnection();
-    }
-
-    /**
-     * The method is invoked when a user clicks one a product from the shop list page and hence
-     * the book object is returned with its particular state.
-     * @param $field
-     * @param $idBook
-     * @return BookData
-     */
-    public function searchBook($field ,$idBook){
-
-        $sqlQuery = "SELECT * FROM Books WHERE $field = '$idBook'";
-        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
-        $statement->execute(); // execute the PDO statement
-        $dataSet = [];
-        while ($row = $statement->fetch()) {
-            $dataSet = new BookData($row);
-        }
-        return $dataSet;
     }
 
     /**
@@ -54,7 +33,13 @@ class BooksDataSet
         return $dataSet;
     }
 
-
+    /**
+     * The method returns results based on the the arguments passed as filters.
+     * @param $category
+     * @param $nrInStock
+     * @param $price
+     * @return array
+     */
     public function searchBy($category, $nrInStock, $price){
         $this->test_input($price);
         $sqlQuery = "SELECT * FROM Books WHERE category = ? AND numberInStock >= ? ORDER BY price $price";
@@ -66,42 +51,6 @@ class BooksDataSet
         while($row = $statement->fetch()) {
             $dataSet[] = new BookData($row);
         }
-        return $dataSet;
-    }
-
-
-    /**
-     * The method is called when a user wants to choose the way the products are displayed on
-     * the shop list page.
-     * @param $category
-     * @param $price
-     * @return array
-     */
-    public function searchFor($category, $price, $start, $limit)
-    {
-        $order = $this->test_input($price);
-        $sqlQuery = "SELECT * FROM Books WHERE idBook > 0";
-        $findings = array();
-        if($category != "" && $category != null){
-            $sqlQuery .= " AND category = :category ";
-            $findings['category'] = $category;
-        }
-        if ($price != "" && $price != null) {
-            $sqlQuery .= " ORDER BY price $order limit :start, :end";
-            $findings['start'] = $start;
-            $findings['limit'] = $limit;
-        }
-        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
-//        $statement->bindParam(':cat',$category, PDO::PARAM_STR);
-//        $statement->bindValue(1, (int) trim($start), PDO::PARAM_INT);
-//        $statement->bindValue(2, (int) trim($limit), PDO::PARAM_INT);
-        $statement->execute($findings); // execute the PDO statement
-
-        $dataSet = [];
-        while ($row = $statement->fetch()) {
-            $dataSet[] = new BookData($row);
-        }
-        var_dump($dataSet);
         return $dataSet;
     }
 
@@ -124,15 +73,8 @@ class BooksDataSet
             $j['AllBooks'][] = $row;
             $dataSet[] = new BookData($row);
         }
-//        $obj = $dataSet[0];
-//        $arr = json_encode($obj->getBookName());
-//        var_dump($arr);
-//        echo json_encode($j);
-//        echo '</br>';
-//        var_dump($dataSet);
         return $dataSet;
     }
-
 
     /**
      * The method returns all the books from the database according to specific parameters passed for
@@ -147,29 +89,6 @@ class BooksDataSet
 
         $dataSet = [];
         while ($row = $statement->fetch()) {
-            $dataSet[] = new BookData($row);
-        }
-        return $dataSet;
-    }
-
-
-
-    /**
-     * The method returns a particular by passing two parameters as conditions for the product to be
-     * search for.
-     * @param $field
-     * @param $value
-     * @return array|BookData
-     */
-    public function searchForBook($field, $value) {
-
-        $sqlQuery = "SELECT bookName FROM Books Where $field LIKE '$value' OR 
-        author LIKE '$value'";
-        $statement = $this->_dbHandle->prepare($sqlQuery);
-        $statement->execute();
-
-        $dataSet = [];
-        while($row = $statement->fetch()) {
             $dataSet[] = new BookData($row);
         }
         return $dataSet;
@@ -190,40 +109,6 @@ class BooksDataSet
         $statement->execute();
     }
 
-// search back end !
-//    /**
-//     * The method is invoked when a searches for a book based on some text, either author name or
-//     * book name, for instance.
-//     * @param $attribute
-//     * @return array
-//     */
-//    public function searchByAttribute($attribute)
-//    {
-//        $attributeTested = $this->test_input($attribute);
-//        $sqlQuery = "SELECT * FROM Books WHERE idBook > 0";
-//        if  ($attributeTested != "" && $attributeTested != null) {
-//            $sqlQuery .= " AND (bookName LIKE '%$attributeTested%' OR author LIKE '%$attributeTested%') ";
-//        }
-//
-//        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
-//        $statement->execute(); // execute the PDO statement
-//
-//        $dataSet = [];
-//        while ($row = $statement->fetch()) {
-//            $dataSet[] = new BookData($row);
-//        }
-//
-//        if(empty($dataSet)){
-//            echo '<script>alert("No results found! Please try again.")</script>';
-//            return $dataSet;
-//        }
-//        else {
-//            return $dataSet;
-//        }
-//
-//
-//    }
-
     /**
      * The method counts the number of items from the Book relation and it is used as part of the
      * checking out process.
@@ -233,24 +118,6 @@ class BooksDataSet
         $sqlQuery = 'SELECT * FROM Books';
         $statement = $this->_dbHandle->prepare($sqlQuery);
         $statement->execute();
-        return $statement->rowCount();
-    }
-
-
-    public function countFilters($category, $price){
-
-        $sqlQuery = "SELECT * FROM Books WHERE idBook > 0";
-        if($category != "" && $category != null){
-            $sqlQuery .= " AND category = ? ";
-        }
-        if ($price != "" && $price != null) {
-            $sqlQuery .= " ORDER BY ?";
-        }
-        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
-        $statement->bindParam(1,$category, PDO::PARAM_STR);
-        $statement->bindParam(2,$price, PDO::PARAM_STR);
-        $statement->execute(); // execute the PDO statement
-
         return $statement->rowCount();
     }
 
@@ -290,15 +157,21 @@ class BooksDataSet
         return $dataSet;
     }
 
+    // JSON Work
 
-    // JSON WORK
-
-    protected $output;
-
+    /**
+     * Sets the type of output (array, Json, XML).
+     * @param OutputInterface $outputType
+     */
     public function setOutput(OutputInterface $outputType){
         $this->output = $outputType;
     }
 
+    /**
+     * Load Data accordingly
+     * @param $arrayOfData
+     * @return mixed
+     */
     public function loadOutput($arrayOfData){
         return $this->output->load($arrayOfData);
     }

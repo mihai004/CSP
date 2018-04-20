@@ -3,7 +3,7 @@
 class UserData
 {
     protected $_idUser, $_eMail, $_phoneNumber, $_houseNr, $_streetName, $_city, $_country, $_postCode, $_password,
-                $_confirmed, $_confirmCode;
+                $_confirmed, $_confirmCode, $_profilePicName;
 
     /**
      * The UserData constructor.
@@ -23,6 +23,7 @@ class UserData
         $this->_password = $dbRow['password'];
         $this->_confirmed = $dbRow['confirmed'];
         $this->_confirmCode = $dbRow['confirmCode'];
+        $this->_confirmCode = $dbRow['profilePicName'];
 
     }
 

@@ -1,4 +1,6 @@
-<?php require('template/header.phtml') ?>
+
+<?php
+require ('template/header.phtml') ?>
 
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
 
@@ -13,13 +15,16 @@
             <div class="container">
                 <div class="carousel-caption">
                     <?php
-                    if(!(isset($_SESSION['userID']))){
+
+                    if (!(isset($_SESSION['userID'])))
+                    {
                         echo ' 
                         <h3>Become a member</h3>
                         <p>
                         <a class="btn btn-lg btn-primary" href="../register.php" role="button">Sign Up today</a>
                         </p>';
                     }
+
                     ?>
                 </div>
             </div>
@@ -82,7 +87,7 @@
             <p><a class="btn btn-info" href="../shopList.php" role="button">Details &raquo;</a></p>
         </div>
     </div>
-<!--</div>-->
 
 </div>
-<?php require('template/footer.phtml') ?>
+<?php
+require ('template/footer.phtml') ?>

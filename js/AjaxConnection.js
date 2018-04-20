@@ -1,13 +1,22 @@
+// No setters! For each connections there will be an object created.
 class AjaxConnection {
 
      constructor() {
           this._xmlHttp = this.createXmlHttp(); // composition instead of inheritance
      }                                          // with composition you know what you get
-                                                // no 'extra baggage'
+                                                // no 'extra baggage'.
+    /**
+     * The getter for the reference object of type XMLHttpRequest
+     * @returns {*}
+     */
     getxmlHttp() {
         return this._xmlHttp;
     }
 
+    /**
+     * The method returns an XMLHttpRequest object.
+     * @returns {*}
+     */
     createXmlHttp() {
         let xmlHttp;
         if (window.XMLHttpRequest) {
@@ -20,36 +29,65 @@ class AjaxConnection {
         return xmlHttp;
     }
 
+    /**
+     * The method opens the _xmlHttp connection.
+     * @param method
+     * @param url
+     * @param updateStatus
+     */
     openConnection(method, url, updateStatus) {
         this._xmlHttp.open(method, url, updateStatus);
     }
 
+    /**
+     * The method is used to set the appropriate headers.
+     * @param contentType
+     * @param value
+     */
     setHeaders(contentType, value) {
         this._xmlHttp.setRequestHeader(contentType, value);
     }
 
+    /**
+     * The method is invoked to send data to the server.
+     */
     sendData() {
         this._xmlHttp.send();
     }
 
+    /**
+     * The method is invoked to send data with parameters to the server (method overloading).
+     * @param parameter
+     */
     sendDataWithParam(parameter){
          this._xmlHttp.send(parameter);
     }
 
+    /**
+     * The method shows the progress of an xmlHttpRequest.
+     */
     showProgress(){
         this._xmlHttp.addEventListener("progress", this.inProgress(), false);
     }
 
+    /**
+     * The method is invoked by the progress event listener.
+     */
     inProgress(){
         console.log('in progress');
     }
 
-
-
+    /**
+     * The method shows the progress of uploading files to the server.
+     * @param evt
+     */
     uploadProgress(evt){
         this._xmlHttp.addEventListener("progress", this.uploadProgressStatus(evt), false);
     }
 
+    /**
+     * The method is invoked by the uploadProgress event listener.
+     */
     uploadProgressStatus(evt){
         if(evt.lengthComputable){
             let percentComplete = Math.round(evt.loaded * 100/ evt.total);
@@ -59,46 +97,83 @@ class AjaxConnection {
         }
     }
 
+    /**
+     * The method is invoked when data was loaded.
+     */
     uploadProgressLoad(){
         this._xmlHttp.addEventListener("load", this.uploadComplete(), false);
     }
+
+    /**
+     * There was an error uploading file.
+     */
     uploadError(){
         this._xmlHttp.addEventListener("error", this.uploadFailed(), false);
     }
 
+    /**
+     * The upload operation was aborted.
+     */
     uploadAbort(){
         this._xmlHttp.addEventListener("abort", this.uploadAborted(), false);
     }
 
+    /**
+     * Upload Status.
+     */
     uploadComplete() {
-        alert("works");
+        console.log("works");
     }
+
+    /**
+     * Upload Status.
+     */
     uploadFailed() {
-        alert("failed");
+        console.log("failed");
     }
+
+    /**
+     * Upload Status.
+     */
     uploadAborted() {
         alert("aborted");
     }
 
-
+    /**
+     * The information from server was loaded.
+     * @param msg
+     * @param displayArea
+     */
     loadComplete(msg, displayArea){
-        //displayMsg('Item added', 'success', displayArea);
         this._xmlHttp.addEventListener("load", this.loaded(msg, displayArea), false);
     }
 
+    /**
+     * Method is invoked  when the data was loaded.
+     * @param msg
+     * @param displayArea
+     */
     loaded(msg, displayArea){
         this.displayMsg(msg, 'success', displayArea);
     }
 
+    /**
+     * The data could be loaded.
+     * @param msg
+     * @param displayArea
+     */
     loadInComplete(msg,displayArea){
         this._xmlHttp.addEventListener("error", this.showError(msg, displayArea), false);
     }
 
+    /**
+     * Show error is data was not loaded.
+     * @param msg
+     * @param displayArea
+     */
     showError(msg, displayArea){
         this.displayMsg(msg, 'warning', displayArea);
     }
-
-
 
     /**
      * Display messages accordingly to the parameters passed.
@@ -136,7 +211,7 @@ class AjaxConnection {
         setTimeout(function() {
             displayBox.parentNode.removeChild(displayBox);
             boxTimeout = -1;
-        }, 2500);
+        }, 3000);
     }
 
     /**

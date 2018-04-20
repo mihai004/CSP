@@ -1,29 +1,28 @@
 <?php
-ini_set('display_errors', 1);       // finding errors
 require('Models/UserDataSet.php');
 require('Models/BookDataSet.php');
 require('Models/BasketDataSet.php');
-//require_once (__DIR__ . 'vendor/autoload.php');
 
-use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\PHPMailer;      // email functionality
 use PHPMailer\PHPMailer\Exception;
 
 session_start();
 
 $view = new stdClass();
-$view->pageTitle = 'Books';
-
+$view->pageTitle = 'Books';             // the page title
 
 $userDataSet = new UserDataSet();
 $basketDataSet = new BasketDataSet();
 $booksDataSet = new BooksDataSet();
-//
+
+// if user is not logged in then redirect him to the home page
 if(!(isset($_SESSION['userID']))) {
 
    header('Location: index.php');
 
 }
 
+// if user is logged in then arrange products accordingly to options the user selects to see them.
 if(isset($_SESSION['userID'])){
 
     $view->user = $userDataSet->searchUser( $_SESSION['userID']);
@@ -38,16 +37,18 @@ if(isset($_SESSION['userID'])){
     $limit = 5;
     $start = ($page > 1) ? ($page * $limit) - $limit: 0;
     $view->basket = $basketDataSet->fetchBasketPerPage($_SESSION['userID'], $start, $limit);
-    $view->noOfBooks = $basketDataSet->selectUniqueBooks();
+    $view->noOfBooks = $basketDataSet->selectUniqueBooks();         // get the number of products
 
 }
 
 // the user is logged in, thereby one can clear the items from the basket
 if (isset($_SESSION['userID']) and (isset($_POST['clearCart']))) {
 
-    $basketDataSet->clearCart();
+    $basketDataSet->clearCart();                                    // clear cart
 
 }
+
+// the user checks out with the product. An e-mail is sent if successful.
 if(isset($_POST['checkOut'])){
 
     $basket = $basketDataSet->fetchAllBasket($_SESSION['userID']);
@@ -114,10 +115,8 @@ if(isset($_POST['checkOut'])){
         }
     }
     else {
-        echo '<p style="font-size: 20px; margin-bottom: 15px;"  class="bg-danger text-center text-danger">
-                    Not enough copies unfortunately for your order at the moment.
-            </br></p>';
-    }
+        echo 'Not enough copies unfortunately for your order at the moment.';
 
+    }
 }
 require('Views/basket.phtml');

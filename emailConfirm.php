@@ -1,14 +1,12 @@
 <?php require('Models/UserDataSet.php');
 
 $userDataSet = new UserDataSet();
+// confirm user identity once email sent by the server was clicked by the user.
 if(isset($_GET['eMail']) && isset($_GET['code'])) {
     $_eMail = $_GET['eMail'];
     $_code = $_GET['code'];
-
-    $userDataSet->checkConfirmation($_eMail, $_code);
+    $userDataSet->checkUserIdentity($_eMail, $_code);       // confirm user in the database.
 }
 else {
-    echo '<p style="font-size: 20px; margin-bottom: 15px;"  class="bg-info text-center text-info">
-                    Please confirm your e-mail in order to log in.
-            </br></p>';
+    echo 'Please confirm your e-mail in order to log in.';  // identity not confirmed for the registered email.
 }

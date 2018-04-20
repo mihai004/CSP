@@ -2,15 +2,13 @@
 
 $userDataSet = new UserDataSet();
 
+// a user wants to reset the password for the account
 if (isset($_POST['resetBtn']) && isset($_POST['emailReset'])) {
 
     $userToBeFound = $_POST['emailReset'];
-
-    $userFound = $userDataSet->searchUser('eMail', $userToBeFound);
-
-    $code = $userFound->getConfirmCode();
-
-    $message = "
+    $userFound = $userDataSet->searchUser('eMail', $userToBeFound);   // user exists
+    $code = $userFound->getConfirmCode();                                   // random number selected for security reasons
+    $message = "                                                            
             Reset your Password
             Click the link below
             http://eqp326.edu.csesalford.com/resetPassword.php?eMail=$userToBeFound&code=$code
@@ -19,6 +17,7 @@ if (isset($_POST['resetBtn']) && isset($_POST['emailReset'])) {
 
 }
 
+// confirms the user identity after an email check
 else if(isset($_GET['eMail']) && isset($_GET['code'])){
 
     $_eMail = $_GET['eMail'];
@@ -30,6 +29,7 @@ else if(isset($_GET['eMail']) && isset($_GET['code'])){
 
 }
 
+// resets the password
 else if(isset($_POST['resetPasswdBtn'])){
 
     $eMail = $userDataSet->test_input($_POST['eMailReset']);
@@ -44,9 +44,6 @@ else if(isset($_POST['resetPasswdBtn'])){
         header('Location: index.php');
     }
     else {
-
-        echo '<p style="font-size: 20px; margin-bottom: 15px;"  class="bg-danger text-center text-danger">
-                    Password do not match. Please try again!
-            </br></p>';
+        echo 'Password do not match. Please try again!';
     }
 }

@@ -39,14 +39,15 @@ class UserDataSet
 
 
     /**
-     *  The method is invoked when a person wants to register. In this case, all the data that the
+     * The method is invoked when a person wants to register. In this case, all the data that the
      * user types will be tested in a securely manner before adding that persons' details to the database.
+     * @param $post
+     * @return bool
      */
      public function registerUser($post)
     {
         if(empty($post['emailReg'])){
-            var_dump($post);
-            echo 'Empty';
+            echo 'No input detected';
             return false;
         }{
             $eMail = $mobileNumber = $houseNumber = $streetName = $city = $country = $postCode = $password = null;
@@ -129,8 +130,8 @@ class UserDataSet
                     if($mail->send()){
 
                         $sqlQuery = "INSERT INTO Users (eMail, phoneNumber, houseNumber, streetName, city, country, 
-                        postCode, password, confirmed, confirmCode) VALUES ('$eMail', '$mobileNumber', '$houseNumber', 
-                      '$streetName', '$city', '$country', '$postCode', '$passwordHash', 0, '$confirmCode')";
+                        postCode, password, confirmed, confirmCode, profilePicName) VALUES ('$eMail', '$mobileNumber', '$houseNumber', 
+                       '$streetName', '$city', '$country', '$postCode', '$passwordHash', 1, '$confirmCode', 'default_avatar.jpg')";
                         $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
                         $statement->execute(); // execute the PDO statement
 
@@ -148,6 +149,22 @@ class UserDataSet
                 }
                 return false;
             }
+        }
+    }
+
+    /**
+     * The method is invoked to store the name of the profile picture of the user.
+     * @param $fileName
+     */
+    public function insertProfilePic($fileName){
+        $sqlQuery = "UPDATE Users SET profilePicName = ? WHERE idUser = ?";
+        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(1, $fileName, PDO::PARAM_STR);
+        $statement->bindParam(2, $_SESSION['userID'], PDO::PARAM_STR);
+        if($statement->execute()) { // execute the PDO statement
+            echo 'Picture uploaded!';
+        } else {
+            echo 'Picture was not uploaded';
         }
     }
 
@@ -170,45 +187,18 @@ class UserDataSet
     }
 
     /**
-     * The method checks to see if a user with a e-Mail inserted for registering exist or not.
-     * @param $enteredEmail
-     * @return bool
-     */
-    public function checkEmail($enteredEmail){
-        $sqlQuery = "SELECT eMail FROM Users Where eMail = '$enteredEmail'";
-        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
-        $statement->execute(); // execute the PDO statement
-        if($statement->rowCount() > 0){
-            return true;
-        }
-    }
-
-    /**
-     * The method checks to see if a mobile phone number is used by someone else.
-     * @param $mobileNumber
-     * @return bool
-     */
-    public function checkPhoneNumber($mobileNumber){
-        $sqlQuery = "SELECT phoneNumber FROM Users Where phoneNumber = '$mobileNumber'";
-        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
-        $statement->execute(); // execute the PDO statement
-        if($statement->rowCount() > 0){
-            return true;
-        }
-    }
-
-    /**
      * The method is invoked when a user clicks the link send to its e-Mail and hence it is
      * able to log in, while the confirmation code remains in the database for further use when for
      * instance a user would want to reset its password.
-     * @param $field
      * @param $value
      * @param $eMail
      */
-    public function updateUser($field, $value, $eMail){
+    public function updateUser($value, $eMail){
 
-        $sqlQuery = "UPDATE Users SET $field = '$value' WHERE eMail = '$eMail'";
+        $sqlQuery = "UPDATE Users SET confirmCode = ? WHERE eMail = ?";
         $statement = $this->_dbHandle->prepare($sqlQuery);
+        $statement->bindParam(1, $value, PDO::PARAM_STR);
+        $statement->bindParam(2, $eMail, PDO::PARAM_STR);
         $statement->execute();
         if( $statement->execute() ){
         }
@@ -223,12 +213,11 @@ class UserDataSet
      * @param $_insertCode
      * @return bool
      */
-    public function checkConfirmation($_eMail, $_insertCode){
-        //$userFound = $this->searchUser('eMail', $_eMail);
+    public function checkUserIdentity($_eMail, $_insertCode){
         $userFound = $this->searchUser($_eMail);
         $_code = $userFound->getConfirmCode();
         if($_code == $_insertCode) {
-            $this->updateUser('confirmed', '1', $_eMail);
+            $this->updateUser('1', $_eMail);
             return true;
         }
         else {
@@ -237,7 +226,42 @@ class UserDataSet
 
     }
 
+    /**
+     * The method checks to see if a user with a e-Mail inserted for registering exist or not.
+     * @param $enteredEmail
+     * @return bool
+     */
+    public function checkEmail($enteredEmail){
+        $sqlQuery = "SELECT eMail FROM Users Where eMail = ?";
+        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(1, $enteredEmail, PDO::PARAM_STR);
+        $statement->execute(); // execute the PDO statement
+        if($statement->rowCount() > 0){
+            return true;
+        }
+    }
 
+    /**
+     * The method checks to see if a mobile phone number is used by someone else.
+     * @param $mobileNumber
+     * @return bool
+     */
+    public function checkPhoneNumber($mobileNumber){
+        $sqlQuery = "SELECT phoneNumber FROM Users Where phoneNumber = ?";
+        $statement = $this->_dbHandle->prepare($sqlQuery); // prepare a PDO statement
+        $statement->bindParam(1, $mobileNumber, PDO::PARAM_STR);
+        $statement->execute(); // execute the PDO statement
+        if($statement->rowCount() > 0){
+            return true;
+        }
+    }
+
+
+    /**
+     * The method is called when the user wants to logIn.
+     * @param $post
+     * @return bool
+     */
     public function logIn($post){
         $obj = json_decode($post['logInCredentials']);
         $email = $this->test_input($obj->email);

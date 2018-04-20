@@ -1,81 +1,81 @@
-<!--<div id="response" style="font-size: 20px; width: 100%; position: fixed; margin-bottom: 15px;"  class="bg-success text-center text-success"></div>-->
+<?php
+require ('template/header.phtml');
 
-<!--<input type="hidden" value="--><?php //echo $_SESSION['userID'] ?><!--" id="userID">-->
-
-<?php require('template/header.phtml') ?>
+?>
 <div class="container" id="shop">
     <div class="navbar-wrap">
 
-<!--        <div class="container" id="shop">-->
+        <nav class="navbar navbar-pills">
 
-            <nav class="navbar navbar-pills">
+            <div class="navbar-header hidden-xs">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" style="background-color: forestgreen;" data-target="#myNav">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span style="background-color: whitesmoke;" class="icon-bar"></span>
+                    <span style="background-color: whitesmoke;" class="icon-bar"></span>
+                    <span style="background-color: whitesmoke;" class="icon-bar"></span>
+                </button>
 
-                <div class="navbar-header hidden-xs">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" style="background-color: forestgreen;" data-target="#myNav">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span style="background-color: whitesmoke;" class="icon-bar"></span>
-                        <span style="background-color: whitesmoke;" class="icon-bar"></span>
-                        <span style="background-color: whitesmoke;" class="icon-bar"></span>
-                    </button>
+            </div>
 
-                </div>
-
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <button class="btn-lg btn-toolbar hidden-lg hidden-md" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     Sort by:
                 </button>
-                    <form action="../shopList.php" method="post">
+                <form action="../shopList.php" method="post">
 
 
-                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                                <ul class="list-group-item">
-                                <label for="category">Category: </label>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="list-group-item">
+                            <label for="category">Category: </label>
 
-                                <select onchange="filterInfo()" class="selectpicker col-sm-12 col-md-2 col-xs-12"
-                                        data-style="btn-warning" id="category">
+                            <select onchange="filterInfo()" class="selectpicker col-sm-12 col-md-2 col-xs-12"
+                                    data-style="btn-warning" id="category">
                                 <option value="science">Science</option>
                                 <option value="novel">Novel</option>
                                 <option value="poetry">Poetry</option>
                                 <option value="philosophy">Philosophy</option>
-                                </select>
+                            </select>
 
-                                <label for="nrInStock">NrInStock: </label>
+                            <label for="nrInStock">NrInStock: </label>
 
-                                <select onchange="filterInfo()" class="selectpicker col-sm-12 col-md-2 col-xs-12"
-                                        data-style="btn-warning" id="nrInStock">
-                                    <option value="1">1</option>
-                                    <option value="30">30</option>
-                                    <option value="100">100</option>
-                                </select>
+                            <select onchange="filterInfo()" class="selectpicker col-sm-12 col-md-2 col-xs-12"
+                                    data-style="btn-warning" id="nrInStock">
+                                <option value="1">1</option>
+                                <option value="30">30</option>
+                                <option value="100">100</option>
+                            </select>
 
-                                <label for="price">Price: </label>
+                            <label for="price">Price: </label>
 
-                                <select onchange="filterInfo()" class="selectpicker col-sm-12 col-md-2 col-xs-12"
-                                        data-style="btn-warning" id="price">
-                                    <option value="asc">Asc</option>
-                                    <option value="desc">Desc</option>
-                                </select>
+                            <select onchange="filterInfo()" class="selectpicker col-sm-12 col-md-2 col-xs-12"
+                                    data-style="btn-warning" id="price">
+                                <option value="asc">Asc</option>
+                                <option value="desc">Desc</option>
+                            </select>
 
-                            </div>
+                    </div>
 
-                        </ul>
-                    </form>
-                </nav>
+                    </ul>
+                </form>
             </nav>
-        </div>
+        </nav>
+    </div>
 
     <div id="displayBook"></div>
     <div id="removeBook" class="col-md-offset-1 col-xs-offset-0 col-lg-offset-1 col-sm-offset-1">
-                        <?php foreach ($view->booksDataSet as $bookData) {
-                            echo '
+        <?php
+
+        foreach($view->booksDataSet as $bookData)
+        {
+            echo '
                            
                              <div style="margin-top: 40px;"  class="bookSet" style="font-size: 18px;">
                          
                              <div style="text-align: center; margin: auto; height: 250px;" class="card">
                               <div id="displayBookMessage' . $bookData->getIdBook() . '"></div>  
-                                    <p>' . '<img  src="/images/'. $bookData->getPhotoName()  . ' " alt="no pic" />' . '</p>
+                                    <p>' . '<img  src="/images/' . $bookData->getPhotoName() . ' " alt="no pic" />' . '</p>
                                 
                              <div class="card-body" style="font-size: 18px;">
     <h3 class="card-title" style="margin-bottom: 15px; height: 35px;"> ' . $bookData->getBookName() . '</h3>
@@ -86,12 +86,12 @@
   <div class="card-body">
   <ul class="list-group list-group-flush" style="list-style-type: none;">
     <li class="list-group-item-info"><b>Available: </b><b style="color:black;">' . $bookData->getNumberInStock() . '</b></li>
-    <li class="list-group-item-info"><b>Price: £ </b><b style="color:black;">'.$bookData->getPrice() . '</b></li>
+    <li class="list-group-item-info"><b>Price: £ </b><b style="color:black;">' . $bookData->getPrice() . '</b></li>
   </ul>
   </div>
   <div class="card-footer">
   <p>
-            <a style="color: royalblue;" href="product.php?id='. $bookData->getIdBook() .'"><b>View Book</b></a> 
+            <a style="color: royalblue;" href="product.php?id=' . $bookData->getIdBook() . '"><b>View Book</b></a> 
    <p>' . '<button data-id="' . $bookData->getIdBook() . '" 
            onclick="addOneBookToCart(' . $bookData->getIdBook() . ')" 
            class="btn btn-primary btn-success addToCart"><b>Add to</b>
@@ -102,59 +102,73 @@
 </div> </div>                            
                              
                                     ';
-                        } ?>
-                </div>
+        }
+
+        ?>
+    </div>
     <div id="displayPagination"></div>
     <div id="removePagination" class="col-xs-12 text-center">
-                <?php
+        <?php
+        echo '<nav aria-label="Page navigation">';
+        echo '<ul class="pagination">';
+        $page = 0;
 
-                echo '<nav aria-label="Page navigation">';
-                echo '<ul class="pagination">';
-                $page =0;
-                if($page > 1){
-
-                    $previous = $page - 1;
-                    echo '<li><a href="../shopList.php?limit='. $limit .'&page='. $previous .'" aria-label="Previous">
+        if ($page > 1)
+        {
+            $previous = $page - 1;
+            echo '<li><a href="../shopList.php?limit=' . $limit . '&page=' . $previous . '" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                     </a></li>';
+        }
 
-                }
+        $pages = ceil($total / $limit);
 
-                $pages = ceil($total / $limit);
-                for($i = 1; $i <= $pages; $i++) {
+        for ($i = 1; $i <= $pages; $i++)
+        {
+            echo '<li><a href="../shopList.php?limit=' . $limit . '&page=' . $i . '"> ';
+            echo $i;
+            echo '</a></li> ';
+        }
 
-                    echo '<li><a href="../shopList.php?limit='. $limit.'&page='. $i .'"> ';
-                    echo $i;
-                    echo '</a></li> ';
-
-                }
-
-                if($page < $pages){
-
-                    $next = $page + 1;
-                    echo '<li><a href="../shopList.php?limit='. $limit .'&page='. $next .'" aria-label="Next">
+        if ($page < $pages)
+        {
+            $next = $page + 1;
+            echo '<li><a href="../shopList.php?limit=' . $limit . '&page=' . $next . '" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                     </a></li>';
+        }
 
-                }
+        echo '</ul>';
+        echo '</nav>';
+        ?>
+        <div id="itemPerPage">
+            <label onchange="window.location.href='../shopList.php'" class="dropdown-toggle text-center" data-toggle="dropdown" href="#">Items/page</label>
+            <select name="filter_3" onchange="window.location.href=this.value">
+                <option value="<?php
+                echo '../shopList.php';
+                ?>"></option>
+                <option value="<?php
+                echo '../shopList.php', '?&limit=2';
+                ?>">2</option>
+                <option value="<?php
+                echo '../shopList.php', '?&limit=3';
+                ?>">3</option>
+                <option value="<?php
+                echo '../shopList.php', '?&limit=4';
+                ?>">4</option>
+                <option value="<?php
+                echo '../shopList.php', '?&limit=5';
+                ?>">5</option>
+                <option value="<?php
+                echo '../shopList.php', '?&limit=10';
+                ?>">10</option>
+            </select>
+        </div>
 
-                echo '</ul>';
-                echo '</nav>';
-
-                ?>
-                    <div id="itemPerPage">
-                    <label onchange="window.location.href='../shopList.php'" class="dropdown-toggle text-center" data-toggle="dropdown" href="#">Items/page</label>
-                    <select name="filter_3" onchange="window.location.href=this.value">
-                        <option value="<?php echo '../shopList.php';?>"></option>
-                        <option value="<?php echo '../shopList.php','?&limit=2';?>">2</option>
-                        <option value="<?php echo '../shopList.php','?&limit=3';?>">3</option>
-                        <option value="<?php echo '../shopList.php','?&limit=4';?>">4</option>
-                        <option value="<?php echo '../shopList.php','?&limit=5';?>">5</option>
-                        <option value="<?php echo '../shopList.php','?&limit=10';?>">10</option>
-                    </select>
-                    </div>
-
-                </div>
-    </>
+    </div>
+</>
 </div>
-<?php require('template/footer.phtml') ?>
+<?php
+require ('template/footer.phtml');
+
+?>

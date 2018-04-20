@@ -1,17 +1,18 @@
-<?php //require ('Views/template/header.phtml');
-//
-//
+<?php include ('Models/UserDataSet.php');
 
-session_start();
-echo $_FILES["fileToUpload"]["name"];
-//
+session_start();  // the session id will represent the unique name of the profile picture
+$userDataSet = new UserDataSet();
+// check for file
 if(empty($_FILES)){
-require ('Views/test.phtml');
+   echo 'No file detected!';
 } else {
-
 $target_dir = "uploads/";
-$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+$filename = $_FILES["fileToUpload"]["name"];
 $uploadOk = 1;
+$file_basename = substr($filename, 0, strripos($filename, '.'));      // get file
+$file_ext = substr($filename, strripos($filename, '.'));                    // get file extension
+$file_basename = $_SESSION['userID'] . $file_ext;                                  // change file name to the id of the user
+$target_file = $target_dir . $file_basename;
 $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 // Check if image file is a actual image or fake image
 //if(isset($_POST["submit"])) {
@@ -24,20 +25,19 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
         $uploadOk = 0;
     }
 //}
-// Check if file already exists
+// Check if file already exists                         // No need. The user can change profile picture accordingly
 //if (file_exists($target_file)) {
 //    echo "Sorry, file already exists.";
 //    $uploadOk = 0;
 //}
 // Check file size
-//if ($_FILES["fileToUpload"]["size"] > 500000) {
-//    echo "Sorry, your file is too large.";
-//    $uploadOk = 0;
-//}
+if ($_FILES["fileToUpload"]["size"] > 500000) {
+    echo "Sorry, your file is too large.";
+    $uploadOk = 0;
+}
 // Allow certain file formats
-if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-    && $imageFileType != "gif" ) {
-    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+if($imageFileType != "jpg") {
+    echo "Sorry, only JPG files are allowed.";
     $uploadOk = 0;
 }
 // Check if $uploadOk is set to 0 by an error
@@ -46,6 +46,7 @@ if ($uploadOk == 0) {
 // if everything is ok, try to upload file
 } else {
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+        $userDataSet->insertProfilePic($file_basename);                             // adds to the database the fileName
         echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
     } else {
         echo "Sorry, there was an error uploading your file.";

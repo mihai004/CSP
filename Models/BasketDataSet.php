@@ -1,16 +1,10 @@
 <?php
 require_once ('Database.php');
 require('BasketData.php');
-//// JSON
-//require ('OutputInterface.php');
-//require ('SerializedArrayOutput.php');
-//require ('JsonStringOutput.php');
-//require ('ArrayOutput.php');
-
 
 class BasketDataSet
 {
-    protected $_dbHandle, $_dbInstance;
+    protected $_dbHandle, $_dbInstance, $output;
 
     public function __construct()
     {
@@ -181,15 +175,8 @@ class BasketDataSet
             $statement->bindParam(2,$productID);
             $statement->bindParam(3, $value);
             if ($statement->execute()) {
-//                echo '<div id="response" style="font-size: 20px; margin-bottom: 15px;"  class="bg-success text-center text-success">
-//                        Successfully added
-//                       </div>';
                 return true;
             }
-//            else {
-//                return false;
-//               // echo 'failed';
-//            }
         }
         return false;
     }
@@ -288,17 +275,23 @@ class BasketDataSet
         return $count;
     }
 
-    // JSON WORK
+    // JSON Work
 
-    protected $output;
-
+    /**
+     * Sets the type of output (array, Json, XML).
+     * @param OutputInterface $outputType
+     */
     public function setOutput(OutputInterface $outputType){
         $this->output = $outputType;
     }
 
+    /**
+     * Load Data accordingly to the specified parameter.
+     * @param $arrayOfData
+     * @return mixed
+     */
     public function loadOutput($arrayOfData){
         return $this->output->load($arrayOfData);
     }
-
 
 }
